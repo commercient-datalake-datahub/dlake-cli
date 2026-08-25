@@ -30,7 +30,7 @@ dlake admin create_schema --schemaName sales
 dlake admin create_table --tableName PizzaOrders --columns @columns.json
 ```
 
-See **Admin Control Plane** and **Command-Line Interface (dlake)** below for the tool catalogues and the argument conventions. Headless recipe — generate a strong portal password and pipe it in: `openssl rand -base64 18 | dlake register start --email … --company … --phone … --password-stdin --consent-crm-backup --consent-erp-backup --consent-phone` (affirmation flags only after the human has agreed), then `dlake register status --watch`. (The piped password is only the portal password, recoverable later by mail-back; the credentials that matter — the welcome-email temp password and the bootstrap key — never pass through the agent.)
+See **Admin Control Plane** and **Command-Line Interface (dlake)** below for the tool catalogues and the argument conventions. Headless recipe: let the CLI mint a conforming portal password with `dlake register start --generate-password --email … --company … --phone … --consent-crm-backup --consent-erp-backup --consent-phone` (affirmation flags only after the human has agreed), then `dlake register status --watch`. KEEP the printed password: `register login` and portal login both need that exact string and it is stored nowhere. The portal password must be 8-32 characters made only of letters, digits and `! # $ % & * ? @ _`, with at least one uppercase, one lowercase, one digit and one of those specials; `register start` refuses anything else and NAMES the offending characters, so a wrong one is caught before it is submitted. Any other character - including `.` `-` `+` `/` `=` quotes, brackets and space - is outside the set, so do not synthesise a password from an arbitrary byte encoding: `--generate-password` always produces a conforming one. To choose your own instead, pipe it with `--password-stdin`. (That password is only the portal password, recoverable later by mail-back; the credentials that matter — the welcome-email temp password and the bootstrap key — never pass through the agent.)
 
 **Lost the verification email?** `dlake register resend` re-sends the same link.
 
@@ -439,12 +439,12 @@ The one trap: the endpoint-config save writes **either** the configuration JSON 
 
 **Install** — download the self-contained binary for your platform (no runtime needed) and put it on your `PATH`:
 
-- [Windows (win-x64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.19/win-x64/dlake.exe)
-- [Linux x64](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.19/linux-x64/dlake)
-- [Linux ARM64 (linux-arm64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.19/linux-arm64/dlake)
-- [macOS Apple Silicon (osx-arm64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.19/osx-arm64/dlake)
-- [macOS Intel (osx-x64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.19/osx-x64/dlake)
-- [SHA256 checksums](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.19/SHA256SUMS) · or `npm install -g @commercient/dlake`
+- [Windows (win-x64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.20/win-x64/dlake.exe)
+- [Linux x64](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.20/linux-x64/dlake)
+- [Linux ARM64 (linux-arm64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.20/linux-arm64/dlake)
+- [macOS Apple Silicon (osx-arm64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.20/osx-arm64/dlake)
+- [macOS Intel (osx-x64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.20/osx-x64/dlake)
+- [SHA256 checksums](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.20/SHA256SUMS) · or `npm install -g @commercient/dlake`
 
 **macOS — sign the binary once after downloading.** The Mac builds ship unsigned, so run `xattr -dr com.apple.quarantine ./dlake` then `codesign --force --sign - ./dlake` (then `chmod +x ./dlake`). On Apple Silicon this is required for reliability, not just for Gatekeeper: an unsigned binary is validated page-by-page as it runs and can abort **intermittently at startup** — `System.AccessViolationException ... at Thread+StartHelper.InitializeCulture()`, typically on rapid back-to-back invocations, where a retry succeeds. Ad-hoc signing removes it. (The `InitializeCulture` frame is misleading: `dlake` runs with invariant globalization on every platform, so there is no culture data involved.)
 
