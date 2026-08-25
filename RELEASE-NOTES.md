@@ -1,5 +1,15 @@
 # dlake release notes
 
+## 0.5.22 (2026-08-25)
+
+- Clearer package listing on npm: `@commercient/dlake` now opens by describing
+  what the CLI and the platform actually do, with a first-run example, rather
+  than starting with installer internals. Both packages also carry a fuller set
+  of keywords, so the CLI is easier to find when searching npm for ERP and CRM
+  integration, sync, and SQL Server tooling.
+- No functional changes. Upgrade:
+  `npm install -g @commercient/dlake` (or `npm install -g datalake`).
+
 ## 0.5.21 (2026-08-25)
 
 - **New agent skill: `dlake-syncagent`.** Installing and configuring the
