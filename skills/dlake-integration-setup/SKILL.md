@@ -38,8 +38,8 @@ resume at any point.
 ## 1. Register the account
 
 ```bash
-printf '%s' "$PW" | dlake register start \
-  --email <email> --company "<Company Name>" --phone <tel> --password-stdin \
+dlake register start --generate-password \
+  --email <email> --company "<Company Name>" --phone <tel> \
   --consent-crm-backup --consent-erp-backup --consent-phone
 ```
 
@@ -61,12 +61,23 @@ type follows from it — never guess:
 If the customer does not know their ERP yet, treat it as case 2 for now; the ERP can still be
 declared at step 5 via `--erpName` on the connector step.
 
-**Keep the password.** `dlake register login` needs that exact string to resume from another machine
-or after the local token expires. Generating one inline and piping it straight in leaves it
-unrecoverable:
+**Keep the password.** `--generate-password` mints a conforming password and prints it **once**; it is
+stored nowhere. `dlake register login` needs that exact string to resume from another machine or after
+the local token expires, and the customer needs it to log into the portal — so capture it from the
+output and store it somewhere durable BEFORE the shell exits.
+
+**The password rules are not optional, and you cannot roll your own generator.** The portal password
+must be 8–32 characters made **only** of letters, digits and `! # $ % & * ? @ _`, with at least one
+uppercase, one lowercase, one digit and one of those specials. `register start` validates this before it
+submits anything and names the offending characters if it refuses. Any other character — including
+`.` `-` `+` `/` `=` quotes, brackets and space — is outside the set, so do not synthesise a password
+from an arbitrary byte encoding. Use `--generate-password`, which always produces a conforming one, or
+pipe a password you chose yourself with `--password-stdin`:
 
 ```bash
-PW=$(openssl rand -base64 18)     # store $PW somewhere durable BEFORE the shell exits
+printf '%s' "$PW" | dlake register start --password-stdin \
+  --email <email> --company "<Company Name>" --phone <tel> \
+  --consent-crm-backup --consent-erp-backup --consent-phone
 ```
 
 `--email`, `--company` and `--phone` are all required. The response gives the `userId` and the
