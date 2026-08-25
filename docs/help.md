@@ -421,6 +421,25 @@ dlake admin odbcsync_read_agent_config --profile <tenant>
 
 Two things deserve care. **The config read returns ten sensitive settings encrypted** (AWS keys, SMTP, the source connection string) and the save writes verbatim — so echoing an unchanged sensitive value back would store ciphertext where the agent expects plaintext; `odbcsync_save_agent_config` refuses such a batch unless `allowSensitive: true` states you are supplying a new plaintext value. And **configuring ODBC is necessary but not sufficient** — the ERP connector flags, the agent install and Normal Sync's table selection are separate; `dlake normalsync readiness` reports ODBC Sync as its own phase. The deeper guide is the **`dlake-odbcsync`** skill.
 
+## Commercient Sync Agent (the on-premises agent)
+
+Everything configured through the platform describes *what* should sync. **A Windows agent running on the customer's own server is what actually reads the ERP** — so a setup is only finished once that agent is installed, configured and connecting. The customer downloads it at the end of the registration wizard and runs it on the server their ERP runs on.
+
+Two interfaces manage the same installation and are peers, not alternatives: the **desktop application**, and **`CommercientSyncAgentCLI.exe`**, its scriptable counterpart for unattended installs, remote administration and provisioning pipelines. They share the same registry entries, scheduled tasks and product configuration, so a change made in one is immediately visible in the other.
+
+The machine needs **Windows**, **administrator privileges** (the agent manages `HKLM` registry keys and Windows scheduled tasks), and an account with at least one product licence. Sign-in uses the customer's **Commercient account** — the same credential as the portal, so it must satisfy the portal's password rules.
+
+Products follow one order: **`products`** (what is licensed, and what is already installed — the authority for exact product names) → **`install`** (download it and create its sync task) → **`configure`** (point it at the source; prompts for anything not passed as a flag, so the same command is guided or fully unattended) → **`test`** (open and close a connection — configuration only) → **`run-test`** (a real sync). `test` failing is a configuration problem; `test` passing and `run-test` failing points at the source's data or permissions.
+
+```
+CommercientSyncAgentCLI.exe -u you@company.com products
+CommercientSyncAgentCLI.exe -u you@company.com install   --product NormalSync
+CommercientSyncAgentCLI.exe -u you@company.com configure --product NormalSync
+CommercientSyncAgentCLI.exe -u you@company.com test      --product NormalSync
+```
+
+Three things are worth knowing. **`status` reports the agent's own scheduled tasks**, not just its products — a product that is installed and configured still will not sync if its task is missing, and that is where it shows. **Every command sets a meaningful exit code** (`3` authentication, `4` unknown product, `5` already installed, `6` not installed, `8` source connection failed, `9` account not permitted), so automation should branch on the code rather than parse output. And **the agent updates itself** every four hours, so do not pin an installation and expect it to stay put. The deeper guide is the **`dlake-syncagent`** skill.
+
 ## Generic API Sync (API sources)
 
 When the source is an **API rather than a database**, **Generic API Sync** teaches the sync agent which endpoints to call. Two halves make the product: the **Connection Manager** stores *how to authenticate* (encrypted, its own surface), and this half stores *what to call*. The **`apisync_*`** admin tools cover it: `apisync_status` (is the product on — a pure read, safe to poll), `apisync_enable` (provision its schema in the tenant database and set the flag — idempotent, confirm-gated, and on failure the product is left **off**), `apisync_save_endpoint_config` (describe one endpoint — see the trap below), `apisync_templates` / `apisync_template_by_id` (the shared per-ERP endpoint-template catalogue, read-only from here), and `apisync_table_schema` (a hosted customer's real ERP table columns; structurally unavailable for on-premise customers, whose `erp_unreachable` answer is correct, not a defect).
@@ -439,12 +458,12 @@ The one trap: the endpoint-config save writes **either** the configuration JSON 
 
 **Install** — download the self-contained binary for your platform (no runtime needed) and put it on your `PATH`:
 
-- [Windows (win-x64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.20/win-x64/dlake.exe)
-- [Linux x64](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.20/linux-x64/dlake)
-- [Linux ARM64 (linux-arm64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.20/linux-arm64/dlake)
-- [macOS Apple Silicon (osx-arm64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.20/osx-arm64/dlake)
-- [macOS Intel (osx-x64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.20/osx-x64/dlake)
-- [SHA256 checksums](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.20/SHA256SUMS) · or `npm install -g @commercient/dlake`
+- [Windows (win-x64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.21/win-x64/dlake.exe)
+- [Linux x64](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.21/linux-x64/dlake)
+- [Linux ARM64 (linux-arm64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.21/linux-arm64/dlake)
+- [macOS Apple Silicon (osx-arm64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.21/osx-arm64/dlake)
+- [macOS Intel (osx-x64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.21/osx-x64/dlake)
+- [SHA256 checksums](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.21/SHA256SUMS) · or `npm install -g @commercient/dlake`
 
 **macOS — sign the binary once after downloading.** The Mac builds ship unsigned, so run `xattr -dr com.apple.quarantine ./dlake` then `codesign --force --sign - ./dlake` (then `chmod +x ./dlake`). On Apple Silicon this is required for reliability, not just for Gatekeeper: an unsigned binary is validated page-by-page as it runs and can abort **intermittently at startup** — `System.AccessViolationException ... at Thread+StartHelper.InitializeCulture()`, typically on rapid back-to-back invocations, where a retry succeeds. Ad-hoc signing removes it. (The `InitializeCulture` frame is misleading: `dlake` runs with invariant globalization on every platform, so there is no culture data involved.)
 
