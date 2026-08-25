@@ -1,5 +1,21 @@
 # dlake release notes
 
+## 0.5.20 (2026-08-25)
+
+- **New: `--generate-password` on `dlake register start`.** The CLI can now mint
+  the portal password for you: a strong 20-character password that meets the
+  portal's password policy, printed once so you can save it. Recommended for
+  headless and scripted registrations — the password never touches argv or shell
+  history.
+- **Password checking moved up front.** `register start` now validates the
+  password before submitting and, if it refuses, names exactly which characters
+  or rules to fix. The portal password is 8–32 characters: letters, digits and
+  `! # $ % & * ? @ _` only, with at least one uppercase, one lowercase, one digit
+  and one of those specials.
+- The Help guide, CLI reference and the registration agent skill were updated to
+  match, including the headless registration recipe. Upgrade:
+  `npm install -g @commercient/dlake` (or `npm install -g datalake`).
+
 ## 0.5.19 (2026-08-22)
 
 - **Corrected bundled agent-skill guidance.** The `dlake-apisync` skill shipped in
