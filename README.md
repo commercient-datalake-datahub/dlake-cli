@@ -259,10 +259,21 @@ array or object argument.
 
 - **API usage guide** — endpoints, auth, scopes, rate limits: see the Data Lake
   \ Data Hub API guide served from your tenant's Help page.
-- **AI-agent skill** — [`skills/dlake/SKILL.md`](skills/dlake/SKILL.md) is a
-  drop-in skill that teaches a coding agent the correct command ordering and the
-  sharp edges (the scoped-key DAB restart, exposed-vs-raw entities, IDENTITY-key
-  limits). Install notes: [`skills/README.md`](skills/README.md).
+- **AI-agent skills** — eight drop-in skills that teach a coding agent to drive
+  this CLI correctly: the right command ordering, the non-obvious gotchas, and
+  the HTTP contract for the Data API. [`skills/dlake`](skills/dlake/SKILL.md)
+  covers building and operating a tenant;
+  [`skills/dlake-integration-setup`](skills/dlake-integration-setup/SKILL.md)
+  stands up a new integration; and one skill each for the sync products —
+  [Normal Sync](skills/dlake-normalsync/SKILL.md),
+  [ODBC Sync](skills/dlake-odbcsync/SKILL.md),
+  [Generic API Sync](skills/dlake-apisync/SKILL.md),
+  [CRMPro](skills/dlake-crmpro/SKILL.md),
+  [TxDownloaderPro](skills/dlake-txdownloaderpro/SKILL.md) — plus
+  [`skills/dlake-syncagent`](skills/dlake-syncagent/SKILL.md) for the
+  on-premises agent that runs on the customer's own ERP server. Read one with
+  `dlake skills show <name>` or install them all with `dlake skills install`;
+  see [`skills/README.md`](skills/README.md).
 - **Permissions** — object writes and connection management need
   `data.ingest.manage`; reads accept any `data.ingest.*` tier; scoped API keys
   are enforced server-side (fail-closed) down to entity and field level.
