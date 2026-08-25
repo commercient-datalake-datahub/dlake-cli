@@ -1,5 +1,21 @@
 # dlake release notes
 
+## 0.5.21 (2026-08-25)
+
+- **New agent skill: `dlake-syncagent`.** Installing and configuring the
+  Commercient Sync Agent — the Windows agent that runs on your own ERP server and
+  actually reads your source data. Covers signing in, listing your licensed
+  products, installing one, configuring it per product type, testing the
+  connection, and reading the agent's health, using the scriptable
+  `CommercientSyncAgentCLI.exe`. It is the on-premises companion to the existing
+  skills, which cover the platform side. Read it with
+  `dlake skills show dlake-syncagent`, or install all of them with
+  `dlake skills install`.
+- The Help guide and the CLI reference gained a Sync Agent section covering the
+  same ground, including the install-and-test sequence and the exit codes worth
+  branching on in a script. Upgrade:
+  `npm install -g @commercient/dlake` (or `npm install -g datalake`).
+
 ## 0.5.20 (2026-08-25)
 
 - **New: `--generate-password` on `dlake register start`.** The CLI can now mint
