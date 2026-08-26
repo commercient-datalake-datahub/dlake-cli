@@ -152,6 +152,13 @@ whether it is installed, **and the state of the agent's own scheduled tasks** �
 and the optional Commercient Receiver. A product that is installed and configured still will not sync
 if its task was never created or has been removed, and `status` is where that shows.
 
+One thing neither `status` nor a clean `run-test` can tell you: **whether rows actually moved**. Normal
+Sync runs incrementally against change tracking, so a run over an unchanged source — or one whose
+initial load never completed — reports success while syncing nothing. To see rows-in-clones against
+what the source held, and to queue a re-pull when tables are missing or short, use the platform side:
+`dlake normalsync resync-status` and `dlake normalsync resync` (see the **dlake-normalsync** skill —
+this skill deliberately does not restate those semantics).
+
 ## 7. Exit codes — check these, don't parse output
 
 Every command sets a meaningful exit code. Automation should branch on the code, never on the text.
