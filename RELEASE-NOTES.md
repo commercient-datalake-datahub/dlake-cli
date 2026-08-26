@@ -1,5 +1,12 @@
 # dlake release notes
 
+## 0.5.23 (2026-08-26)
+
+- Documentation refresh: the npm package README now describes all eight bundled
+  agent skills, including `dlake-syncagent`.
+- No functional changes. Upgrade:
+  `npm install -g @commercient/dlake` (or `npm install -g datalake`).
+
 ## 0.5.22 (2026-08-25)
 
 - Clearer package listing on npm: `@commercient/dlake` now opens by describing
