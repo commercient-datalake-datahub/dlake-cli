@@ -1,5 +1,20 @@
 # dlake release notes
 
+## 0.5.24 (2026-08-26)
+
+- **New: Normal Sync resync.** `dlake normalsync resync --confirm` asks the
+  on-premises agent to re-pull every synced table on its next run;
+  `--table <name>` queues a single table (SYSPRO custom tables like
+  `ArCustomer+` are fully supported), and `--clear` discards the queued list.
+  Nothing is deleted or dropped — the agent does the work.
+- **New: `dlake normalsync resync-status`.** Shows what is queued, plus **clone
+  coverage**: the rows actually present in each clone table against the count
+  recorded at the last sync — the quickest way to see whether a sync actually
+  moved data, per table.
+- The same operations are available to AI agents as four new admin tools, and
+  the Normal Sync guide and skills cover them. Upgrade:
+  `npm install -g @commercient/dlake` (or `npm install -g datalake`).
+
 ## 0.5.23 (2026-08-26)
 
 - Documentation refresh: the npm package README now describes all eight bundled
