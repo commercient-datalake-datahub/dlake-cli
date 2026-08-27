@@ -1,5 +1,15 @@
 # dlake release notes
 
+## 0.5.26 (2026-08-27)
+
+- The Sync Agent guidance now states that available commands vary by agent
+  build: try a command as written, and where a build prompts instead of
+  accepting a flag, work through it interactively — `--help` on that machine
+  is the authority on the form it takes.
+- The `db_owner` requirement for the Normal Sync source login is now in the
+  Help and CLI guides as well as the agent skills.
+- Upgrade: `npm install -g @commercient/dlake` (or `npm install -g datalake`).
+
 ## 0.5.25 (2026-08-27)
 
 - **Normal Sync and CRMPro guidance, considerably expanded.** The agent skills
