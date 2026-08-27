@@ -777,6 +777,7 @@ re-asserts itself on each run and reports this for each group. Filter it by `err
 |---|---|
 | `dlake-integration-setup` | Standing an integration up: registration, verification, seeding, then the wizard — CRM choice and the ERP connector |
 | **`dlake-crmpro`** (this) | Operating the **forward** leg: the `crmpro_*` tools, and the setup and transaction tables behind them — processes, sync control, field mapping, diagnostics |
+| `dlake-crmpro-hubspot` | The HubSpot values for that leg: the configuration a HubSpot process needs, the view contract for it, the seed/upsert pair, `CRM_FieldList`, and what to check when a run pushes nothing. Read it before building a HubSpot process |
 | `dlake-txdownloaderpro` | The **writeback** leg: exposing the TxDownloaderPro objects and scoping a key to them |
 | `dlake` | Operating a tenant generally — schema, queries, exports, keys, the REST/GraphQL contract |
 
