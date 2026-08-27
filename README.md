@@ -259,7 +259,7 @@ array or object argument.
 
 - **API usage guide** — endpoints, auth, scopes, rate limits: see the Data Lake
   \ Data Hub API guide served from your tenant's Help page.
-- **AI-agent skills** — eight drop-in skills that teach a coding agent to drive
+- **AI-agent skills** — nine drop-in skills that teach a coding agent to drive
   this CLI correctly: the right command ordering, the non-obvious gotchas, and
   the HTTP contract for the Data API. [`skills/dlake`](skills/dlake/SKILL.md)
   covers building and operating a tenant;
@@ -268,7 +268,8 @@ array or object argument.
   [Normal Sync](skills/dlake-normalsync/SKILL.md),
   [ODBC Sync](skills/dlake-odbcsync/SKILL.md),
   [Generic API Sync](skills/dlake-apisync/SKILL.md),
-  [CRMPro](skills/dlake-crmpro/SKILL.md),
+  [CRMPro](skills/dlake-crmpro/SKILL.md) and its
+  [HubSpot specifics](skills/dlake-crmpro-hubspot/SKILL.md),
   [TxDownloaderPro](skills/dlake-txdownloaderpro/SKILL.md) — plus
   [`skills/dlake-syncagent`](skills/dlake-syncagent/SKILL.md) for the
   on-premises agent that runs on the customer's own ERP server. Read one with
