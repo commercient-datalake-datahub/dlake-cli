@@ -2,8 +2,8 @@
 name: dlake-syncagent
 description: >-
   Install and configure the **Commercient Sync Agent** — the on-premises Windows agent that runs on
-  the customer's own ERP server — using `CommercientSyncAgentCLI.exe`, the scriptable counterpart to
-  the desktop application. Covers signing in, listing the account's licensed products, installing one,
+  the customer's own ERP server — using `CommercientSyncAgentCLI.exe`, the command-line counterpart to
+  the desktop application (command availability varies by agent build; check `--help` on the machine). Covers signing in, listing the account's licensed products, installing one,
   configuring it per product type (NormalSync, ODBC/FastODBC, TxDownloaderPro, IOTSync, QuickBooks),
   testing the connection, and reading the agent's own health. Use it when the task is "the customer
   downloaded the agent, now what", "install NormalSync on their server", "the agent isn't running",
@@ -93,6 +93,14 @@ CommercientSyncAgentCLI.exe -u you@company.com -p "$PW" test      --product Norm
 CommercientSyncAgentCLI.exe -u you@company.com -p "$PW" run-test  --product NormalSync
 ```
 
+> **Check what your agent build accepts before scripting against it.** The commands and flags in this
+> skill — the verbs above and `-p` — are supported by some agent builds and not others; newer builds
+> may prompt for the password and present the products as a numbered menu instead. Try a command as
+> written: if the build reports an unknown argument, or asks for the password rather than taking
+> `-p`, drive that machine interactively and use this skill as the map of what each step does rather
+> than as a script. `CommercientSyncAgentCLI.exe --help` on the machine in front of you is the
+> authority on which form it takes.
+
 Use the product name **exactly as `products` prints it** — that listing is the authority, and it also
 tells you what is already installed, so it is the right first call on an unfamiliar machine.
 
@@ -167,7 +175,9 @@ this skill deliberately does not restate those semantics).
 
 ## 7. Exit codes — check these, don't parse output
 
-Every command sets a meaningful exit code. Automation should branch on the code, never on the text.
+On builds that take the commands above, every one sets a meaningful exit code, and automation should
+branch on the code rather than the text. Where a build presents the interactive menu instead, read the
+codes below as the meaning of each outcome rather than as something to script against.
 
 | Code | Meaning | Usually means |
 |---|---|---|
