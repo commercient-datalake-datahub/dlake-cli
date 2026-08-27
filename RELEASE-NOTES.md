@@ -1,5 +1,18 @@
 # dlake release notes
 
+## 0.5.25 (2026-08-27)
+
+- **Normal Sync and CRMPro guidance, considerably expanded.** The agent skills
+  now spell out what a CRMPro source view has to contain and how to build one
+  that syncs — the identity and change-detection joins, key formats, process
+  naming, and the value rules each destination CRM enforces (currency codes,
+  email addresses, dates). Reading `dlake skills show dlake-crmpro` before
+  building a process is now the short path.
+- The Normal Sync guidance states the source SQL login needs `db_owner` on the
+  ERP database, and why a read-only login passes the connection test but
+  cannot sync.
+- Upgrade: `npm install -g @commercient/dlake` (or `npm install -g datalake`).
+
 ## 0.5.24 (2026-08-26)
 
 - **New: Normal Sync resync.** `dlake normalsync resync --confirm` asks the
