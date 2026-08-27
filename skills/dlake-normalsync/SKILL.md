@@ -236,9 +236,15 @@ setup:
 |---|---|
 | The sync agent installed (`SyncAgentProduct` type 10, `IsInstalled = 1`) | The on-prem agent installer |
 | `ERP_SQLHOSTNAME` | ERP connector setup (`dlake-integration-setup`) |
-| `ERP_SQLUSERNAME` | ERP connector setup |
+| `ERP_SQLUSERNAME` | ERP connector setup — **must be `db_owner` on the ERP database** (see below) |
 | `ERP_SQLPASSWORD` | ERP connector setup |
 | `ERP_SQLDATABASE` | ERP connector setup |
+
+**The ERP SQL login must be `db_owner`, not a reader.** Normal Sync does not just read the source: it
+creates and alters the clone tables, table types and stored procedures in the ERP database and enables
+change tracking there. `db_datareader` is enough to make the connection test pass and is not enough to
+sync — the failure arrives later, as a sync that errors or moves nothing, with the connection looking
+healthy.
 
 ```bash
 dlake normalsync readiness
