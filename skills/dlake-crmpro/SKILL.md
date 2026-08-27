@@ -612,6 +612,97 @@ Then, for the detail those do not carry:
 If none of those moved, the question is whether the agent ran at all — a scheduling/host question,
 answered from the customer's sync server, not from here.
 
+**When a run records itself but no process moved, check §7b before the host.** A run that completes
+having left every process untouched points at process naming or the view shape, not at scheduling.
+And read `dlake crmpro errors --profile <tenant>` in either case: it reads the shared error surface,
+so it works whether or not the tenant has a `CRMPRO_ERROR_LOG` table of its own.
+
+## 7b. The source-view contract — what a process's view must expose
+
+`SQL_Query` is always `SELECT * FROM DLO.<view>`, so every requirement below is satisfied inside the
+view body. Build a view to this shape and a process syncs; depart from it and the run completes
+without moving records, so check these first when a sync reports success and nothing arrives.
+
+| Column | Purpose |
+|---|---|
+| `RecordKey` | The record's identity. Kept out of the posted properties, used to build the `TimeStampRepository` key, and sent as the CRM's external id. HubSpot processes use `RecordKey`; `ExternalKey` belongs to Salesforce processes. |
+| `SFDCID` | The destination record's id, so an existing record is updated rather than created again. Empty string for a record that has not synced yet. |
+| `TimeStamp` | The clone table's rowversion, compared with `TimeStampRepository.SavedTimeStamp` to find changed rows. A view without it returns no rows. `crmpro_table_columns` does not list this column — read the clone table or `crmpro_get_process_sql` to confirm it. |
+
+**Use two joins against `TimeStampRepository`, one for identity and one for change detection:**
+
+```sql
+SELECT v.*, ISNULL(idj.SFDCID, '') AS SFDCID
+FROM ( /* your ERP select, aliasing the key column AS RecordKey */ ) v
+-- identity: keyed on [Key] alone, so a changed row keeps its CRM id
+LEFT JOIN dbo.TimeStampRepository idj
+       ON idj.[Key] = 'vw_HUBSPOT_NEW_CUSTOMER::' + CAST(v.RecordKey AS varchar(200))
+-- change detection: the timestamp comparison belongs here
+LEFT JOIN dbo.TimeStampRepository chg
+       ON chg.[Key] = 'vw_HUBSPOT_NEW_CUSTOMER::' + CAST(v.RecordKey AS varchar(200))
+      AND v.[TimeStamp] = ISNULL(chg.SavedTimeStamp, v.[TimeStamp])
+WHERE chg.[Key] IS NULL          -- only rows still needing a push
+```
+
+Keep them separate. A single join serving both purposes returns no id for the rows that are about to
+sync, and those records are created again instead of updated. A first sync gives no warning of this,
+because nothing exists in the CRM yet to update.
+
+**Key separators are positional.** The cursor key is `PREFIX::value` — a double colon after the
+prefix. Composite keys use a single colon between parts: `PREFIX::value1:value2`. With a single-colon
+prefix the already-synced check never matches, and every row is sent again on each run.
+
+**Name processes so the name contains `upsert`.** For `Sync_Operation_Type = 1` the process name
+selects the sync path: include `upsert` (add `batch` for the batch path). A purely descriptive name
+such as `Companies - ArCustomer` or `NL Contacts` selects no path, and the run leaves the process
+untouched. Put descriptive detail in `Developer_Comment`, which does not affect path selection.
+
+**Write `CRM_Object_API_Name` in lower case:** `company`, `contact`, `product`, `deal`, `line_item`.
+A capitalised name is not recognised, and the external-key property is written as `externalkey`
+instead of the mapped field.
+
+**Values must satisfy the destination CRM as well as SQL.** A currency column needs an ISO code, so
+map an ERP that stores `$` with a `CASE` rather than a blanket replace — real ISO codes usually sit in
+the same column. Email columns are validated by the CRM, so malformed source addresses are refused
+per record. Both appear in `dlake crmpro errors` per record with the CRM's own message.
+
+**The ERP SQL login needs `db_owner` on the source database.** Normal Sync creates and alters clone
+tables, table types and stored procedures there, and enables change tracking. `db_datareader` is
+enough for the connection test to pass and not enough to sync.
+
+## 7c. Further rules for HubSpot processes
+
+**Keep `SFDCID` to `Sync_Operation_Type = 1`.** The upsert path removes `SFDCID` from the posted
+properties; the create paths do not, and HubSpot rejects the record with `Invalid names: [SFDCID]`. A
+view built to §7b therefore belongs to an `upsert` process. Use `Sync_Operation_Type = 1` for the
+work and let the upsert path handle both new and existing records.
+
+**Point association joins at the prefix that holds the parent's id.** An association resolves through
+the parent's `SFDCID` in `TimeStampRepository`, so the join must use the prefix the id was stored
+under. Where two processes cover the same object, the one that ran first holds the ids. Read the
+repository keys and use the prefix present there; a join on the other prefix returns no rows.
+
+**Expect `PROPERTY_DOESNT_EXIST` to clear over the first few runs.** Missing CRM properties are
+created one per pass, so the count falls each run (4, then 3, then 2, then none). Compare counts
+across runs before treating it as a mapping problem.
+
+**Dates need the destination's format.** Native CRM date properties take ISO-8601; custom properties
+are more permissive. Timezone conversion can move a date by a day, so compare one synced record with
+its source before loading the rest.
+
+**A plan limit is reported once for all records it refused.** When a portal reaches an object cap —
+HubSpot allows 100 products on some tiers — the refusal arrives as a single error whose description
+lists every affected key, comma-joined. Count the keys in that description to see how many records
+need a higher tier or a narrower selection.
+
+**Use the five recognised object names.** `company`, `contact`, `product`, `deal` and `line_item`
+route to the HubSpot API. A custom object name returns `Unable to infer object type from: <name>`;
+custom objects are outside this path.
+
+**`The Group named commercient already exists` needs no action.** The property-group bootstrap
+re-asserts itself on each run and reports this for each group. Filter it by `errorKey` when reading
+`dlake crmpro errors` so it does not obscure records that genuinely failed.
+
 ## 8. Things that bite
 
 - **The `crmpro_*` tools are Admin-only.** The calling key must belong to a tenant user holding the
