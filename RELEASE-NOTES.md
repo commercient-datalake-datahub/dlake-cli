@@ -1,5 +1,17 @@
 # dlake release notes
 
+## 0.5.27 (2026-08-27)
+
+- **New agent skill: `dlake-crmpro-hubspot`.** The HubSpot specifics of a CRMPro
+  forward sync, in one place: the configuration a HubSpot process needs, what its
+  source view must provide, the seed-then-upsert pair that lets some fields stay
+  CRM-owned while the rest follow the ERP, the field-list rows an object needs
+  before it will push anything, and the checks to run when a sync finishes
+  without writing records. Read it with
+  `dlake skills show dlake-crmpro-hubspot`, or install all nine with
+  `dlake skills install`.
+- Upgrade: `npm install -g @commercient/dlake` (or `npm install -g datalake`).
+
 ## 0.5.26 (2026-08-27)
 
 - The Sync Agent guidance now states that available commands vary by agent
