@@ -109,6 +109,12 @@ setup with no options, and fully unattended with every option — the same comma
 
 `--sql-hostname` · `--sql-username` · `--sql-password` · `--database` · `--schema` (defaults to `dbo`)
 
+> **The SQL login you give NormalSyncPro must be `db_owner` on the ERP database.** Not
+> `db_datareader` — the agent does not merely read the source. It creates and alters clone tables,
+> table types and stored procedures in that database, and enables change tracking. A read-only login
+> passes `test` (which only opens a connection) and then fails or silently does nothing during the
+> sync, which is the expensive way to discover this.
+
 **ODBC, FastODBC**
 
 `--dsn` · `--odbc-username` · `--odbc-password` · `--table-list` (comma-separated) · `--client-db-type`
