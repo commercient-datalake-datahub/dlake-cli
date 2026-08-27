@@ -384,6 +384,11 @@ Deeper operating guidance — the flag table, field mapping, cursors and the tab
 
 **Normal Sync** is the third agent, and it runs first in the chain: an on-premises **change-tracking** sync agent for Microsoft SQL Server (2008 R2 and later) that extracts changed data from the customer's source database into the clone tables of their gateway database. Sources that are not SQL Server use the **ODBC sync agent** instead, which lands the data in an intermediary database that Normal Sync then moves into the clone tables. From there **CRMPro** consumes the clone tables (through views) and pushes to the CRM — so the three products chain: **Normal Sync → clone tables → CRMPro → CRM**, with **TxDownloaderPro** closing the loop back toward the source.
 
+**The SQL login the agent uses for the source database needs `db_owner` on it.** Normal Sync does more
+than read: it creates and alters the clone tables, table types and stored procedures in that database
+and enables change tracking there. A read-only login is enough for the connection test to pass and not
+enough to sync, so this is worth confirming before a first run rather than after one that moves nothing.
+
 The **`normalsync_*`** admin tools manage which source tables the agent syncs: `normalsync_available_tables` (the ERP's table catalogue), `normalsync_list_selected_tables`, `normalsync_readiness` (are the prerequisites in place?), `normalsync_select_table` (add an already-catalogued table to this customer's sync), `normalsync_set_sync_enabled` (per-table activate/deactivate), `normalsync_set_row_filter` (the per-table row filter and index hint), and — for tables never synced anywhere before — `normalsync_catalog_table` / the composed `normalsync_add_table`. Four more cover RESYNC, for tables that already clone: `normalsync_resync_status` (what is pending, plus clone coverage), `normalsync_resync_all`, `normalsync_resync_table` and `normalsync_clear_table_resync`.
 
 From the CLI, the same operations are a shorthand group — everything runs against a named tenant profile:
@@ -463,12 +468,12 @@ The one trap: the endpoint-config save writes **either** the configuration JSON 
 
 **Install** — download the self-contained binary for your platform (no runtime needed) and put it on your `PATH`:
 
-- [Windows (win-x64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.25/win-x64/dlake.exe)
-- [Linux x64](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.25/linux-x64/dlake)
-- [Linux ARM64 (linux-arm64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.25/linux-arm64/dlake)
-- [macOS Apple Silicon (osx-arm64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.25/osx-arm64/dlake)
-- [macOS Intel (osx-x64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.25/osx-x64/dlake)
-- [SHA256 checksums](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.25/SHA256SUMS) · or `npm install -g @commercient/dlake`
+- [Windows (win-x64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.26/win-x64/dlake.exe)
+- [Linux x64](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.26/linux-x64/dlake)
+- [Linux ARM64 (linux-arm64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.26/linux-arm64/dlake)
+- [macOS Apple Silicon (osx-arm64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.26/osx-arm64/dlake)
+- [macOS Intel (osx-x64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.26/osx-x64/dlake)
+- [SHA256 checksums](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.26/SHA256SUMS) · or `npm install -g @commercient/dlake`
 
 **macOS — sign the binary once after downloading.** The Mac builds ship unsigned, so run `xattr -dr com.apple.quarantine ./dlake` then `codesign --force --sign - ./dlake` (then `chmod +x ./dlake`). On Apple Silicon this is required for reliability, not just for Gatekeeper: an unsigned binary is validated page-by-page as it runs and can abort **intermittently at startup** — `System.AccessViolationException ... at Thread+StartHelper.InitializeCulture()`, typically on rapid back-to-back invocations, where a retry succeeds. Ad-hoc signing removes it. (The `InitializeCulture` frame is misleading: `dlake` runs with invariant globalization on every platform, so there is no culture data involved.)
 
