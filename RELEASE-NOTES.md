@@ -1,5 +1,16 @@
 # dlake release notes
 
+## 0.5.28 (2026-08-29)
+
+- **Tool listings now tell you what your key can actually use.** The Help and
+  API guides, the CLI reference and the `dlake` agent skill no longer quote a
+  fixed number of admin or data-plane tools: what is available depends on the
+  key you are signed in with, so `dlake admin list` and `dlake tool list` are
+  the answer — run either one to see your own surface.
+- Both npm packages now link to the product overview from their README and
+  registry page.
+- Upgrade: `npm install -g @commercient/dlake` (or `npm install -g datalake`).
+
 ## 0.5.27 (2026-08-27)
 
 - **New agent skill: `dlake-crmpro-hubspot`.** The HubSpot specifics of a CRMPro
