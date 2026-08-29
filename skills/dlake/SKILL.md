@@ -28,10 +28,10 @@ exists). Follow the sequence and rules below and it goes smoothly.
 ```
 dlake login --domain <tenant>                 # auth with a dlk_ API key: env DLAKE_API_KEY | --api-key-stdin | no-echo prompt
 dlake status                                  # tenant + service health
-dlake admin list                              # 141 control-plane tools (DDL, keys, exposure, DAB, RLS, events, registration wizard)
+dlake admin list                              # every control-plane tool your key can use (DDL, keys, exposure, DAB, RLS, events, registration wizard)
 dlake admin <tool> --help                     # argument schema for one tool
 dlake admin <tool> [--arg value ...]          # invoke it (schema/keys/exposure/etc.)
-dlake tool  list                              # ~23 data-plane tools (records, query, aggregate, ingest, export)
+dlake tool  list                              # every data-plane tool your key can use (records, query, aggregate, ingest, export)
 dlake tool  <tool> [--arg value ...]          # invoke it (create_record, query, execute_entity, ...)
 dlake guide api | guide help | guide cli      # live API + platform docs, and the CLI reference
 ```
