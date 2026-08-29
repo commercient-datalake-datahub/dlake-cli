@@ -18,6 +18,10 @@ the Stripe and HubSpot CLIs. It authenticates with a tenant API key, manages
 profiles, and wraps the platform's REST and admin surfaces with a
 scripting-friendly UX.
 
+**Product overview:
+[datalake-ms-dab.commercient.com/datalake](https://datalake-ms-dab.commercient.com/datalake/)**
+— the product site, with the full feature tour and how to get started.
+
 > **Binary distribution.** This repository publishes the official `dlake`
 > binaries and release notes. The source code is not published here.
 
@@ -43,9 +47,9 @@ vector features require SQL Server 2022+ / 2025.)
   CSV/Parquet exports.
 - **Serve it** — a per-tenant Data API (REST + GraphQL) over exactly the
   entities you expose, plus **MCP connectors for AI agents** (a data plane and
-  an admin control plane with 126 tools), natural-language querying, row-change
-  events (SSE / polling / signed webhooks), time travel, and row-level
-  security.
+  a full admin control plane — `dlake admin list` prints every tool your key
+  can use), natural-language querying, row-change events (SSE / polling /
+  signed webhooks), time travel, and row-level security.
 - **Govern it** — role-based permissions, scoped API keys enforced down to
   entity and field level *in the database* (fail-closed), audit logs, and data
   quality rules with alerting.
@@ -257,6 +261,8 @@ array or object argument.
 
 ## Documentation
 
+- **Product overview** — what the platform does, in one page:
+  <https://datalake-ms-dab.commercient.com/datalake/>.
 - **API usage guide** — endpoints, auth, scopes, rate limits: see the Data Lake
   \ Data Hub API guide served from your tenant's Help page.
 - **AI-agent skills** — nine drop-in skills that teach a coding agent to drive
@@ -313,7 +319,9 @@ That is the fastest way to reach us for help with the CLI, the platform, API
 keys, connectors, or a Commercient SYNC integration. You can also open a GitHub
 issue here for CLI bugs and feature requests.
 
-Learn more about Commercient and the 150+ systems SYNC connects at
+Product overview for Data Lake / Data Hub:
+<https://datalake-ms-dab.commercient.com/datalake/>. Learn more about
+Commercient and the 150+ systems SYNC connects at
 [www.commercient.com](https://www.commercient.com).
 
 ## License
