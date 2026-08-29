@@ -374,7 +374,7 @@ Three things worth knowing before you change anything:
 - **Nothing takes effect until the next scheduled run.** CRMPro reads its configuration and flags at startup, so an edit lands on the next run — there is no "apply now".
 - **The master switch is customer-wide.** `crmpro_set_sync_enabled` moves every process in the tenant; to stop one object, change that process instead.
 
-Deeper operating guidance — the flag table, field mapping, cursors and the tables behind the tools — lives in the **`dlake-crmpro`** skill that ships with the CLI.
+Deeper operating guidance — the flag table, field mapping, cursors and the tables behind the tools — lives in the **`dlake-crmpro`** skill that ships with the CLI, and the HubSpot-specific values a process needs are in **`dlake-crmpro-hubspot`**.
 
 ## TxDownloaderPro (writeback sync)
 
