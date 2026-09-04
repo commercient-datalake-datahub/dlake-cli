@@ -4,7 +4,8 @@ description: >-
   Build a working CRMPro → HubSpot forward sync on a Commercient tenant: the exact
   `CRM_Configuration` row shape the HubSpot engine dispatches on (lower-case object names, operation
   type `'1'` with a `syspro_*` PK property, an unbound CRM), the DLO view contract (`RecordKey`,
-  `[TimeStamp]`, an `SFDCID` that is never NULL, the identity/change double-join, prefix = view name),
+  `[TimeStamp]`, an `SFDCID` that is never NULL, the identity/change double-join, prefix = view name,
+  the three view kinds and the `SavedTimeStamp` cursor rule that keeps a fresh install from freezing),
   the seed/upsert pair that gives CRM-owned and ERP-owned fields different lifetimes, the
   `CRM_FieldList` rows an object needs before it will push anything, and the checks to run when a
   sync completes having written no records. Use it when standing up or debugging a SYSPRO (or other
@@ -44,17 +45,17 @@ with the HubSpot object id in `SFDCID`. Those rows are both the identity map and
 
 | Column | Value | Why |
 |---|---|---|
-| `CRM_Object_API_Name` | `company`, `contact`, `deal`, `product`, `line_item` | Lower case, matched case-sensitively against the engine's object dictionary. A misspelling or wrong case is skipped silently. Spell it from this list rather than copying an existing row — a template may carry `comapny`. |
+| `CRM_Object_API_Name` | `company`, `contact`, `deal`, `product`, `line_item` | Lower case, matched case-sensitively against the engine's baked-in object dictionary. A misspelling or wrong case is skipped silently. Spell it from this list rather than copying an existing row — a template may carry `comapny`. |
 | `Sync_Operation_Type` | `'1'` | The upsert path, which matches on the PK property and handles new and existing records alike. |
 | `CRM_PK_API_Name` | the unique `syspro_*` property — `syspro_customer`, `syspro_stockcode`, `syspro_salesorder`, `syspro_order_line`, `syspro_invoice`; contacts use `email` | `crmpro_create_process` requires it; omitting it is the usual cause of an otherwise opaque `400`. |
 | `CRMName` and `APIAuthConfigID` | both NULL | The hosted HubSpot engine uses the default registered-CRM path. Leave the Connection Manager entry unbound and do not set `CRMName`. |
-| `SQL_Query` | `SELECT * FROM DLO.vw_NL_COMPANY` | DLO-qualified is correct. The view name must match the view's own case exactly. |
+| `SQL_Query` | `SELECT * FROM DLO.vw_COMPANY` | DLO-qualified is correct. The view name must match the view's own case exactly. |
 | `View_Name_For_Field_Creation` | the view name | Drives property creation while `Is_Create_Fields = 1`. |
 | `TimeStamp_Prefix` | the view name | The view joins `TimeStampRepository` on `'<viewname>::' + RecordKey`, so the prefix and the view name have to agree, case included. |
 | `Is_Create_Fields` | `1` | Creates the `syspro_*` properties on the first run. |
 | `IsAccountMatching` | `1` on company rows | The matching path for portals that already hold companies. |
 | `Sync_Batch_Size` | `'200'` | |
-| every nullable text column | `''` | `Prefix_OF_Field_OR_Object`, `Postfix_OF_Field_OR_Object`, `Developer_Comment`, `Document_Source_Path`, `File_Search_Pattern`, `File_Name_Separator`, `Delete_SQL_Query`, `Get_SOQL_Query` and the rest. Leave one NULL and the object is skipped without a recorded error. |
+| every nullable text column | `''` | `Prefix_OF_Field_OR_Object`, `Postfix_OF_Field_OR_Object`, `Developer_Comment`, `Document_Source_Path`, `File_Search_Pattern`, `File_Name_Separator`, `Delete_SQL_Query`, `Get_SOQL_Query` and the rest. A NULL throws `Object reference not set` inside the engine, which catches it — so the object is skipped without a recorded error. |
 
 ## 3. The view contract
 
@@ -75,26 +76,63 @@ SELECT v.*, ISNULL(idj.SFDCID, '') AS SFDCID
 FROM ( SELECT /* fields */, a.[TimeStamp] AS [TimeStamp]
        FROM dbo.SF_ERP_Salesforce_Clone_X a /* joins */ ) v
 LEFT JOIN dbo.TimeStampRepository idj
-       ON idj.[Key] = 'vw_NL_X::' + CAST(v.RecordKey AS varchar(200))
+       ON idj.[Key] = 'vw_X::' + CAST(v.RecordKey AS varchar(200))
 LEFT JOIN dbo.TimeStampRepository chg
-       ON chg.[Key] = 'vw_NL_X::' + CAST(v.RecordKey AS varchar(200))
-      AND v.[TimeStamp] = ISNULL(chg.SavedTimeStamp, v.[TimeStamp])
+       ON chg.[Key] = 'vw_X::' + CAST(v.RecordKey AS varchar(200))
+      AND chg.SavedTimeStamp = v.[TimeStamp]
 WHERE chg.[Key] IS NULL
 ```
 
-A **create-only** view — for seed processes and for contacts — drops the `chg` join and filters
-`WHERE idj.[Key] IS NULL` instead, so a record that has synced once never reappears.
+**The three view kinds.** Every source view is one of three. The `SELECT` list and the joins to the
+source stay the same; only the repository join and the `WHERE` clause change.
+
+| Kind | Repository joins | `WHERE` | Use for |
+|---|---|---|---|
+| **Insert-only** (create-once, seed) | `LEFT JOIN … idj` on the prefix key | `idj.[Key] IS NULL` | Seed processes carrying CRM-owned fields, contacts, and anything that must not overwrite the CRM after creation. A record that has synced once never reappears. |
+| **Update-only** | `INNER JOIN … idj` on the prefix key | `idj.SavedTimeStamp <> v.[TimeStamp] OR idj.SavedTimeStamp IS NULL` | A leg that may only touch records the sync already created, never create one. Emit `idj.SFDCID` — the inner join means it is never NULL, but wrap it in `ISNULL(…, '')` anyway. |
+| **Insert + update** (upsert) | `LEFT JOIN … idj` for the id, plus `LEFT JOIN … chg` on the key **and** `chg.SavedTimeStamp = v.[TimeStamp]` | `chg.[Key] IS NULL` | The everyday leg: rows that are new (no repository row) or changed (the cursor differs). |
+
+In all three kinds a NULL `SavedTimeStamp` means **changed**, never unchanged.
+
+**The upsert `chg` predicate is `chg.SavedTimeStamp = v.[TimeStamp]`, never
+`v.[TimeStamp] = ISNULL(chg.SavedTimeStamp, v.[TimeStamp])`.** The engine writes `SavedTimeStamp`
+only on the update path, and a record created through a create or seed path gets a repository row
+with a NULL cursor. The `ISNULL` form reads that NULL as "unchanged", so such a record can never
+qualify as changed, the update path never runs for it, and its cursor never populates — the records
+created first are frozen for good. The direct-equality form treats a NULL cursor as changed; after
+the first update pass the engine fills the cursors in and ordinary change detection takes over.
 
 **Value conventions.** Booleans as `1`/`0` rather than `'true'`/`'false'`. Dates as
 `CAST(col AS date)`. Currency normalised to an ISO code (`'$'` and `''` → `'USD'`). Resolve lookups
 inside the view — the terms description rather than the terms code. Send the owner as the HubSpot
 user's email in `hubspot_owner_id`, mapped from the ERP salesperson code through a mapping table such
-as `DLO.nl_owner_map`, joined `LEFT` so an unmapped row sends NULL and leaves the CRM's owner
-untouched.
+as `DLO.owner_map` (`syspro_salesperson`, `salsalesperson_name`, `hubspot_user_email`), joined
+`LEFT` so an unmapped row sends NULL and leaves the CRM's owner untouched.
+
+Three further rules the contract implies and a fresh build can miss:
+
+- **A seed or create view carries every property the CRM requires at creation.** A deal needs
+  `pipeline` and `dealstage` in the seed view — the internal ids, not the labels — or the record is
+  rejected. A company needs `name`; a contact needs `email`.
+- **`RecordKey` and `CRM_PK_API_Name` may differ, and that is correct.** The repository key is the
+  stable source identity — contacts key on `Customer`, one primary contact per account — while the PK
+  property is what the CRM matches on, which for contacts is `email`. Choose the repository key for
+  stability and the PK property for the destination's uniqueness rule.
+- **When a view joins N tables, emit the MAX rowversion across all of them as `[TimeStamp]`.** A
+  cursor that tracks only the base table cannot see a change in a joined one — an `InvPrice` price
+  change never resyncs a product whose view emits only `InvMaster`'s rowversion. The idiom, NULL-safe
+  for `LEFT`-joined tables:
+
+  ```sql
+  (SELECT MAX(ts) FROM (VALUES (a.[TimeStamp]), (b.[TimeStamp]), (c.[TimeStamp])) x(ts)) AS [TimeStamp]
+  ```
+
+  For aggregated children — a deal amount summed over `SorDetail` lines — include
+  `MAX(child.[TimeStamp])` from the aggregate in that `VALUES` list.
 
 **Associations** are columns carrying the parent's repository `SFDCID`, coalesced to `''`:
 `associate_company`, `associate_deal`, and `hs_product_id` for a line item's product. Join the prefix
-of the process that creates the parent — `'vw_NL_COMPANY_SEED::' + Customer` where a seed process
+of the process that creates the parent — `'vw_COMPANY_SEED::' + Customer` where a seed process
 creates companies. An INNER join on the parent's repository row also sequences the work: children
 appear in the view only once their parent has synced, so parents flow on one run and children on the
 next. That is expected.
@@ -104,10 +142,10 @@ next. That is expected.
 Where some fields belong to the CRM after first load — set once, never overwritten by the ERP — use
 two processes on the same object:
 
-1. **`vw_NL_COMPANY_SEED`** — create-only (`idj IS NULL`), lower `Sync_Order`, carrying the CRM-owned
-   fields (phone, address block, postcode, account email, customer-since) plus the key and name. Once
-   a record has a repository row it never reappears, so the CRM's copy stands.
-2. **`vw_NL_COMPANY`** — the upsert view, carrying only ERP-owned fields, matched on the PK property.
+1. **`vw_COMPANY_SEED`** — insert-only (`idj IS NULL`, the first kind in §3), lower `Sync_Order`,
+   carrying the CRM-owned fields (phone, address block, postcode, account email, customer-since) plus
+   the key and name. Once a record has a repository row it never reappears, so the CRM's copy stands.
+2. **`vw_COMPANY`** — the upsert view, carrying only ERP-owned fields, matched on the PK property.
    It runs whenever a row changes.
 
 Both are `Sync_Operation_Type '1'` with the same `CRM_PK_API_Name`, and each has its own
@@ -145,7 +183,9 @@ The log shows `Start … END : 0.00` per object and `Total Data Sync : 0`, with 
 tables. Check in this order; each of these produces exactly that result.
 
 1. **Does the view return rows?** `dlake tool query "SELECT COUNT(*) FROM DLO.vw_X"`. Zero rows means
-   the answer is in the view.
+   the answer is in the view — and where every repository row for that prefix carries a NULL
+   `SavedTimeStamp`, zero rows from an upsert view is the cursor rule in §3, not an absence of
+   changes.
 2. **Is `SFDCID` NULL?** It must be `ISNULL(…, '')`.
 3. **Is `CRM_Object_API_Name` lower case and spelled from the §2 list**, case-exact?
 4. **Does `CRM_FieldList` have rows** for that `Object_Name`?
@@ -168,10 +208,11 @@ resync does not change a zero-record push either — that gate is configuration,
 
 - **Custom objects need an Enterprise portal.** On Standard or Professional a `p_*` custom object —
   invoices, for instance — cannot exist. Build the process, leave it inactive, and note why.
-- **Deal pipelines are created in the HubSpot UI**, not by the sync. Once the customer has created
-  one, read the `dealstage` and `pipeline` enumeration options — the internal ids, not the labels —
-  and put those ids in the deal view's `CASE` expression before activating deals.
-- **A large product set lands across several runs** — around 140 per run at batch size 200 — so a
+- **Deal pipelines are created in the HubSpot UI**, not by the sync and not by the HubSpot MCP
+  connector. Once the customer has created one, read the `dealstage` and `pipeline` enumeration
+  options — the internal ids, not the labels — and put those ids in the deal view's `CASE`
+  expression before activating deals.
+- **A large product set lands across several runs**, so a
   partial count after one run is expected.
 - **Owners and pipelines sync on every run**, which is why `HUBSPOT_NEW_OWNER` and
   `HUBSPOT_NEW_PIPELINE` rows in `TimeStampRepository` are a quick confirmation that the connection
