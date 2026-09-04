@@ -12,6 +12,11 @@ description: >-
 
 # Driving the `dlake` CLI
 
+> **Keep this skill current.** `dlake` ships updates often and this text is embedded in the CLI
+> you have installed. Before relying on it, compare `dlake --version` with
+> `npm view @commercient/dlake version`; if they differ, run `npm install -g @commercient/dlake@latest`
+> and then `dlake skills install`, which overwrites the installed skill files with the current text.
+
 `dlake` is the terminal/CI client for a **Commercient Data Lake / Data Hub** tenant — a per-tenant
 Microsoft SQL Server database with a schema builder, an auto-generated **Data API (Microsoft Data
 API Builder / "DAB")** exposing REST + GraphQL, scoped API keys, row-level security, change events,
