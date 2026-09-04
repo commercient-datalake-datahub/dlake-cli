@@ -47,6 +47,17 @@ A skill is just a folder. Copy it into the directory your harness scans for skil
 | **OpenCode** | `.opencode/skill/<skill>/` |
 | **Other harnesses** | wherever the harness discovers skills — keep the `<skill>/SKILL.md` layout intact |
 
+The CLI installs and refreshes all of them in one step, and it is the copy that stays current:
+
+```bash
+npm install -g @commercient/dlake@latest   # the skills ship inside the CLI; updates are frequent
+dlake skills install                        # writes every skill where your agent looks, refreshing existing copies
+```
+
+Check `dlake --version` against `npm view @commercient/dlake version` before relying on a skill; a
+newer CLI means newer skill text. Copying from a clone works too, but a copied file does not
+refresh itself:
+
 ```bash
 # from a clone of this repo — install any or all
 cp -r skills/dlake                   ~/.claude/skills/   # operate an existing tenant
