@@ -420,9 +420,10 @@ full form when you want the schema, or `--command activate` instead of the boole
 - **ODBC customers still need Normal Sync configured.** The ODBC agent fills an intermediary
   database; Normal Sync is what moves it into the clone tables.
 
-- **`plumbsupply` is a live customer.** Never exercise a mutation against it to see what happens —
-  every write here changes a production data flow, and disabling a table is invisible from the CRM
-  side until someone notices missing records.
+- **Any tenant you can reach here may be a live customer.** Never exercise a mutation against one
+  to see what happens — every write here changes a production data flow, and disabling a table is
+  invisible from the CRM side until someone notices missing records. Experiment only on a tenant
+  designated for testing.
 
 ---
 
