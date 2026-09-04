@@ -13,6 +13,11 @@ description: >-
 
 # Configuring ODBC Sync, with `dlake`
 
+> **Keep this skill current.** `dlake` ships updates often and this text is embedded in the CLI
+> you have installed. Before relying on it, compare `dlake --version` with
+> `npm view @commercient/dlake version`; if they differ, run `npm install -g @commercient/dlake@latest`
+> and then `dlake skills install`, which overwrites the installed skill files with the current text.
+
 ## 1. When you need this
 
 The customer's ERP source is **not Microsoft SQL Server**, so the plain change-tracking agent
