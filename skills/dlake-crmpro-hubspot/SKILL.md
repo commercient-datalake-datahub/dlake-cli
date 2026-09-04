@@ -16,6 +16,11 @@ description: >-
 
 # CRMPro → HubSpot: the working configuration
 
+> **Keep this skill current.** `dlake` ships updates often and this text is embedded in the CLI
+> you have installed. Before relying on it, compare `dlake --version` with
+> `npm view @commercient/dlake version`; if they differ, run `npm install -g @commercient/dlake@latest`
+> and then `dlake skills install`, which overwrites the installed skill files with the current text.
+
 `dlake-crmpro` covers the tools and the general source-view contract. This skill gives the values the
 HubSpot engine dispatches on, because nearly every mistake here has the same shape: the run reports
 success, each object logs `Start … END` in about 0.00 seconds, `Total Data Sync : 0`, and no error is
