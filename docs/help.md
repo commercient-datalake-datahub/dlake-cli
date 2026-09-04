@@ -295,6 +295,74 @@ The Data Engine (DAB) is a per-tenant container serving REST + GraphQL over the 
 - **Relationships (for the GraphQL surface)**: declaring a relationship is what lets an *application developer* read a parent and its children in one nested GraphQL request, and filter by a related entity's column. It is a Data-API concern only — it creates no database foreign key and changes nothing for the SQL editor, the Data Browser, MCP or the CLI. See the API Usage Guide for the developer-facing detail.
 - **Atomic multi-row writes**: Data-API writes are **not** transactional — a multi-step write (header + lines + a status row) can half-succeed and leave orphans. When you need all-or-nothing, wrap the work in a **stored procedure** (`BEGIN TRAN` / `COMMIT` / `ROLLBACK`) and expose it as an entity; one call then either commits everything or leaves the database untouched. Procedure entities are exposed on `POST` only, since a write must not be reachable by a "safe" method.
 
+## Key Usage (who is calling your API)
+
+**Settings → DAB & API Keys → Key Usage.** One table answering the question the key list can't: *which* of your keys are actually being used, how hard, whether their calls are succeeding, where they're calling from, and whether the key doing the work is still valid.
+
+Pick a window — **last hour**, **last 24 hours** or **last 7 days** — and each key shows:
+
+- **Calls** — how many requests that key made in the window, and the same figure as a rate (`/min`) so the three windows are comparable at a glance.
+- **Outcome** — the same calls split into succeeded, rejected (`4xx`) and failed (`5xx`). A key that is mostly being rejected is usually a scope or permission problem, not a network one.
+- **Status** — **Active**, **Expired**, **Revoked** or **Deleted**, with the date that governs it (*expires 30 Sep*, *revoked 2 Aug*). Status sits next to the traffic on purpose: the two together are what tell you something is wrong.
+- **Caller IP** — the address the key was last used from, plus a count of any other addresses seen in the window. Read it as *where this credential is being used*: several addresses on a key you issued to one integration is worth a look.
+- **Last used** — when the key last obtained a token, whatever the metrics say.
+- **Attention** — named problems, described below.
+
+**Every key of the tenant is listed**, including the platform's own service keys (portal, sync workers) that no person owns — those normally carry most of the traffic, so a report that left them out would hide its own busiest caller. Soft-deleted keys appear too, marked *Deleted*, precisely so you can see if one is somehow still being called.
+
+**The Attention column** flags a key whose traffic and status disagree:
+
+- **Calls after revocation / deletion / expiry** — a key that should no longer work is still being used. Investigate: the caller has not been told to stop, or something is still accepting the credential.
+- **Expiring while in use** — a key doing real work expires within 30 days. This is the one that turns into an outage on a date nobody is watching; extend it (the key's **Extend** menu) or plan the rotation now.
+- **Mostly failing** — more than half of that key's calls are being refused.
+
+> **"n/a" is not zero.** Call counts come from the platform's metrics service. When a figure reads **n/a** the report could not reach that service — it is *not* a statement that the key was idle. An idle key shows a real **0**. Key names, statuses and last-used times come from your own lake and are unaffected either way. Likewise **"not recorded"** in the Caller IP column means no address has been captured for that key yet (nothing has used it since addresses started being recorded) — not that it was used without one.
+
+Reading the report is read-only and needs the same **API keys — view** permission as the key list itself. Nothing here reveals key material: only the short public prefix each key already shows.
+
+## Resource Usage (what your queries cost)
+
+**Settings → DAB & API Keys → Key Usage**, below the key table. Key Usage answers *how many calls*; this answers *what those calls cost on the database server*. Pick the same window — **last hour**, **last 24 hours** or **last 7 days**:
+
+- **Processor time** — CPU consumed by your database's work over the window. This is the honest measure of load: a hundred cheap lookups and one enormous report can produce the same call count and wildly different processor time.
+- **Requests completed** — database requests finished in the window. Higher than your API call count, normally: one API call can be several database requests.
+- **Avg per request** — the processor time the *average* request cost, in milliseconds. This is the figure to judge by, because the two totals above mean nothing apart: 18.7 minutes of processor time across 104,581 requests is 10.7 ms a request, which is a healthy database; the same 18.7 minutes across 400 requests is a query that needs looking at. It reads **n/a** when no request completed in the window — there is no average over nothing.
+- **Request rate** — completed requests per minute, averaged across the window. This is what makes the three windows comparable: a 7-day total dwarfs an hourly one while describing a quieter database.
+- **Running now** — requests executing at this instant. Not a window figure, and it does not change when you change the window. A number that stays high is worth a look; a number that spikes and clears is a database doing its job.
+- **Temporary workspace** — scratch space your queries are holding **right now** for sorts, spills and temporary tables. Large syncs and merges legitimately use a lot of it.
+- **Workspace peak** — the most scratch space held at once at any point in the window. The "right now" figure on its own hides the spike that mattered: a merge that took 4 GB and handed it back reads as almost nothing a minute later.
+- **Memory held** — how much of the database server's memory your database occupies **right now**. This is the pages of your tables and indexes the server is keeping in memory so it does not have to read them off disk again. A database that is used holds memory; that is the server working properly, not a problem.
+- **Memory peak** — the most memory your database held at once at any point in the window. The "right now" figure alone can miss it: a nightly sync that pulls a large table into memory is evicted by somebody else's work by morning and reads as almost nothing when you look.
+- **Memory over time** — the *average* memory your database held across the window, expressed in **gigabyte-hours**. Two gigabytes held for a whole day is 48 GB-hours. This is the figure the memory part of your usage is calculated from, and it is the average rather than the peak on purpose: holding 2 GB all day and spiking to 8 GB for ten minutes are very different costs to the server, and the average is what tells them apart.
+- **Stopped for workspace** — statements cancelled in the window for exceeding the temporary-workspace allowance on your database. This is **0** everywhere today, because no allowance is capped yet; it is on the panel so the number has somewhere to appear the moment one is. If it is ever non-zero the panel also raises a banner saying so.
+
+### What this costs
+
+Under the tiles, the panel shows **what this costs** as a single figure in **logical units (LU)**, worked out from three separate measurements of the same workload:
+
+| Term | How it is worked out |
+| --- | --- |
+| From requests | completed requests / 1,000 |
+| From processor time | CPU seconds / 10 |
+| From memory | gigabyte-hours x 5 |
+
+**We charge the highest of the three, never the sum.** The panel marks the one that is winning as **charged**, and the headline figure repeats it - *"set by memory"*, *"set by processor time"*, *"set by requests"*.
+
+That rule is there because these three describe *the same work* from three different sides, and adding them would charge you three times over for one workload. The one that is highest is the resource your work is actually constrained by - and it is the only one worth optimising. If your figure is set by memory, halving your query count will not move it.
+
+Memory is on this list because it is usually the scarce resource. A database server runs out of memory long before it runs out of processor: a busy shared server can sit at around a tenth of its processor capacity while its memory is full. A lake that keeps a large working set in memory and issues very few queries is inexpensive by both of the other measures while being a substantial and real cost to the server, and a bill that counted only requests and processor time would say so incorrectly.
+
+**Today the figure is marked partial.** The platform does not yet measure *engine hours* - how long your data container was awake, as opposed to how hard it worked - so that part is missing from the total and the panel says so beneath the figure. It is reported as missing rather than quietly left out.
+
+
+The figures are **your own database only** — never anybody else's, and never an aggregate you are a fraction of.
+
+Your **Dashboard** also carries a compact **Resource usage (24h)** card — processor time, requests completed and the average per request over the last 24 hours, with what is running right now and one **Usage** line naming the charged figure and the term that sets it on lines beneath, and a **Details** link back to this panel. The window selector, the temporary-workspace figures, the request rate and the full breakdown live on the panel.
+
+> **"n/a" is not zero.** There are two separate reasons a figure can read **n/a**, and neither means idle. The panel says which: *"temporarily unavailable"* means the metrics service could not be reached — try again. *"Per-database resource measurement is not enabled for this tenant yet"* means nothing is measuring your database — this feature needs SQL Server 2025, and your lake is on an earlier version. A lake that **is** measured but was quiet shows a real **0**. Both temporary-workspace figures can read **n/a** on their own while the rest are real: not every database server reports them, and the panel says so under those two tiles rather than showing **0 MB**, which would read as "your queries never spill". The memory figures work the same way and can read **n/a** on their own: not every database server collects them, and on a server where the collection is switched off or is costing too much to run the panel says so rather than showing **0 MB**.
+
+Reading this needs the **DAB — view** permission, the same one as the API call-volume card on your dashboard.
+
 ## Stored Procedures as MCP Tools
 
 Any stored procedure you have exposed can be published to AI agents as **its own named tool**, rather than being reachable only through the generic "execute a procedure" tool. An agent connected to your lake then sees the procedure by name in its tool list — `get_order_summary` alongside the standard read/write tools — and decides to call it from the description you write.
@@ -495,12 +563,12 @@ The one trap: the endpoint-config save writes **either** the configuration JSON 
 
 **Install** — download the self-contained binary for your platform (no runtime needed) and put it on your `PATH`:
 
-- [Windows (win-x64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.28/win-x64/dlake.exe)
-- [Linux x64](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.28/linux-x64/dlake)
-- [Linux ARM64 (linux-arm64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.28/linux-arm64/dlake)
-- [macOS Apple Silicon (osx-arm64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.28/osx-arm64/dlake)
-- [macOS Intel (osx-x64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.28/osx-x64/dlake)
-- [SHA256 checksums](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.28/SHA256SUMS) · or `npm install -g @commercient/dlake`
+- [Windows (win-x64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.29/win-x64/dlake.exe)
+- [Linux x64](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.29/linux-x64/dlake)
+- [Linux ARM64 (linux-arm64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.29/linux-arm64/dlake)
+- [macOS Apple Silicon (osx-arm64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.29/osx-arm64/dlake)
+- [macOS Intel (osx-x64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.29/osx-x64/dlake)
+- [SHA256 checksums](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.29/SHA256SUMS) · or `npm install -g @commercient/dlake`
 
 **macOS — sign the binary once after downloading.** The Mac builds ship unsigned, so run `xattr -dr com.apple.quarantine ./dlake` then `codesign --force --sign - ./dlake` (then `chmod +x ./dlake`). On Apple Silicon this is required for reliability, not just for Gatekeeper: an unsigned binary is validated page-by-page as it runs and can abort **intermittently at startup** — `System.AccessViolationException ... at Thread+StartHelper.InitializeCulture()`, typically on rapid back-to-back invocations, where a retry succeeds. Ad-hoc signing removes it. (The `InitializeCulture` frame is misleading: `dlake` runs with invariant globalization on every platform, so there is no culture data involved.)
 
