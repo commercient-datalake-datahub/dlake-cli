@@ -612,10 +612,11 @@ Then, for the detail those do not carry:
 If none of those moved, the question is whether the agent ran at all — a scheduling/host question,
 answered from the customer's sync server, not from here.
 
-**When a run records itself but no process moved, check §7b before the host.** A run that completes
-having left every process untouched points at process naming or the view shape, not at scheduling.
-And read `dlake crmpro errors --profile <tenant>` in either case: it reads the shared error surface,
-so it works whether or not the tenant has a `CRMPRO_ERROR_LOG` table of its own.
+**When a run records itself but no process moved, check §7b and §7d before the host.** A run that
+completes having left every process untouched points at process naming, the view shape, or a NULL the
+engine could not read — not at scheduling. And read `dlake crmpro errors --profile <tenant>` in
+either case: it reads the shared error surface, so it works whether or not the tenant has a
+`CRMPRO_ERROR_LOG` table of its own.
 
 ## 7b. The source-view contract — what a process's view must expose
 
@@ -640,7 +641,7 @@ LEFT JOIN dbo.TimeStampRepository idj
 -- change detection: the timestamp comparison belongs here
 LEFT JOIN dbo.TimeStampRepository chg
        ON chg.[Key] = 'vw_HUBSPOT_NEW_CUSTOMER::' + CAST(v.RecordKey AS varchar(200))
-      AND v.[TimeStamp] = ISNULL(chg.SavedTimeStamp, v.[TimeStamp])
+      AND chg.SavedTimeStamp = v.[TimeStamp]
 WHERE chg.[Key] IS NULL          -- only rows still needing a push
 ```
 
@@ -648,13 +649,38 @@ Keep them separate. A single join serving both purposes returns no id for the ro
 sync, and those records are created again instead of updated. A first sync gives no warning of this,
 because nothing exists in the CRM yet to update.
 
+**A NULL `SavedTimeStamp` means changed, never unchanged.** The engine writes `SavedTimeStamp` only
+on the update path, so a record created through a create or seed path gets a repository row with a
+NULL cursor. Written as `v.[TimeStamp] = ISNULL(chg.SavedTimeStamp, v.[TimeStamp])` the predicate
+collapses to a tautology for exactly those rows: the `chg` join always matches, `WHERE chg.[Key] IS
+NULL` excludes them, and they can never qualify as changed — so the update path never runs for them
+and their cursor never populates. The records created first are frozen for good. Write the predicate
+as `chg.SavedTimeStamp = v.[TimeStamp]` instead; after the first update pass the engine fills the
+cursors in and ordinary change detection takes over. Every fresh install is exposed to this, because
+on a fresh install every record enters through a create path.
+
+**Source views come in three kinds**, differing only in the repository join and the `WHERE` clause:
+**insert-only** (`LEFT JOIN` the repository, `WHERE repo.[Key] IS NULL` — a record that has synced
+once never reappears), **update-only** (`INNER JOIN` the repository,
+`WHERE repo.SavedTimeStamp <> v.[TimeStamp] OR repo.SavedTimeStamp IS NULL` — never creates), and
+**insert + update**, the double-join above. The NULL-cursor rule holds in all three.
+
+**When a view joins N source tables, emit the MAX rowversion across all of them.** A timestamp that
+tracks only the base table silently misses a change made in a joined one, so the upsert never fires:
+
+```sql
+(SELECT MAX(ts) FROM (VALUES (a.[TimeStamp]), (b.[TimeStamp]), (c.[TimeStamp])) x(ts)) AS [TimeStamp]
+```
+
+For an aggregated child, include `MAX(child.[TimeStamp])` from the aggregate in that `VALUES` list.
+
 **Key separators are positional.** The cursor key is `PREFIX::value` — a double colon after the
 prefix. Composite keys use a single colon between parts: `PREFIX::value1:value2`. With a single-colon
 prefix the already-synced check never matches, and every row is sent again on each run.
 
 **Name processes so the name contains `upsert`.** For `Sync_Operation_Type = 1` the process name
 selects the sync path: include `upsert` (add `batch` for the batch path). A purely descriptive name
-such as `Companies - ArCustomer` or `NL Contacts` selects no path, and the run leaves the process
+such as `Companies - ArCustomer` or `Contacts` selects no path, and the run leaves the process
 untouched. Put descriptive detail in `Developer_Comment`, which does not affect path selection.
 
 **Write `CRM_Object_API_Name` in lower case:** `company`, `contact`, `product`, `deal`, `line_item`.
@@ -703,6 +729,77 @@ custom objects are outside this path.
 re-asserts itself on each run and reports this for each group. Filter it by `errorKey` when reading
 `dlake crmpro errors` so it does not obscure records that genuinely failed.
 
+## 7d. The silent zero-record run — the engine's signature failure
+
+**A green run that syncs nothing writes no error anywhere.** The engine wraps each object's
+processing in a catch-all, so a misconfigured process logs `Start … END` in **0.00 seconds** in the
+run log (`SalesforceLog.txt` on the sync server), the summary reads `Total Data Sync : 0`, and the
+error tables stay empty. Every item below produces exactly that symptom. Check
+them in order.
+
+1. **Does the source view return rows?** `dlake tool query "SELECT COUNT(*) FROM <schema>.<view>"`.
+   Zero means the answer is in the view, not in the engine — and where the repository rows for that
+   prefix all carry a NULL `SavedTimeStamp`, it is the cursor rule in §7b.
+2. **A NULL in a column the engine reads.** Two independent killers. A **NULL text column on the
+   configuration row** — `Prefix_OF_Field_OR_Object`, `Postfix_OF_Field_OR_Object`,
+   `Developer_Comment`, `Document_Source_Path`, `File_Search_Pattern`, `File_Name_Separator`,
+   `Delete_SQL_Query`, `Get_SOQL_Query` and the rest — throws `Object reference not set` inside the
+   engine, which catches it. And a **NULL `SFDCID` in the view** stops the object outright. Template
+   inserts use `''` everywhere; a hand-built row must too, and the view must emit
+   `ISNULL(repo.SFDCID, '')`.
+3. **`CRM_Object_API_Name` fails dispatch.** It is matched **case-sensitively** against a baked-in
+   per-CRM dictionary, and a wrong name or wrong case is skipped in silence. Trust a working
+   install's value over the template catalogue — at least one shipped template carries a misspelled
+   object name.
+4. **`CRM_FieldList` has no rows for that `Object_Name`.** An object with an empty field map syncs
+   nothing, silently. Template imports populate the table; a hand-built process must populate it too,
+   one row per pushed view column, with `Object_Name` equal to the `CRM_Object_API_Name` value.
+5. **Case anywhere else**: `SQL_Query` against the actual view name, and `TimeStamp_Prefix` against
+   the literal the view's own `TimeStampRepository` join uses.
+
+Two signals worth reading while still at zero. If the run created the destination's custom fields,
+the engine is processing the row — field creation ran — so the fault is in the data step rather than
+in dispatch. And the recurring `Cannot insert duplicate key … IX_CommercientFlags` log line is
+benign; it is not the reason nothing synced.
+
+### What is engine-generic, and what to re-verify per CRM
+
+Generic, and safe to rely on for any destination module: the three view kinds and their `WHERE`
+shapes, a never-NULL `SFDCID`, the `SavedTimeStamp` cursor rules, the MAX rowversion across joined
+tables, `TimeStamp_Prefix` discipline, mandatory `CRM_FieldList` rows, `''` in every nullable
+configuration column, and NULL `CRMName`/`APIAuthConfigID` meaning registered-CRM dispatch.
+
+Verified on the HubSpot module only — **confirm these against a working install of the target CRM**
+before relying on them elsewhere: the `CRM_Object_API_Name` dispatch tokens; the `<prefix>::<key>`
+repository-key separator; the same-name view-column-to-CRM-field convention; what `Is_Create_Fields`
+does, and how it types and marks the fields it creates; association columns (`associate_*`, or
+lookup-id handling); the owner-resolution target, which for HubSpot is a user email where an
+id-keyed CRM will want a user id; value serialisation for booleans, dates and currency; and
+`IsAccountMatching` semantics. Per-CRM object models bite as well — Salesforce keeps pricing on
+`PricebookEntry` rather than `Product2`, an `OpportunityLineItem` needs a `PricebookEntryId`, stages
+are a record type plus a sales process rather than a pipeline, and a standard-field upsert key such
+as `Contact.Email` is not an external id.
+
+### Building a process by hand, when `crmpro_apply_template` answers an opaque 400
+
+- **Create minimal, then set the rest.** `crmpro_create_process` takes `recordType`,
+  `crmObjectApiName`, `selectedTable`, `customViewName`, `displayName` and `crmPkApiName`.
+  `crmPkApiName` is required — omitting it is one cause of the bare `[registration status 400]`, and
+  so, sometimes, are the optional arguments `syncOperationType`, `batchSize` and `connectionId`.
+- **`crmpro_update_process` does not persist `createViewQuery`, `isViewNeedsToCreate` or a CRM
+  rebind**, and still reports success. For those, expose `CRM_Configuration` and `CRM_FieldList` with
+  `set_entity_exposure`, `restart_dab` once, then write the rows with `dlake tool update_record`.
+- **`TR_CreateUpdateView` executes `CreateViewQuery` as a single batch** at the start of a run where
+  `IsViewNeedsToCreate` is set, then clears the flag. Use `CREATE VIEW` when the view is new and
+  `ALTER VIEW` when it already exists.
+- **`crmpro_set_sync_enabled` can need two calls on a fresh tenant.** The dlake tool is idempotent
+  — it reads the flag and fires the toggle only when the state differs from the request — but the
+  endpoint it wraps is a blind toggle. Where the `IS_CRMPRO_SYNC_ENABLED` flag row does not exist
+  yet, the first call toggles against a missing row, seeds it at `0` and reports `after: false`.
+  Re-read `crmpro_sync_status` and call again; two calls are normal only on a fresh tenant. Anything
+  driving the raw endpoint directly gets true toggle semantics.
+- **The CLI shorthand for `crmpro_update_process_field` takes `--value`, not `--checked`.**
+
 ## 8. Things that bite
 
 - **The `crmpro_*` tools are Admin-only.** The calling key must belong to a tenant user holding the
@@ -725,9 +822,10 @@ re-asserts itself on each run and reports this for each group. Filter it by `err
 - **`Is_Active_Delete_Records` needs a `Delete_SQL_Query` first**, and the guard only checks that the
   query is non-empty. A source table with no primary key yields a malformed delete the guard cannot
   catch — read the query yourself before enabling the flag.
-- **The master sync toggle is customer-wide.** `crmpro_set_sync_enabled` is idempotent and reports the
-  state before and after, but it moves the whole customer. One object belongs in
-  `crmpro_update_process_field`.
+- **The master sync toggle is customer-wide.** `crmpro_set_sync_enabled` is idempotent once the flag
+  row exists, and reports the state before and after, but it moves the whole customer. One object
+  belongs in `crmpro_update_process_field`. On a fresh tenant, where the flag row does not exist yet,
+  the first call seeds it at `0` and two calls are normal — see §7d.
 - **DynamicCRM answers `crm_not_supported`.** Salesforce, HubSpot and ZohoCRM are the live providers,
   each refreshing its own tokens. That refusal is the platform being clear, not a tenant fault.
 - **`TimeStamp_Prefix` is the cursor namespace.** `TimeStampRepository.Key` is built as
@@ -777,7 +875,7 @@ re-asserts itself on each run and reports this for each group. Filter it by `err
 |---|---|
 | `dlake-integration-setup` | Standing an integration up: registration, verification, seeding, then the wizard — CRM choice and the ERP connector |
 | **`dlake-crmpro`** (this) | Operating the **forward** leg: the `crmpro_*` tools, and the setup and transaction tables behind them — processes, sync control, field mapping, diagnostics |
-| `dlake-crmpro-hubspot` | The HubSpot values for that leg: the configuration a HubSpot process needs, the view contract for it, the seed/upsert pair, `CRM_FieldList`, and what to check when a run pushes nothing. Read it before building a HubSpot process |
+| `dlake-crmpro-hubspot` | The HubSpot values for that leg: the object-name tokens the engine dispatches on, the configuration a HubSpot process needs, the DLO view contract for it, the seed/upsert pair, `CRM_FieldList`, the portal limits that shape the design, and what to check when a run pushes nothing. Read it before building a HubSpot process |
 | `dlake-txdownloaderpro` | The **writeback** leg: exposing the TxDownloaderPro objects and scoping a key to them |
 | `dlake` | Operating a tenant generally — schema, queries, exports, keys, the REST/GraphQL contract |
 
