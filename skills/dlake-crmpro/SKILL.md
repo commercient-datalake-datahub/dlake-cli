@@ -18,6 +18,11 @@ description: >-
 
 # Operating CRMPro with `dlake`
 
+> **Keep this skill current.** `dlake` ships updates often and this text is embedded in the CLI
+> you have installed. Before relying on it, compare `dlake --version` with
+> `npm view @commercient/dlake version`; if they differ, run `npm install -g @commercient/dlake@latest`
+> and then `dlake skills install`, which overwrites the installed skill files with the current text.
+
 **CRMPro** is Commercient's **forward** sync engine. It reads a customer's ERP data out of their
 gateway database and pushes it into the CRM or e-commerce platform, covering the whole lifecycle:
 schema creation in the destination, incremental change detection by timestamp, transformation,
