@@ -1,5 +1,15 @@
 # dlake release notes
 
+## 0.5.29 (2026-09-04)
+
+- **CRMPro agent skills: corrected change-detection guidance.** The `dlake-crmpro` and
+  `dlake-crmpro-hubspot` skills now state the source-view change-detection rule correctly: a
+  record with no saved cursor counts as changed. A view written to the previous example could
+  leave records created on the first run permanently un-updated. The HubSpot skill also
+  documents the three source-view kinds, the properties a record needs at creation, and the
+  rowversion pattern for views that join several tables.
+- Upgrade: `npm install -g @commercient/dlake` (or `npm install -g datalake`).
+
 ## 0.5.28 (2026-08-29)
 
 - **Tool listings now tell you what your key can actually use.** The Help and
