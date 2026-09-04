@@ -112,7 +112,9 @@ the first update pass the engine fills the cursors in and ordinary change detect
 inside the view — the terms description rather than the terms code. Send the owner as the HubSpot
 user's email in `hubspot_owner_id`, mapped from the ERP salesperson code through a mapping table such
 as `DLO.owner_map` (`syspro_salesperson`, `salsalesperson_name`, `hubspot_user_email`), joined
-`LEFT` so an unmapped row sends NULL and leaves the CRM's owner untouched.
+`LEFT` so an unmapped row sends NULL and leaves the CRM's owner untouched. Non-ASCII text in a view
+literal is safe as an `N'…'` literal — an em dash in a deal name survives `create_view` and the push
+unchanged.
 
 Three further rules the contract implies and a fresh build can miss:
 
@@ -159,10 +161,15 @@ Both are `Sync_Operation_Type '1'` with the same `CRM_PK_API_Name`, and each has
 ## 5. `CRM_FieldList` is required
 
 One row per pushed column, where `Object_Name` is the `CRM_Object_API_Name` value (`company`, not a
-display name), and `View_Field_Name` and `CRM_API_Name` are the view's column name. **An object with
-no `CRM_FieldList` rows pushes nothing and records no error.** Template imports populate this table;
+display name), and `View_Field_Name` and `CRM_API_Name` are the view's column name. Association
+columns (`associate_company`, `associate_deal`, `hs_product_id`) need rows like any other pushed
+column. **An object with no `CRM_FieldList` rows pushes nothing and records no error.** Template imports populate this table;
 a hand-built process needs it populated too — `dlake tool create_record --entity CRM_FieldList` once
 the entity is exposed, or through the portal.
+
+Where a seed and an upsert process share an object (§4), they share the one `Object_Name`-keyed list:
+it holds the union of both views' columns, and a listed field that a view does not output is simply
+not posted by that process.
 
 ## 6. Building a process by hand
 
