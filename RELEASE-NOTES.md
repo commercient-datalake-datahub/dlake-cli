@@ -1,5 +1,16 @@
 # dlake release notes
 
+## 0.5.30 (2026-09-04)
+
+- **`dlake skills install` now refreshes existing skill files.** Installing over an earlier copy
+  updates it in place and reports each file as created, updated or unchanged. The previous
+  behaviour, leaving existing files alone, is available with `--skip-existing`; `--force` is still
+  accepted and has no effect.
+- **Every agent skill now tells the agent to check for a newer dlake first.** Updates are frequent
+  and the skill text ships inside the CLI, so each skill opens with the two commands that confirm
+  you are on the latest version and refresh the installed copies.
+- Upgrade: `npm install -g @commercient/dlake` (or `npm install -g datalake`).
+
 ## 0.5.29 (2026-09-04)
 
 - **CRMPro agent skills: corrected change-detection guidance.** The `dlake-crmpro` and
