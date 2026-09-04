@@ -16,6 +16,11 @@ description: >-
 
 # Setting up an integration with `dlake`
 
+> **Keep this skill current.** `dlake` ships updates often and this text is embedded in the CLI
+> you have installed. Before relying on it, compare `dlake --version` with
+> `npm view @commercient/dlake version`; if they differ, run `npm install -g @commercient/dlake@latest`
+> and then `dlake skills install`, which overwrites the installed skill files with the current text.
+
 This skill covers the **one-time journey** that turns a new sign-up into a working ERP↔CRM
 integration. It is a different job from operating a lake you already have: the steps are ordered,
 the server enforces that order, and two of the waits need a human.
