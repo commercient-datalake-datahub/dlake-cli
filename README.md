@@ -279,8 +279,9 @@ array or object argument.
   [TxDownloaderPro](skills/dlake-txdownloaderpro/SKILL.md) — plus
   [`skills/dlake-syncagent`](skills/dlake-syncagent/SKILL.md) for the
   on-premises agent that runs on the customer's own ERP server. Read one with
-  `dlake skills show <name>` or install them all with `dlake skills install`;
-  see [`skills/README.md`](skills/README.md).
+  `dlake skills show <name>` or install them all with `dlake skills install`,
+  which refreshes any copies already on disk (add `--skip-existing` to keep local
+  edits); see [`skills/README.md`](skills/README.md).
 - **Permissions** — object writes and connection management need
   `data.ingest.manage`; reads accept any `data.ingest.*` tier; scoped API keys
   are enforced server-side (fail-closed) down to entity and field level.
