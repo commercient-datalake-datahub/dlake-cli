@@ -20,6 +20,11 @@ description: >-
 
 # Setting up TxDownloaderPro writeback with `dlake`
 
+> **Keep this skill current.** `dlake` ships updates often and this text is embedded in the CLI
+> you have installed. Before relying on it, compare `dlake --version` with
+> `npm view @commercient/dlake version`; if they differ, run `npm install -g @commercient/dlake@latest`
+> and then `dlake skills install`, which overwrites the installed skill files with the current text.
+
 A Commercient integration has two legs. The **inbound** leg pulls the customer's ERP data into
 the Data Lake. **TxDownloaderPro** is the **writeback** leg going the other way: it picks up
 records a user flagged in the CRM, carries them back toward the source/ERP system, and reports
