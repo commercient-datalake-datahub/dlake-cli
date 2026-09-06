@@ -1,5 +1,13 @@
 # dlake release notes
 
+## 0.5.31 (2026-09-06)
+
+- **Fix: the CLI no longer follows HTTP redirects and never sends credentials to a host other
+  than the configured API host.** A redirect is reported as what it is — something answering in
+  place of the API — instead of being followed, and every request that carries your API key or
+  token is checked against the endpoints your profile is configured with before it is sent.
+- Upgrade: `npm install -g @commercient/dlake` (or `npm install -g datalake`).
+
 ## 0.5.30 (2026-09-04)
 
 - **`dlake skills install` now refreshes existing skill files.** Installing over an earlier copy
