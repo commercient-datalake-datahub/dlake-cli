@@ -1,5 +1,17 @@
 # dlake release notes
 
+## 0.5.32 (2026-09-07)
+
+- **New: `dlake register erps` lists the instance types sign-up accepts.** It needs no account and
+  no key, so you can run it before you register, and it prints the display name alongside the
+  machine code.
+- **`register start --instance-type` now takes either the code or the display name**, in any
+  casing, and sends the code. A value that is not in the catalog is refused before the account is
+  created, instead of failing at the server, so a typo can no longer register you against the
+  wrong ERP. Omitting the flag is unchanged — that remains the right choice for a standalone
+  Data Lake.
+- Upgrade: `npm install -g @commercient/dlake` (or `npm install -g datalake`).
+
 ## 0.5.31 (2026-09-06)
 
 - **Fix: the CLI no longer follows HTTP redirects and never sends credentials to a host other
