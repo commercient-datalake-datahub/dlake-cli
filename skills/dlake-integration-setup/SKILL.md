@@ -66,6 +66,12 @@ type follows from it — never guess:
 If the customer does not know their ERP yet, treat it as case 2 for now; the ERP can still be
 declared at step 5 via `--erpName` on the connector step.
 
+**Do not guess the instance type.** `dlake register erps` lists the accepted values as a name/code
+table — it is anonymous, so run it before registering — and `--instance-type` takes either column,
+case-insensitively. `register start` resolves what you pass to the machine code before it posts, and
+a value that is not in that catalog is refused (server code `erp_unknown`) rather than registering
+the customer against the wrong ERP.
+
 **Keep the password.** `--generate-password` mints a conforming password and prints it **once**; it is
 stored nowhere. `dlake register login` needs that exact string to resume from another machine or after
 the local token expires, and the customer needs it to log into the portal — so capture it from the
