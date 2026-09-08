@@ -563,12 +563,12 @@ The one trap: the endpoint-config save writes **either** the configuration JSON 
 
 **Install** — download the self-contained binary for your platform (no runtime needed) and put it on your `PATH`:
 
-- [Windows (win-x64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.32/win-x64/dlake.exe)
-- [Linux x64](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.32/linux-x64/dlake)
-- [Linux ARM64 (linux-arm64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.32/linux-arm64/dlake)
-- [macOS Apple Silicon (osx-arm64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.32/osx-arm64/dlake)
-- [macOS Intel (osx-x64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.32/osx-x64/dlake)
-- [SHA256 checksums](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.32/SHA256SUMS) · or `npm install -g @commercient/dlake`
+- [Windows (win-x64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.33/win-x64/dlake.exe)
+- [Linux x64](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.33/linux-x64/dlake)
+- [Linux ARM64 (linux-arm64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.33/linux-arm64/dlake)
+- [macOS Apple Silicon (osx-arm64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.33/osx-arm64/dlake)
+- [macOS Intel (osx-x64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.33/osx-x64/dlake)
+- [SHA256 checksums](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.33/SHA256SUMS) · or `npm install -g @commercient/dlake`
 
 **macOS — sign the binary once after downloading.** The Mac builds ship unsigned, so run `xattr -dr com.apple.quarantine ./dlake` then `codesign --force --sign - ./dlake` (then `chmod +x ./dlake`). On Apple Silicon this is required for reliability, not just for Gatekeeper: an unsigned binary is validated page-by-page as it runs and can abort **intermittently at startup** — `System.AccessViolationException ... at Thread+StartHelper.InitializeCulture()`, typically on rapid back-to-back invocations, where a retry succeeds. Ad-hoc signing removes it. (The `InitializeCulture` frame is misleading: `dlake` runs with invariant globalization on every platform, so there is no culture data involved.)
 
@@ -592,6 +592,14 @@ dlake normalsync selected                         # the ERP tables Normal Sync c
 ```
 
 **Passing argument values.** `dlake admin <tool>` / `dlake tool <tool>` map `--arg value` onto each tool's JSON schema. Booleans take `true/false/1/0/yes/no`; an arg whose type is an **array or object** takes **JSON** — `--columns '[{"name":"Id","type":"INT","identity":true,"primaryKey":true}]'` — or, better, **`@file.json`** to read the value from a file: `--columns @columns.json`. `@file` works for **any** argument (and is the reliable form on Windows, where the shell mangles quoted JSON); `@@` passes a literal leading `@`. Simple lists still accept the comma form (`--columns sku,region`, `--ids 1,2,3`). `dlake admin <tool> --help` prints the schema and repeats these conventions.
+
+**Keeping an eye on it — `dlake watch`.** `dlake watch` polls the surfaces your Data Lake depends on (both APIs, the Data API plane, the sign-up catalog, the published CLI downloads and — with `--profile` — your own tenant's web app, its three planes and a live `SELECT 1`) and alerts you the moment one of them *changes state*, rather than every cycle. An alert is a timestamped console line plus a desktop notification and the terminal bell, and optionally a small JSON document posted to `--webhook` (flat, with a ready-made `text` field, so it reads correctly in Slack or Teams) and appended to `--log`. A single failed probe is absorbed; two in a row declare a check down, and one success declares it back. `dlake watch --once` runs a single cycle and exits 0 if everything passed and 1 if anything did not, which is all a cron entry or a scheduled task needs. Nothing is stored and there is no config file.
+
+```bash
+dlake watch                                     # live table, refreshed every 60s
+dlake watch --profile acme --webhook https://hooks.example.com/xyz
+dlake watch --once --quiet                      # for a scheduler: exit 0 = all healthy
+```
 
 Multiple tenants = multiple **profiles** (`--profile`), like the Stripe CLI's projects. Everything supports `--json` for scripting. The `dlake admin <tool>` passthrough exposes the full Admin Control Plane above — the same tools your key can use (`dlake admin list` prints them), same permission rules (full-scope admin key), with `--help` generated from each tool's schema. First-class `dlake s3 …` commands add the object-storage outlet (connections, browse, streaming put/get, and table-to-S3 export).
 
