@@ -1,5 +1,27 @@
 # dlake release notes
 
+## 0.5.33 (2026-09-08)
+
+- **New: `dlake watch` — a live monitor that tells you when something breaks.** It polls the
+  surfaces your Data Lake depends on (both APIs, the Data API plane, the sign-up catalog and the
+  published CLI downloads, plus — when you name a tenant — your Data Lake's web app, its three
+  planes and a live `SELECT 1`) and prints a status table each cycle with state, latency and the
+  reason for any failure.
+- **Alerts fire on changes, not on every cycle.** When a check goes from healthy to failing, or
+  recovers, `watch` prints a timestamped line, raises a desktop notification (Windows, macOS or
+  Linux) and rings the terminal bell. A single failed probe is absorbed; two in a row declare a
+  check down, and one success declares it back. A check that has been down for an hour does not
+  keep alerting.
+- **`--webhook` and `--log` for unattended use.** Each transition can be posted as a small flat
+  JSON document — with a ready-made `text` field, so it reads correctly in Slack or Teams — and
+  appended to a file, one JSON object per line.
+- **`--once` for schedulers.** One cycle, then exit 0 if everything passed and 1 if anything did
+  not, so cron or Task Scheduler can act on the result. `--json` prints one document per cycle,
+  `--quiet` prints only transitions.
+- Every default check is anonymous and read-only; the authenticated `SELECT 1` runs only when you
+  pass `--profile`. Nothing is stored and there is no config file.
+- Upgrade: `npm install -g @commercient/dlake` (or `npm install -g datalake`).
+
 ## 0.5.32 (2026-09-07)
 
 - **New: `dlake register erps` lists the instance types sign-up accepts.** It needs no account and
