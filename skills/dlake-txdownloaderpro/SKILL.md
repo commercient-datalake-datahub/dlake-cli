@@ -889,6 +889,55 @@ a key can only ever drive its own tenant.
 | `txdownloaderpro_destination_systems` | The shared destination-system catalogue | — |
 | `txdownloaderpro_destination_actions` | The actions on one destination point | `destinationPoint` |
 | `txdownloaderpro_destination_schema` | The bound action's API config + simplified schema | `processId` |
+| `txdownloaderpro_error_log` | The errors panel UNPAGED: one row per failing business key, 30 days. Capped | `processId`, `filterType` |
+| `txdownloaderpro_error_log_page` | The same panel, paged and searched in the DATABASE | `processId`, `filterType`, `pattern`, `start`, `length` |
+| `txdownloaderpro_transaction_log` | The attempt grid: date window, status filter, free text. Payload columns omitted | `processId`, `since`, `until`, `statusFilter`, `pattern`, `start`, `length` |
+| `txdownloaderpro_transaction` | ONE attempt with its payloads — the only read that returns them | `recordId` |
+
+### Reading the transaction log without drowning in it
+
+The four log reads above answer the questions the setup tools cannot. Two things decide which one
+you want.
+
+**Keys versus attempts.** The grid lists ATTEMPTS; the errors panel lists KEYS. One order retried
+seventeen times is seventeen grid rows and ONE errors row. So "how many orders are broken" is
+`txdownloaderpro_error_log*`, and "what happened to this order" is
+`txdownloaderpro_transaction_log`. The errors panel also carries the attempts that later
+**succeeded** for the same key — a key listed there is not necessarily still failing.
+
+**Bounds.** A busy process makes tens of thousands of rows and each carries request/response
+payloads, so nothing here is unbounded:
+
+- pages default to 25 rows and are clamped to 200; the result is additionally capped at 64 KB;
+- the unpaged `txdownloaderpro_error_log` is capped the same way and sets `truncated` — on a
+  process with many failures use `txdownloaderpro_error_log_page` instead, which filters in the
+  DATABASE rather than clipping afterwards;
+- `txdownloaderpro_transaction` clips each payload column to 8 KB and reports its real size, so a
+  megabyte-sized ERP response cannot arrive unannounced;
+- every result carries `truncated` with the totals. **Read it before concluding anything.**
+
+Narrow with `since`/`until`, `statusFilter` and `pattern` — all three are applied by the database —
+rather than paging through everything. An unparseable date means "no bound on that side", so a
+malformed `since` silently WIDENS the window instead of failing.
+
+```bash
+# Which keys are failing, and did any of them get through later?
+dlake txdownloaderpro errors 7 --profile <tenant>
+dlake txdownloaderpro errors 7 --profile <tenant> --filter 2 --grep SO-1042
+
+# What happened to this order, in the window it should have moved in?
+dlake txdownloaderpro transactions 7 --profile <tenant> \
+    --status Failed --since 2026-09-01 --until 2026-09-30
+
+# What did we actually send, and what did the ERP say back?
+dlake txdownloaderpro transaction 241 --profile <tenant>
+
+# Everything matching, to a file — one JSON object per line, nothing printed
+dlake txdownloaderpro transactions 7 --profile <tenant> --status Failed --out failures.jsonl
+```
+
+`statusFilter` is one of `Hold`, `Awaiting`, `Ready`, `Created`, `Success`, `Failed` or `All`; it
+is the calculated status described in §10, not a stored column.
 
 ### Mutations — these change what the next run does
 
