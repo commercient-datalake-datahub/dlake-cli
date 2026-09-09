@@ -3,12 +3,14 @@ name: dlake-syncagent
 description: >-
   Install and configure the **Commercient Sync Agent** — the on-premises Windows agent that runs on
   the customer's own ERP server — using `CommercientSyncAgentCLI.exe`, the command-line counterpart to
-  the desktop application (command availability varies by agent build; check `--help` on the machine). Covers signing in, listing the account's licensed products, installing one,
-  configuring it per product type (NormalSync, ODBC/FastODBC, TxDownloaderPro, IOTSync, QuickBooks),
-  testing the connection, and reading the agent's own health. Use it when the task is "the customer
-  downloaded the agent, now what", "install NormalSync on their server", "the agent isn't running",
-  or "configure this unattended". This is the ON-PREMISES half of a setup: the `dlake` skills
-  configure the platform side, this one configures the machine that talks to the ERP.
+  the desktop application. Covers signing in, listing the account's licensed products, installing
+  one, configuring it per product type (NormalSync, ODBC/FastODBC, TxDownloaderPro, IOTSync,
+  QuickBooks), reading a saved configuration back, testing the connection, and reading the agent's
+  own health. Also covers the PLATFORM side of the same decision — `dlake registration products`,
+  which says which products that agent should run. Use it when the task is "the customer downloaded
+  the agent, now what", "install NormalSync on their server", "the agent isn't running", or
+  "configure this unattended". This is the ON-PREMISES half of a setup: the `dlake` skills configure
+  the platform side, this one configures the machine that talks to the ERP.
 ---
 
 # Installing and configuring the Commercient Sync Agent
@@ -80,7 +82,7 @@ CommercientSyncAgentCLI.exe -u you@company.com login
 
 ## 4. The sequence
 
-Products go through the same four steps in this order. Do not skip `test` — it is the only step that
+Products go through the same steps in this order. Do not skip `test` — it is the only step that
 proves the configuration is usable before a sync depends on it.
 
 ```
@@ -94,24 +96,25 @@ products    →  install    →  configure   →  test  →  run-test
 CommercientSyncAgentCLI.exe -u you@company.com -p "$PW" products
 CommercientSyncAgentCLI.exe -u you@company.com -p "$PW" install   --product NormalSync
 CommercientSyncAgentCLI.exe -u you@company.com -p "$PW" configure --product NormalSync
+CommercientSyncAgentCLI.exe -u you@company.com -p "$PW" config    --product NormalSync
 CommercientSyncAgentCLI.exe -u you@company.com -p "$PW" test      --product NormalSync
 CommercientSyncAgentCLI.exe -u you@company.com -p "$PW" run-test  --product NormalSync
 ```
 
-> **Check what your agent build accepts before scripting against it.** The commands and flags in this
-> skill — the verbs above and `-p` — are supported by some agent builds and not others; newer builds
-> may prompt for the password and present the products as a numbered menu instead. Try a command as
-> written: if the build reports an unknown argument, or asks for the password rather than taking
-> `-p`, drive that machine interactively and use this skill as the map of what each step does rather
-> than as a script. `CommercientSyncAgentCLI.exe --help` on the machine in front of you is the
-> authority on which form it takes.
+`config` (singular) READS a product's saved configuration back and never modifies it; passwords and
+secrets are not printed. `configure` is the one that writes. Reach for `config` first on a machine
+someone else set up — it answers "what is this pointed at" without risking a change.
 
 Use the product name **exactly as `products` prints it** — that listing is the authority, and it also
 tells you what is already installed, so it is the right first call on an unfamiliar machine.
 
-`test` opens and closes a connection using the saved configuration. `run-test` actually runs a sync.
+`test` opens and closes a connection using the saved configuration. `run-test` triggers the
+product's real scheduled sync task and monitors it to completion, reporting per-table progress.
 `test` failing is a configuration problem; `test` passing and `run-test` failing is a data or
 permissions problem at the source.
+
+`CommercientSyncAgentCLI.exe --help`, and `<command> --help` for any one command, is the authority
+on the machine in front of you. Check it before scripting against a build you have not used.
 
 ## 5. Configuring, per product type
 
@@ -149,9 +152,10 @@ one with a repeated flag:
 
 `--ignore-modals` · `--app-path` · `--process-name` · `--qb-username` · `--modals-to-close`
 
-Not every product supports every command. Configuration works for all of them; the rest varies:
+Not every product supports every command. `configure` and `config` work for all of the types below;
+the rest varies:
 
-| Product type | `configure` | `test` | `run-test` | `docs` | `cleanup` |
+| Product type | `configure` / `config` | `test` | `run-test` | `docs` | `cleanup` |
 |---|:---:|:---:|:---:|:---:|:---:|
 | NormalSync family | ✅ | ✅ | ✅ | ✅ | ✅ |
 | ODBC, FastODBC | ✅ | ✅ | — | ✅ | — |
@@ -159,6 +163,8 @@ Not every product supports every command. Configuration works for all of them; t
 | IOTSync | ✅ | — | — | — | — |
 | ODBCQuickBookConfigure | ✅ | — | — | — | — |
 | QuickBooksSyncAgent | ✅ | — | — | — | — |
+
+A command a product does not support fails with a message saying so, not silently.
 
 ## 6. Checking health
 
@@ -168,8 +174,21 @@ CommercientSyncAgentCLI.exe -u you@company.com -p "$PW" status
 
 `status` is the one call worth scripting on a schedule. It reports the account, every product and
 whether it is installed, **and the state of the agent's own scheduled tasks** — the auto-update task
-and the optional Commercient Receiver. A product that is installed and configured still will not sync
-if its task was never created or has been removed, and `status` is where that shows.
+and the Commercient Receiver. A product that is installed and configured still will not sync if its
+task was never created or has been removed, and `status` is where that shows.
+
+**`Commercient Receiver: Not Created` is a diagnostic, not a detail.** The Receiver
+(`CommercientReceiver.exe`, run by a scheduled task named `Commercient Receiver Task - <ApplicationName>`)
+is a **WebSocket CLIENT**: it stays connected to the Commercient service and starts a product's sync
+when a run command arrives from that side. With it created, a sync can be triggered **on demand**
+instead of waiting for the product's own scheduled task. With it `Not Created`, on-demand runs cannot
+reach that server at all and the product runs only on its schedule — so "I asked for a run and
+nothing happened" is answered here first.
+
+The task can only be created once `CommercientReceiver.exe` is present under the install path's
+`CommercientReceiver` folder; the agent's updater is what puts it there. A `Not Created` on a machine
+that has never updated is therefore expected, and the fix is to let the updater run rather than to
+create a task by hand.
 
 One thing neither `status` nor a clean `run-test` can tell you: **whether rows actually moved**. Normal
 Sync runs incrementally against change tracking, so a run over an unchanged source — or one whose
@@ -180,9 +199,8 @@ this skill deliberately does not restate those semantics).
 
 ## 7. Exit codes — check these, don't parse output
 
-On builds that take the commands above, every one sets a meaningful exit code, and automation should
-branch on the code rather than the text. Where a build presents the interactive menu instead, read the
-codes below as the meaning of each outcome rather than as something to script against.
+Every command sets a meaningful exit code. Automation should branch on the code rather than on the
+text, which is written for a person.
 
 | Code | Meaning | Usually means |
 |---|---|---|
@@ -207,26 +225,77 @@ Useful when something looks wrong and you need to see actual state rather than w
 
 | Where | What |
 |---|---|
-| `HKLM\SOFTWARE\CommercientSyncAgent\` | The agent's configuration and installed-product paths. Values are Base64-encoded, so they are unreadable at a glance but **not secret** — treat anything here as readable by any administrator on the box. |
-| Windows Task Scheduler | The maintenance auto-update task, one sync task per installed product, and optionally a Receiver task. |
-| `C:\ProgramData\Commercient\` | Where `uninstall` backs a product up before removing it, and where the updater stages downloads. |
+| `HKLM\SOFTWARE\CommercientSyncAgent\` | The agent's install path and per-product configuration, shared with the desktop app and the updater. Values are Base64-encoded, so they are unreadable at a glance but **not secret** — treat anything here as readable by any administrator on the box. |
+| Windows Task Scheduler | `Commercient Update Task` (the auto-updater), one sync task per installed product, and `Commercient Receiver Task - <ApplicationName>` (the WebSocket client that accepts on-demand run commands). |
 
-**The agent updates itself.** A maintenance task runs every four hours as SYSTEM and applies updates
-without asking. Do not pin or hand-patch an agent installation expecting it to stay put; if a version
-matters for a diagnosis, record it at the time.
+**The agent updates itself.** The update task runs with highest privileges, starting daily and
+repeating every four hours, and applies updates without asking. Do not pin or hand-patch an agent
+installation expecting it to stay put; if a version matters for a diagnosis, record it at the time.
 
 ## 9. Removing a product
 
-Two commands, and the difference matters:
+Two commands, and the difference is not "more thorough" versus "less" — they act on different
+machines' worth of state:
 
 ```
-CommercientSyncAgentCLI.exe ... uninstall --product NormalSync -y   # remove it, keeping a backup
-CommercientSyncAgentCLI.exe ... cleanup   --product NormalSync -y   # remove what uninstall leaves behind
+CommercientSyncAgentCLI.exe ... uninstall --product NormalSync -y   # this machine
+CommercientSyncAgentCLI.exe ... cleanup   --product NormalSync -y   # the ERP DATABASE. Destructive.
 ```
 
-`uninstall` removes the product and its task, backing up to `C:\ProgramData\Commercient\`. `cleanup`
-is the further step for a product being retired for good. Use `uninstall` alone if there is any
-chance of reinstating it — and note that `cleanup` is only supported for the NormalSync family.
+`uninstall` removes the product's scheduled task and its installed files. Local, reversible by
+reinstalling and reconfiguring.
+
+`cleanup` is **destructive and irreversible, and it does not touch the local install at all**: it
+connects to the product's configured SQL Server database and DROPS Change Tracking along with the
+`Log_*` / `LogSF_*` tables and stored procedures. That is the customer's ERP database. Run it only
+for a product being retired for good, and only with the customer's agreement. It is supported for
+the NormalSync family only.
+
+Both prompt for confirmation; `-y` (`--yes`) skips the prompt and is required for unattended use —
+which is exactly the flag to think twice about on `cleanup`.
+
+## 9b. The platform half — `dlake registration products`
+
+An agent on the customer's server is only half the arrangement. The other half is a list in the
+customer's own gateway database saying **which products that agent should run** — and the wizard
+never sets it. Phase 1 is `CommercientCRMPro` (11); Phase 2 is `CommercientTxDownloaderPro` (22).
+
+This is what "the agent is installed but nothing happens" usually turns out to be. Check it from the
+platform side, with a tenant API key whose user holds the Admin role:
+
+```bash
+# What is registered, and what names `add` will accept
+dlake registration products list --profile <tenant>
+
+# Register one, by id or by its exact name. Idempotent — re-running changes nothing.
+dlake registration products add 11 --profile <tenant>
+dlake registration products add CommercientTxDownloaderPro --profile <tenant>
+
+# Register it AND ask for the agent to be installed, in one call
+dlake registration products add 22 --profile <tenant> --request-install
+
+# Ask for the agent without registering anything
+dlake registration products request-install --profile <tenant>
+
+# Remove a registration. Soft — the row stays, marked removed.
+dlake registration products remove 11 --profile <tenant>
+```
+
+Three rules worth knowing before you use it:
+
+- **Product names are lookup keys, and several are misspelled in the estate on purpose.** The
+  installer matches them literally, so a name that differs by one character creates a SECOND row for
+  the same product and the installer then tries to install it twice. `products list` prints the
+  accepted names; use them verbatim and never "correct" one. An unknown name is refused, and the
+  refusal carries the accepted list — pass that on rather than guessing.
+- **`--request-install` is a REQUEST, not an install.** It arms the switch the installer reads;
+  somebody still has to run the installer on the customer's ERP server. Nothing in this skill's
+  first nine sections happens by itself.
+- **A registered product with no processes does nothing.** Registering says what to run; the Phase 1
+  and Phase 2 configuration (`dlake-crmpro`, `dlake-txdownloaderpro`) says what it runs ON.
+
+`installedDate` in that listing is a local wall-clock reading from the customer's own server, not
+UTC — the installer writes it with no offset recorded anywhere. Do not convert it.
 
 ## 10. Where this fits
 
