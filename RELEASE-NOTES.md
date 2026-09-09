@@ -1,5 +1,36 @@
 # dlake release notes
 
+## 0.5.34 (2026-09-09)
+
+- **New: `dlake registration products` — say what the customer's Sync Agent should run.** The
+  sign-up wizard waits for an agent to appear but never decides which products it runs. These
+  verbs list, register and remove them, and ask for the agent to be installed: `products list`
+  (which also prints the accepted product names, several of which cannot be guessed), `products
+  add <id-or-name> [--request-install]`, `products remove <id>` and `products request-install`.
+  Registering is idempotent and removal is soft, so a removed product still shows in the list
+  marked as removed.
+- **New: `dlake crmpro log` — read the sync agent's own log.** The error view and the agent's
+  self-report were already there; this is the log the sync actually wrote. `--grep` searches it
+  (`--regex` for a regular expression), `--tail` and `--page` choose how much comes back, and
+  `--source-page` reads it in source order.
+- **New: `dlake txdownloaderpro` — the TxDownloaderPro transaction log.** `errors <processId>`
+  groups failures by business key and shows which of them eventually got through; `transactions
+  <processId>` is the attempt grid with a date window, a status filter and free-text search; and
+  `transaction <recordId>` opens one attempt with the request and response payloads.
+- **Log output is bounded, and says so.** These logs run to hundreds of thousands of lines, so
+  every log command returns a window — by default the most recent 100 matching lines, or 25 rows
+  — and reports how many lines or rows matched in total, so a narrow view is never mistaken for a
+  short log. Narrow it with a search rather than paging through everything.
+- **`--out <file>` writes the whole thing to a file.** `dlake crmpro log --out sync.log` and
+  `dlake txdownloaderpro transactions <id> --out rows.jsonl` save the complete, unfiltered result
+  and print a single line saying where it went and how big it is.
+- The new commands are also available to agents and MCP clients as tools on the admin control
+  plane, with the same filters and the same bounds.
+- Upgrade: `npm install -g @commercient/dlake` (or `npm install -g datalake`), then run
+  `dlake skills install` to refresh the bundled agent skills. Run it **without**
+  `--skip-existing` — that flag leaves your earlier skill files in place, and the CRMPro,
+  TxDownloaderPro and Sync Agent skills all changed in this release.
+
 ## 0.5.33 (2026-09-08)
 
 - **New: `dlake watch` — a live monitor that tells you when something breaks.** It polls the
