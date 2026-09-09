@@ -95,6 +95,8 @@ outcome directly, so you read the result rather than inferring it from a follow-
 | `crmpro_sync_history_options` | The object picker that scopes a history query | — |
 | `crmpro_errors` | Sync errors for the customer | — |
 | `crmpro_agent_info` | The sync agent's own self-report | — |
+| `crmpro_sync_log_export` | The sync agent's OWN log, read whole and filtered. **Bounded** — see below | `pattern`, `regex`, `tail`, `page`, `pageSize` |
+| `crmpro_sync_log_text` | One 10,000-byte SOURCE page of the same log, in source order | `pageIndex` (1-based) plus the same window args |
 | `crmpro_flags` | The sync flags for this customer's ERP/CRM pair, with current values | — |
 | `crmpro_user_flags` | The customer's extra-info toggles | — |
 | `crmpro_connections` | Connection-manager entries and the ids every connection-aware call wants | — |
@@ -141,6 +143,48 @@ dlake admin crmpro_delete_process --profile <tenant> --recordId 123 --confirm tr
 For `crmpro_update_process` and `crmpro_create_process`, take the exact field names from
 `dlake admin crmpro_update_process --help` (and from a `crmpro_get_process` read of the row you are
 about to change) rather than from memory.
+
+### Reading the sync log without drowning in it
+
+`crmpro_errors` reads a shared error database and `crmpro_agent_info` is the agent's own
+self-report. Neither is the log the sync **wrote**. That log is, and it is often the only place a
+failure is explained in the engine's own words.
+
+It is also unbounded — a long-running customer's log runs to hundreds of thousands of lines — so
+**both log tools return a WINDOW, never the whole file**:
+
+- a bare call returns the last 100 matching lines, which is where a failure is;
+- the hard ceiling is 200 lines or 64 KB, whichever comes first, and no argument raises it;
+- every result carries `totalLines`, `matchedLines`, `returnedLines` and `truncated`. **Read
+  `truncated` before you conclude anything.** `truncated: true` means you are looking at part of
+  the answer; the fix is a narrower `pattern`, not a bigger `tail`.
+
+Ask the log a question rather than scrolling it:
+
+```bash
+# The tail, bounded
+dlake crmpro log --profile <tenant>
+
+# A question. --grep is a case-insensitive substring; --regex makes it an expression
+dlake crmpro log --profile <tenant> --grep "ERROR"
+dlake crmpro log --profile <tenant> --grep "^Call TR_" --regex --tail 20
+
+# Walk the matches forwards rather than from the end
+dlake crmpro log --profile <tenant> --grep ERROR --page 2 --page-size 50
+
+# One source page, in the order the agent wrote it (byte paging, so it can cut mid-line)
+dlake crmpro log --profile <tenant> --source-page 3
+
+# The WHOLE log, unfiltered, into a file — the only way to get all of it. Prints one
+# line (path, size, line count) and none of the log.
+dlake crmpro log --profile <tenant> --out sync.log
+```
+
+**Never try to pull a whole log into a conversation.** If you need all of it, write it to a file
+with `--out` and read the file in pieces; the tools deliberately cannot hand it over in one call.
+
+The log's lines are not uniformly timestamped, so there is no time filter — `pattern` and the
+window are what you narrow with.
 
 ### What these tools know that a raw row write does not
 
@@ -592,10 +636,19 @@ dlake tool  read_records --entity CRM_Configuration --filter "ID eq 12" --first 
 Read-back matters most after `crmpro_update_process_field`: an unrecognised `fieldName` reports
 success and changes nothing, and the record is the only place that shows it.
 
-**Nothing takes effect until the next scheduled run.** CRMPro is a scheduled per-customer agent; it
-reads its configuration and flags at **startup**. An edit made mid-run does not affect the run in
-flight, and an edit made between runs takes effect at the next one. There is no "apply now" from the
-`dlake` side — do not tell a customer a change is live because the row updated.
+**Nothing takes effect until the next run.** CRMPro is a per-customer agent that reads its
+configuration and flags at **startup**. An edit made mid-run does not affect the run in flight, and
+an edit made between runs takes effect at the next one. There is no "apply now" from the `dlake`
+side — do not tell a customer a change is live because the row updated.
+
+**A run does not have to be the scheduled one.** The customer's server also runs the **Commercient
+Receiver** — a WebSocket client that stays connected to the Commercient service and starts a
+product's sync when a run command arrives — so a sync can be triggered **on demand** rather than
+waiting for the product's scheduled task. The command is sent from the Commercient service side, not
+from this CLI. It reaches that server only while the Receiver task exists there: the Sync Agent
+CLI's `status` reports it as `Commercient Receiver: Created` or `Not Created`, and `Not Created`
+means on-demand runs cannot reach that machine and only the scheduled task will run it. See the
+**dlake-syncagent** skill.
 
 **What a run does afterwards:** it loads the flags and the configuration rows, creates destination
 schema where the create flags allow it, detects changes by timestamp, transforms, calls the
