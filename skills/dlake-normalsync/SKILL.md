@@ -298,6 +298,19 @@ dlake normalsync resync --clear --confirm         # throw the queued per-table l
 no drop, no clone table touched, `FirstTimeSync` not involved. The on-prem agent reads the flags on
 its **next run** and does the work — so nothing at all has happened when the command returns.
 
+### Running a sync on demand
+
+That next run does not have to be the scheduled one. The customer's server also runs the
+**Commercient Receiver** — a WebSocket client that stays connected to the Commercient service and
+starts a product's sync when a run command arrives — so a queued resync can be picked up as soon as
+a run is triggered rather than at the product's next scheduled firing. The command is sent from the
+Commercient service side, not from this CLI.
+
+It reaches that server only while the Receiver task exists there. The Sync Agent CLI's `status`
+reports it as `Commercient Receiver: Created` or `Not Created`; `Not Created` means on-demand runs
+cannot reach that machine and only the product's own scheduled task will run it — which is the first
+thing to check when a queued resync appears to sit still. See the **dlake-syncagent** skill.
+
 ### The flags are CONSUMED — a zero is not "off"
 
 **The agent sets `RE_SYNC_FLAG` back to `0` when it STARTS the resync.** So a zero means *nothing is
