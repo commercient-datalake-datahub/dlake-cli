@@ -179,6 +179,9 @@ The platform evolves and tools have exact argument schemas — verify rather tha
 - `dlake admin list` / `dlake tool list` — what actually exists on this tenant.
 - `dlake admin list_exposed_entities` (or `dlake entities list`) — what the Data API currently serves.
 - `dlake admin dab_status` — whether the API container is running (after a restart).
+- `dlake admin dab_dropped_entities` — exposed entities the last regenerate did not publish, with the
+  reason for each and whether the served API still lacks them. Check this when an entity that
+  `list_exposed_entities` shows as exposed answers EntityNotFound.
 - `dlake guide api` — the live API guide (auth, REST/GraphQL, events, write semantics).
 
 Exit codes: `0` success · `1` error · `2` usage error · `3` permission/auth denied.
