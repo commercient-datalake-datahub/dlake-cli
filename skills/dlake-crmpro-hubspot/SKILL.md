@@ -62,6 +62,14 @@ with the HubSpot object id in `SFDCID`. Those rows are both the identity map and
 | `Sync_Batch_Size` | `'200'` | |
 | every nullable text column | `''` | `Prefix_OF_Field_OR_Object`, `Postfix_OF_Field_OR_Object`, `Developer_Comment`, `Document_Source_Path`, `File_Search_Pattern`, `File_Name_Separator`, `Delete_SQL_Query`, `Get_SOQL_Query` and the rest. A NULL throws `Object reference not set` inside the engine, which catches it — so the object is skipped without a recorded error. |
 
+### The shipped templates use a different convention
+
+The values above are the working configuration. The `Standard` templates in the catalogue
+(`crmpro_templates --crmName HubSpot`) write `Sync_Operation_Type` `'2'` (create), an empty `CRM_PK_API_Name`,
+`Is_Create_Fields` `0`, and views that carry an `externalkey` column rather than a `syspro_*` property. A process
+imported from a template therefore does not match this section until you set these values on it; a process built
+by hand should use the values above. Where a live install and the catalogue disagree, the install is the reference.
+
 ## 3. The view contract
 
 Views live in **DLO** — create them with `dlake admin create_view` / `alter_view`; the engine reads
@@ -163,8 +171,10 @@ Both are `Sync_Operation_Type '1'` with the same `CRM_PK_API_Name`, and each has
 One row per pushed column, where `Object_Name` is the `CRM_Object_API_Name` value (`company`, not a
 display name), and `View_Field_Name` and `CRM_API_Name` are the view's column name. Association
 columns (`associate_company`, `associate_deal`, `hs_product_id`) need rows like any other pushed
-column. **An object with no `CRM_FieldList` rows pushes nothing and records no error.** Template imports populate this table;
-a hand-built process needs it populated too — `dlake tool create_record --entity CRM_FieldList` once
+column. **An object with no `CRM_FieldList` rows pushes nothing and records no error.** Do not assume an import
+filled it: the Registration API's template import runs the template's `CreateViewQuery` and `Insert_Query` and does
+not write `CRM_FieldList`, so read the template's `MappingJson` and check `crmpro_field_mapping` on the new process
+before activating it. A hand-built process needs it populated too — `dlake tool create_record --entity CRM_FieldList` once
 the entity is exposed, or through the portal.
 
 Where a seed and an upsert process share an object (§4), they share the one `Object_Name`-keyed list:
@@ -243,6 +253,8 @@ dlake tool query --profile <tenant> --sql "SELECT LEFT([Key], CHARINDEX('::',[Ke
 ## 10. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the tables, the field mapping,
-and the source-view contract that applies to every CRM. This skill adds the HubSpot values. For the
+and the source-view contract that applies to every CRM. This skill adds the HubSpot values;
+`dlake-crmpro-syspro-salesforce` and `dlake-crmpro-syspro-shopify` do the same for their destinations,
+and the conventions genuinely differ between them. For the
 extract leg that fills the clone tables, see `dlake-normalsync`; for the on-premises agent that runs
 it, `dlake-syncagent`; for the writeback leg, `dlake-txdownloaderpro`.
