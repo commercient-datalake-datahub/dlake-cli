@@ -21,6 +21,10 @@ description: >-
 > `npm view @commercient/dlake version`; if they differ, run `npm install -g @commercient/dlake@latest`
 > and then `dlake skills install`, which overwrites the installed skill files with the current text.
 
+**The source ERP has its own page under this skill.** `erps/<erp>.md` is a child file of this
+skill and describes what the shipped templates for that ERP → Salesforce pair set up. §7 lists
+every one of them and how to pick the right row; read this page first, then that one.
+
 `dlake-txdownloaderpro` is the parent skill and the authority for everything general: what the
 writeback objects are and how they are exposed to the Data API (§1–§7), how a key is scoped to
 them, the `TxDownloaderPro` configuration table and the `TxDownloaderProTrans` transaction table
@@ -241,7 +245,65 @@ resolve against the emitted document (section 4); and is there a `ResultStructur
 (section 5). Each of those is a different column, and answering them in that order avoids
 editing the mapping to fix a query.
 
-## 7. Where this sits
+## 7. The source ERP’s own page
+
+One row per source ERP the catalogue ships default Salesforce templates for. Each page is a child
+file of this skill, addressed as `dlake-txdownloaderpro-salesforce/erps/<erp>` — `dlake skills
+show dlake-txdownloaderpro-salesforce/erps/<erp>` prints one, and `dlake skills install` writes
+them beside this file.
+
+<!-- ERP-TABLE:BEGIN dlake-txdownloaderpro-salesforce -->
+| ERP | Page | What its templates deliver |
+|---|---|---|
+| Acumatica Cloud | [`erps/acumatica-cloud.md`](erps/acumatica-cloud.md) | 3 default templates in 2 processes, mostly `SELECT` queries; writes back through `Part1` |
+| Aptean Made2Manage | [`erps/aptean-made2manage.md`](erps/aptean-made2manage.md) | 1 default template in 1 process, mostly `SELECT` queries; nothing written back |
+| Commercient CPQ | [`erps/commercient-cpq.md`](erps/commercient-cpq.md) | 1 default template in 1 process, mostly `SELECT` queries; nothing written back |
+| Epicor 10 | [`erps/epicor-10.md`](erps/epicor-10.md) | 3 default templates in 1 process, mostly `SELECT` queries; writes back through `Part1` |
+| Epicor 9 and 9.5 | [`erps/epicor-9-and-9-5.md`](erps/epicor-9-and-9-5.md) | 5 default templates in 2 processes, mostly `SELECT` queries; writes back through `Part1` |
+| Epicor Prophet 21 (P21) | [`erps/epicor-prophet-21-p21.md`](erps/epicor-prophet-21-p21.md) | 13 default templates in 6 processes, mostly `SELECT` queries; writes back through `Part1` |
+| Exact MAX | [`erps/exact-max.md`](erps/exact-max.md) | 2 default templates in 1 process, mostly `SELECT` queries; nothing written back |
+| IFS | [`erps/ifs.md`](erps/ifs.md) | 3 default templates in 3 processes, mostly `SELECT` queries; writes back through `Part1` |
+| Infor SXe | [`erps/infor-sxe.md`](erps/infor-sxe.md) | 2 default templates in 2 processes, mostly `SELECT` queries; nothing written back |
+| JD Edwards | [`erps/jd-edwards.md`](erps/jd-edwards.md) | 2 default templates in 2 processes, mostly `SELECT` queries; nothing written back |
+| JobBOSS | [`erps/jobboss.md`](erps/jobboss.md) | 1 default template in 1 process, mostly `SELECT` queries; nothing written back |
+| Macola ES | [`erps/macola-es.md`](erps/macola-es.md) | 2 default templates in 1 process, mostly `SELECT` queries; nothing written back |
+| Microsoft Business Central | [`erps/microsoft-business-central.md`](erps/microsoft-business-central.md) | 22 default templates in 10 processes, mostly `SELECT` queries; nothing written back |
+| Microsoft Dynamics GP | [`erps/microsoft-dynamics-gp.md`](erps/microsoft-dynamics-gp.md) | 7 default templates in 3 processes, mostly `SELECT` queries; writes back through `Part1` |
+| Microsoft Dynamics NAV | [`erps/microsoft-dynamics-nav.md`](erps/microsoft-dynamics-nav.md) | 6 default templates in 4 processes, mostly `SELECT` queries; writes back through `Part1` |
+| MYOB AccountRight | [`erps/myob-accountright.md`](erps/myob-accountright.md) | 6 default templates in 4 processes, mostly `SELECT` queries; writes back through `Part1` |
+| NetSuite | [`erps/netsuite.md`](erps/netsuite.md) | 13 default templates in 5 processes, mostly `SELECT` queries; writes back through `Part1` |
+| QuickBooks Desktop | [`erps/quickbooks-desktop.md`](erps/quickbooks-desktop.md) | 32 default templates in 12 processes, mostly `SELECT` queries; writes back through `Part1` |
+| QuickBooks Online | [`erps/quickbooks-online.md`](erps/quickbooks-online.md) | 5 default templates in 3 processes, mostly `SELECT` queries; nothing written back |
+| QuickBooks POS | [`erps/quickbooks-pos.md`](erps/quickbooks-pos.md) | 1 default template in 1 process, mostly `SELECT` queries; nothing written back |
+| Sage 100 (US) | [`erps/sage-100-us.md`](erps/sage-100-us.md) | 32 default templates in 11 processes, mostly `SELECT` queries; writes back through `Part1`, `Part2` |
+| Sage 100 Contractor | [`erps/sage-100-contractor.md`](erps/sage-100-contractor.md) | 14 default templates in 6 processes, mostly `SELECT` queries; writes back through `Part1`, `Part2` |
+| Sage 100 Contractor 2018 | [`erps/sage-100-contractor-2018.md`](erps/sage-100-contractor-2018.md) | 8 default templates in 3 processes, mostly `SELECT` queries; writes back through `Part1` |
+| Sage 200 UK | [`erps/sage-200-uk.md`](erps/sage-200-uk.md) | 2 default templates in 1 process, mostly `SELECT` queries; nothing written back |
+| Sage 300 | [`erps/sage-300.md`](erps/sage-300.md) | 8 default templates in 4 processes, mostly `SELECT` queries; nothing written back |
+| Sage 50 Canada | [`erps/sage-50-canada.md`](erps/sage-50-canada.md) | 11 default templates in 4 processes, mostly `SELECT` queries; writes back through `Part1` |
+| Sage 50 UK | [`erps/sage-50-uk.md`](erps/sage-50-uk.md) | 13 default templates in 12 processes, mostly `SELECT` queries; writes back through `Part1` |
+| Sage 50 US | [`erps/sage-50-us.md`](erps/sage-50-us.md) | 34 default templates in 18 processes, mostly `SELECT` queries; writes back through `Part1` |
+| Sage 500 | [`erps/sage-500.md`](erps/sage-500.md) | 3 default templates in 2 processes, mostly `SELECT` queries; writes back through `Part1` |
+| Sage BusinessWorks 2013/2015 | [`erps/sage-businessworks-2013-2015.md`](erps/sage-businessworks-2013-2015.md) | 1 default template in 1 process, mostly `SELECT` queries; nothing written back |
+| Sage Intacct | [`erps/sage-intacct.md`](erps/sage-intacct.md) | 3 default templates in 3 processes, mostly `SELECT` queries; nothing written back |
+| Sage Live | [`erps/sage-live.md`](erps/sage-live.md) | 5 default templates in 2 processes, mostly `SELECT` queries; nothing written back |
+| SAP B1 | [`erps/sap-b1.md`](erps/sap-b1.md) | 10 default templates in 3 processes, mostly `SELECT` queries; writes back through `Part1` |
+| SYSPRO 6 | [`erps/syspro-6.md`](erps/syspro-6.md) | 5 default templates in 2 processes, mostly `SELECT` queries; writes back through `Part1` |
+| Traverse 11 | [`erps/traverse-11.md`](erps/traverse-11.md) | 1 default template in 1 process, mostly `SELECT` queries; nothing written back |
+| VAI S2K | [`erps/vai-s2k.md`](erps/vai-s2k.md) | 7 default templates in 4 processes, mostly `SELECT` queries; writes back through `Part1`, `Part2` |
+| Workday | [`erps/workday.md`](erps/workday.md) | 4 default templates in 3 processes, mostly `SELECT` queries; writes back through `Part1`, `Part2` |
+| Xero | [`erps/xero.md`](erps/xero.md) | 4 default templates in 3 processes, mostly `SELECT` queries; writes back through `Part1` |
+<!-- ERP-TABLE:END -->
+
+**Work out which row applies before reading one.** The source is the ERP the tenant was registered
+with: `dlake register erps` lists the catalogue’s names and codes, and `dlake admin
+crmpro_templates` shows what that tenant can actually import. Match that ERP to a row above, then
+read its page alongside this one — this page for the conventions that hold across every source,
+that page for what this source’s own templates set. If no row matches the tenant’s ERP, this skill
+alone applies: the catalogue ships no default templates for that pair, so there is nothing
+ERP-specific to read and nothing to import.
+
+## 8. Where this sits
 
 - `dlake-txdownloaderpro` — the parent: exposure, key scoping, the two tables, `SFUpdated`, the
   mapping columns, the filter vocabulary, the `txdownloaderpro_*` tools. **Read it first.**
