@@ -21,6 +21,10 @@ description: >-
 > `npm view @commercient/dlake version`; if they differ, run `npm install -g @commercient/dlake@latest`
 > and then `dlake skills install`, which overwrites the installed skill files with the current text.
 
+**The source ERP has its own page under this skill.** `erps/<erp>.md` is a child file of this
+skill and describes what the shipped templates for that ERP → HubSpot pair set up. §10 lists every
+one of them and how to pick the right row; read this page first, then that one.
+
 `dlake-crmpro` covers the tools and the general source-view contract. This skill gives the values the
 HubSpot engine dispatches on, because nearly every mistake here has the same shape: the run reports
 success, each object logs `Start … END` in about 0.00 seconds, `Total Data Sync : 0`, and no error is
@@ -250,11 +254,100 @@ dlake tool query --profile <tenant> --sql "SELECT LEFT([Key], CHARINDEX('::',[Ke
 `withId = n` for every prefix is the success condition. Confirm in HubSpot itself by searching on the
 `syspro_*` key property.
 
-## 10. Where this sits
+## 10. The source ERP’s own page
+
+One row per source ERP the catalogue ships Standard HubSpot templates for. Each page is a child
+file of this skill, addressed as `dlake-crmpro-hubspot/erps/<erp>` — `dlake skills show
+dlake-crmpro-hubspot/erps/<erp>` prints one, and `dlake skills install` writes them beside this
+file.
+
+<!-- ERP-TABLE:BEGIN dlake-crmpro-hubspot -->
+| ERP | Page | What its templates deliver |
+|---|---|---|
+| Acumatica | [`erps/acumatica.md`](erps/acumatica.md) | 8 Standard templates in 8 groups, pushing `deal`, `line_item`, `product`, `company`; `::` repository keys |
+| Acumatica Cloud | [`erps/acumatica-cloud.md`](erps/acumatica-cloud.md) | 9 Standard templates in 8 groups, pushing `deal`, `line_item`, `product`, `company`; `::` repository keys |
+| Aptean Intuitive | [`erps/aptean-intuitive.md`](erps/aptean-intuitive.md) | 6 Standard templates in 6 groups, pushing `product`, `deal`, `line_item`, `company`; `::` repository keys |
+| Aptean Ross | [`erps/aptean-ross.md`](erps/aptean-ross.md) | 6 Standard templates in 6 groups, pushing `products`, `deal`, `line_item`, `company`; `::` repository keys |
+| Aptean WorkWise | [`erps/aptean-workwise.md`](erps/aptean-workwise.md) | 1 Standard template in 1 group, pushing `contact`; `::` repository keys |
+| Datacor Chempax | [`erps/datacor-chempax.md`](erps/datacor-chempax.md) | 1 Standard template in 1 group, pushing `contact`; `::` repository keys |
+| Deltek Ajera | [`erps/deltek-ajera.md`](erps/deltek-ajera.md) | 1 Standard template in 1 group, pushing `contact`; `::` repository keys |
+| Deltek Vision | [`erps/deltek-vision.md`](erps/deltek-vision.md) | 3 Standard templates in 3 groups, pushing `company`, `deal`; `::` repository keys |
+| Dynamics Business Central | [`erps/dynamics-business-central.md`](erps/dynamics-business-central.md) | 3 Standard templates in 3 groups, pushing `product`, `company`, `contact`; `::` repository keys |
+| Epicor 10 | [`erps/epicor-10.md`](erps/epicor-10.md) | 9 Standard templates in 9 groups, pushing `deal`, `line_item`, `company`, `products` and more; `::` repository keys |
+| Epicor 11 Kinetic | [`erps/epicor-11-kinetic.md`](erps/epicor-11-kinetic.md) | 5 Standard templates in 5 groups, pushing `contact`, `company`, `product`, `deal` and more; `::` repository keys |
+| Epicor BisTrack | [`erps/epicor-bistrack.md`](erps/epicor-bistrack.md) | 3 Standard templates in 3 groups, pushing `contact`, `company`, `product`; `::` repository keys |
+| Epicor Cloud | [`erps/epicor-cloud.md`](erps/epicor-cloud.md) | 9 Standard templates in 9 groups, pushing `products`, `deal`, `line_item`, `comapany` and more; `::` repository keys |
+| Epicor Kinetic (EPICORKINECT) | [`erps/epicor-kinetic-epicorkinect.md`](erps/epicor-kinetic-epicorkinect.md) | 1 Standard template in 1 group, pushing `contact`; `::` repository keys |
+| Epicor Kinetic (EPICORKINETIC) | [`erps/epicor-kinetic-epicorkinetic.md`](erps/epicor-kinetic-epicorkinetic.md) | 4 Standard templates in 4 groups, pushing `company`, `product`, `deal`, `line_item`; `::` repository keys |
+| Epicor Prophet 21 (P21) | [`erps/epicor-prophet-21-p21.md`](erps/epicor-prophet-21-p21.md) | 9 Standard templates in 9 groups, pushing `product`, `deal`, `line_item`, `company` and more; `::` repository keys |
+| Exact MAX | [`erps/exact-max.md`](erps/exact-max.md) | 6 Standard templates in 6 groups, pushing `product`, `deal`, `line_item`, `company`; `::` repository keys |
+| Exact Online | [`erps/exact-online.md`](erps/exact-online.md) | 8 Standard templates in 8 groups, pushing `product`, `deal`, `line_item`, `company`; `::` repository keys |
+| GlobalShop | [`erps/globalshop.md`](erps/globalshop.md) | 8 Standard templates in 8 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
+| HubSpot | [`erps/hubspot.md`](erps/hubspot.md) | 1 Standard template in 1 group, pushing `deal`; `:` repository keys |
+| IFS | [`erps/ifs.md`](erps/ifs.md) | 6 Standard templates in 6 groups, pushing `products`, `deal`, `line_item`, `company`; `::` repository keys |
+| Infor CloudSuite | [`erps/infor-cloudsuite.md`](erps/infor-cloudsuite.md) | 3 Standard templates in 3 groups, pushing `contact`, `company`, `deal`; `::` repository keys |
+| Infor CSD | [`erps/infor-csd.md`](erps/infor-csd.md) | 10 Standard templates in 9 groups, pushing `company`, `products`, `deal`, `line_item` and more; `::` repository keys |
+| Infor FACTS | [`erps/infor-facts.md`](erps/infor-facts.md) | 8 Standard templates in 8 groups, pushing `product`, `company`, `deal`, `line_item`; `::` repository keys |
+| Infor SXe | [`erps/infor-sxe.md`](erps/infor-sxe.md) | 6 Standard templates in 6 groups, pushing `deal`, `line_item`, `company`, `products`; `::` repository keys |
+| Infor SyteLine V9 | [`erps/infor-syteline-v9.md`](erps/infor-syteline-v9.md) | 6 Standard templates in 6 groups, pushing `product`, `company`, `deal`, `line_item`; `::` repository keys |
+| Infor Visual | [`erps/infor-visual.md`](erps/infor-visual.md) | 7 Standard templates in 7 groups, pushing `product`, `company`, `deal`, `line_item` and more; `::` repository keys |
+| Infor Visual 9 | [`erps/infor-visual-9.md`](erps/infor-visual-9.md) | 7 Standard templates in 7 groups, pushing `product`, `company`, `deal`, `line_item` and more; `::` repository keys |
+| Infor10 Distribution Business | [`erps/infor10-distribution-business.md`](erps/infor10-distribution-business.md) | 8 Standard templates in 8 groups, pushing `product`, `company`, `deal`, `line_item`; `::` repository keys |
+| JobBOSS | [`erps/jobboss.md`](erps/jobboss.md) | 9 Standard templates in 9 groups, pushing `deal`, `line_item`, `company`, `products` and more; `::` repository keys |
+| Macola 10 | [`erps/macola-10.md`](erps/macola-10.md) | 8 Standard templates in 8 groups, pushing `deal`, `line_item`, `company`, `products`; `::` repository keys |
+| Macola ES | [`erps/macola-es.md`](erps/macola-es.md) | 8 Standard templates in 8 groups, pushing `deal`, `line_item`, `company`, `products`; `::` repository keys |
+| Macola Progression | [`erps/macola-progression.md`](erps/macola-progression.md) | 8 Standard templates in 8 groups, pushing `deal`, `line_item`, `company`, `products`; `::` repository keys |
+| Microsoft Business Central | [`erps/microsoft-business-central.md`](erps/microsoft-business-central.md) | 6 Standard templates in 6 groups, pushing `deal`, `line_item`, `company`, `products`; `::` repository keys |
+| Microsoft Dynamics AX | [`erps/microsoft-dynamics-ax.md`](erps/microsoft-dynamics-ax.md) | 8 Standard templates in 8 groups, pushing `deal`, `line_item`, `product`, `company`; `::` repository keys |
+| Microsoft Dynamics GP 2016 | [`erps/microsoft-dynamics-gp-2016.md`](erps/microsoft-dynamics-gp-2016.md) | 6 Standard templates in 6 groups, pushing `deal`, `line_item`, `product`, `company`; `::` repository keys |
+| Microsoft Dynamics GP 2017 | [`erps/microsoft-dynamics-gp-2017.md`](erps/microsoft-dynamics-gp-2017.md) | 6 Standard templates in 6 groups, pushing `deal`, `line_item`, `product`, `company`; `::` repository keys |
+| Microsoft Dynamics NAV | [`erps/microsoft-dynamics-nav.md`](erps/microsoft-dynamics-nav.md) | 5 Standard templates in 5 groups, pushing `deal`, `line_item`, `company`; `::` repository keys |
+| MYOB AccountRight | [`erps/myob-accountright.md`](erps/myob-accountright.md) | 8 Standard templates in 8 groups, pushing `deal`, `line_item`, `company`, `products`; `::` repository keys |
+| NetSuite | [`erps/netsuite.md`](erps/netsuite.md) | 11 Standard templates in 11 groups, pushing `deal`, `line_item`, `company`, `products`; `::` repository keys |
+| Plex | [`erps/plex.md`](erps/plex.md) | 6 Standard templates in 6 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
+| Process PRO | [`erps/process-pro.md`](erps/process-pro.md) | 6 Standard templates in 6 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
+| QuickBooks Desktop | [`erps/quickbooks-desktop.md`](erps/quickbooks-desktop.md) | 9 Standard templates in 9 groups, pushing `company`, `products`, `deal`, `line_item` and more; `::` repository keys |
+| QuickBooks Desktop (QUICKBOOKS) | [`erps/quickbooks-desktop-quickbooks.md`](erps/quickbooks-desktop-quickbooks.md) | 9 Standard templates in 9 groups, pushing `company`, `products`, `deal`, `line_item` and more; `::` repository keys |
+| Sage 100 (US) | [`erps/sage-100-us.md`](erps/sage-100-us.md) | 11 Standard templates in 11 groups, pushing `company`, `products`, `deal`, `line_item` and more; `::` repository keys |
+| Sage 100 2013 V5 | [`erps/sage-100-2013-v5.md`](erps/sage-100-2013-v5.md) | 10 Standard templates in 10 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
+| Sage 100 2014 | [`erps/sage-100-2014.md`](erps/sage-100-2014.md) | 10 Standard templates in 10 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
+| Sage 100 2015 | [`erps/sage-100-2015.md`](erps/sage-100-2015.md) | 10 Standard templates in 10 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
+| Sage 100 2016 | [`erps/sage-100-2016.md`](erps/sage-100-2016.md) | 10 Standard templates in 10 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
+| Sage 100 2017 | [`erps/sage-100-2017.md`](erps/sage-100-2017.md) | 11 Standard templates in 11 groups, pushing `company`, `products`, `deal`, `line_item` and more; `::` repository keys |
+| Sage 100 Contractor 2019 | [`erps/sage-100-contractor-2019.md`](erps/sage-100-contractor-2019.md) | 6 Standard templates in 6 groups, pushing `company`, `products`, `deal`, `line_item` and more; `::` repository keys |
+| Sage 100 Germany | [`erps/sage-100-germany.md`](erps/sage-100-germany.md) | 1 Standard template in 1 group, pushing `contact`; `::` repository keys |
+| Sage 100 US (SAGE100US) | [`erps/sage-100-us-sage100us.md`](erps/sage-100-us-sage100us.md) | 10 Standard templates in 10 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
+| Sage 200 UK | [`erps/sage-200-uk.md`](erps/sage-200-uk.md) | 6 Standard templates in 6 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
+| Sage 200 US | [`erps/sage-200-us.md`](erps/sage-200-us.md) | 6 Standard templates in 6 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
+| Sage 300 | [`erps/sage-300.md`](erps/sage-300.md) | 7 Standard templates in 7 groups, pushing `company`, `products`, `deal`, `line_item` and more; `::` repository keys |
+| Sage 300 CRE | [`erps/sage-300-cre.md`](erps/sage-300-cre.md) | 6 Standard templates in 6 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
+| Sage 50 Cloud | [`erps/sage-50-cloud.md`](erps/sage-50-cloud.md) | 1 Standard template in 1 group, pushing `contact`; `::` repository keys |
+| Sage 50 UK | [`erps/sage-50-uk.md`](erps/sage-50-uk.md) | 5 Standard templates in 5 groups, pushing `deal`, `line_item`, `company`; `::` repository keys |
+| Sage 50 US | [`erps/sage-50-us.md`](erps/sage-50-us.md) | 9 Standard templates in 9 groups, pushing `deal`, `line_item`, `product`, `company` and more; `::` repository keys |
+| Sage 500 | [`erps/sage-500.md`](erps/sage-500.md) | 8 Standard templates in 8 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
+| Sage X3 | [`erps/sage-x3.md`](erps/sage-x3.md) | 8 Standard templates in 8 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
+| SAP B1 | [`erps/sap-b1.md`](erps/sap-b1.md) | 9 Standard templates in 9 groups, pushing `company`, `products`, `deal`, `line_item` and more; `::` repository keys |
+| SAP Business ByDesign | [`erps/sap-business-bydesign.md`](erps/sap-business-bydesign.md) | 4 Standard templates in 4 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
+| SouthWare | [`erps/southware.md`](erps/southware.md) | 6 Standard templates in 6 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
+| Steelviking | [`erps/steelviking.md`](erps/steelviking.md) | 6 Standard templates in 6 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
+| SYSPRO 7 and above | [`erps/syspro-7-and-above.md`](erps/syspro-7-and-above.md) | 9 Standard templates in 9 groups, pushing `comapny`, `product`, `deal`, `line_item` and more; `::` repository keys |
+| VAI S2K | [`erps/vai-s2k.md`](erps/vai-s2k.md) | 6 Standard templates in 6 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
+<!-- ERP-TABLE:END -->
+
+**Work out which row applies before reading one.** The source is the ERP the tenant was registered
+with: `dlake register erps` lists the catalogue’s names and codes, and `dlake admin
+crmpro_templates` shows what that tenant can actually import. Match that ERP to a row above, then
+read its page alongside this one — this page for the conventions that hold across every source,
+that page for what this source’s own templates set. If no row matches the tenant’s ERP, this skill
+alone applies: the catalogue ships no Standard templates for that pair, so there is nothing
+ERP-specific to read and nothing to import.
+
+## 11. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the tables, the field mapping,
-and the source-view contract that applies to every CRM. This skill adds the HubSpot values;
-`dlake-crmpro-syspro-salesforce` and `dlake-crmpro-syspro-shopify` do the same for their destinations,
-and the conventions genuinely differ between them. For the
+and the source-view contract that applies to every CRM. This skill adds the HubSpot values, and its
+`erps/` pages add what each source ERP's own templates set up. `dlake-crmpro-salesforce` and
+`dlake-crmpro-shopify` do the same for their destinations, and the conventions genuinely differ
+between them. For the
 extract leg that fills the clone tables, see `dlake-normalsync`; for the on-premises agent that runs
 it, `dlake-syncagent`; for the writeback leg, `dlake-txdownloaderpro`.
