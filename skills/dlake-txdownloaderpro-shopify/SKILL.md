@@ -21,6 +21,10 @@ description: >-
 > `npm view @commercient/dlake version`; if they differ, run `npm install -g @commercient/dlake@latest`
 > and then `dlake skills install`, which overwrites the installed skill files with the current text.
 
+**The source ERP has its own page under this skill.** `erps/<erp>.md` is a child file of this
+skill and describes what the shipped templates for that ERP → Shopify pair set up. §7 lists every
+one of them and how to pick the right row; read this page first, then that one.
+
 `dlake-txdownloaderpro` is the parent skill and the authority for everything general: what the
 writeback objects are and how they are exposed to the Data API (§1–§7), how a key is scoped to
 them, the `TxDownloaderPro` and `TxDownloaderProTrans` tables and their columns (§9, §10), the
@@ -147,7 +151,48 @@ right and does the preview return a record (section 3); does each path root matc
 document, and is there a `Line.mainXml` where lines are expected (section 4). A question about
 something appearing back in Shopify is answered by section 5, not by a mapping change.
 
-## 7. Where this sits
+## 7. The source ERP’s own page
+
+One row per source ERP the catalogue ships default Shopify templates for. Each page is a child
+file of this skill, addressed as `dlake-txdownloaderpro-shopify/erps/<erp>` — `dlake skills show
+dlake-txdownloaderpro-shopify/erps/<erp>` prints one, and `dlake skills install` writes them
+beside this file.
+
+<!-- ERP-TABLE:BEGIN dlake-txdownloaderpro-shopify -->
+| ERP | Page | What its templates deliver |
+|---|---|---|
+| Abas Business Software | [`erps/abas-business-software.md`](erps/abas-business-software.md) | 1 default template in 1 process, mostly JSON module objects; nothing written back |
+| Acumatica Cloud | [`erps/acumatica-cloud.md`](erps/acumatica-cloud.md) | 3 default templates in 3 processes, mostly JSON module objects; nothing written back |
+| Epicor 10 | [`erps/epicor-10.md`](erps/epicor-10.md) | 3 default templates in 3 processes, mostly JSON module objects; nothing written back |
+| Epicor 9 and 9.5 | [`erps/epicor-9-and-9-5.md`](erps/epicor-9-and-9-5.md) | 2 default templates in 2 processes, mostly JSON module objects; nothing written back |
+| Epicor Prophet 21 (P21) | [`erps/epicor-prophet-21-p21.md`](erps/epicor-prophet-21-p21.md) | 2 default templates in 2 processes, mostly JSON module objects; nothing written back |
+| Exact Globe Next | [`erps/exact-globe-next.md`](erps/exact-globe-next.md) | 1 default template in 1 process, mostly JSON module objects; nothing written back |
+| Infor Visual 9 | [`erps/infor-visual-9.md`](erps/infor-visual-9.md) | 1 default template in 1 process, mostly JSON module objects; nothing written back |
+| Microsoft Business Central | [`erps/microsoft-business-central.md`](erps/microsoft-business-central.md) | 8 default templates in 5 processes, mostly JSON module objects; nothing written back |
+| Microsoft Dynamics GP | [`erps/microsoft-dynamics-gp.md`](erps/microsoft-dynamics-gp.md) | 3 default templates in 3 processes, mostly JSON module objects; nothing written back |
+| Microsoft Dynamics NAV | [`erps/microsoft-dynamics-nav.md`](erps/microsoft-dynamics-nav.md) | 2 default templates in 2 processes, mostly JSON module objects; nothing written back |
+| MYOB AccountRight | [`erps/myob-accountright.md`](erps/myob-accountright.md) | 4 default templates in 4 processes, mostly JSON module objects; nothing written back |
+| NetSuite | [`erps/netsuite.md`](erps/netsuite.md) | 3 default templates in 3 processes, mostly JSON module objects; nothing written back |
+| Plex | [`erps/plex.md`](erps/plex.md) | 2 default templates in 2 processes, mostly JSON module objects; nothing written back |
+| QuickBooks Desktop | [`erps/quickbooks-desktop.md`](erps/quickbooks-desktop.md) | 5 default templates in 5 processes, mostly JSON module objects; nothing written back |
+| Sage 100 (US) | [`erps/sage-100-us.md`](erps/sage-100-us.md) | 4 default templates in 4 processes, mostly JSON module objects; nothing written back |
+| Sage 300 | [`erps/sage-300.md`](erps/sage-300.md) | 3 default templates in 3 processes, mostly JSON module objects; nothing written back |
+| Sage 50 UK | [`erps/sage-50-uk.md`](erps/sage-50-uk.md) | 4 default templates in 4 processes, mostly JSON module objects; nothing written back |
+| Sage 50 US | [`erps/sage-50-us.md`](erps/sage-50-us.md) | 4 default templates in 4 processes, mostly JSON module objects; nothing written back |
+| SYSPRO 6 | [`erps/syspro-6.md`](erps/syspro-6.md) | 3 default templates in 3 processes, mostly JSON module objects; nothing written back |
+| Traverse 11 | [`erps/traverse-11.md`](erps/traverse-11.md) | 3 default templates in 3 processes, mostly JSON module objects; nothing written back |
+| Xero | [`erps/xero.md`](erps/xero.md) | 3 default templates in 3 processes, mostly JSON module objects; nothing written back |
+<!-- ERP-TABLE:END -->
+
+**Work out which row applies before reading one.** The source is the ERP the tenant was registered
+with: `dlake register erps` lists the catalogue’s names and codes, and `dlake admin
+crmpro_templates` shows what that tenant can actually import. Match that ERP to a row above, then
+read its page alongside this one — this page for the conventions that hold across every source,
+that page for what this source’s own templates set. If no row matches the tenant’s ERP, this skill
+alone applies: the catalogue ships no default templates for that pair, so there is nothing
+ERP-specific to read and nothing to import.
+
+## 8. Where this sits
 
 - `dlake-txdownloaderpro` — the parent: exposure, key scoping, the two tables, `SFUpdated`, the
   mapping columns, the filter vocabulary, the `txdownloaderpro_*` tools. **Read it first.**
