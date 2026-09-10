@@ -838,9 +838,16 @@ time, so there is nothing to expose before then.
 
 ---
 
-The destination sub-skills `dlake-txdownloaderpro-salesforce`, `-hubspot`, `-dynamiccrm`, `-zohocrm` and
-`-shopify` carry what the shipped default templates set for each CRM; one generated page per ERP and CRM pair
-sits beside them in the repository tree `skills-pairs/`, not bundled here.
+The destination sub-skills `dlake-txdownloaderpro-salesforce`, `-hubspot`, `-dynamicscrm`, `-zohocrm` and
+`-shopify` carry what the shipped default templates set for each CRM.
+
+**Each of them carries one child page per source ERP, under `erps/`.** The destination skill holds
+what is true of that CRM whatever the source; `erps/<erp>.md` holds what the shipped default
+templates for that one ERP set up — the processes, the query shape, the mapping document, the
+`ResultStructure` parts. Every destination skill opens with an ERP table listing its children and
+settles the question of which one applies; read the destination skill first, then the row for the
+tenant's source ERP. `dlake skills show dlake-txdownloaderpro-salesforce/erps/sage100` prints one
+directly, and `dlake skills install` writes the children beside their parent.
 
 ## 14. Configuring it through its own API — the `txdownloaderpro_*` tools
 
