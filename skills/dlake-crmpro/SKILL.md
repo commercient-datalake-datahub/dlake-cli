@@ -934,6 +934,8 @@ as `Contact.Email` is not an external id.
 | `dlake-integration-setup` | Standing an integration up: registration, verification, seeding, then the wizard — CRM choice and the ERP connector |
 | **`dlake-crmpro`** (this) | Operating the **forward** leg: the `crmpro_*` tools, and the setup and transaction tables behind them — processes, sync control, field mapping, diagnostics |
 | `dlake-crmpro-hubspot` | The HubSpot values for that leg: the object-name tokens the engine dispatches on, the configuration a HubSpot process needs, the DLO view contract for it, the seed/upsert pair, `CRM_FieldList`, the portal limits that shape the design, and what to check when a run pushes nothing. Read it before building a HubSpot process |
+| `dlake-crmpro-syspro-salesforce` | The Salesforce values for that leg from a SYSPRO source: standard plus managed-package objects, the external-id key, the single-colon repository key, the lookup ladder that makes `Sync_Order` a dependency order, and the create/update pairs |
+| `dlake-crmpro-syspro-shopify` | The Shopify values for that leg from a SYSPRO source: the upper-case object tokens, the insert-only create legs, and the two update legs that compare the ERP value against a mirrored Shopify table instead of using the cursor |
 | `dlake-txdownloaderpro` | The **writeback** leg: exposing the TxDownloaderPro objects and scoping a key to them |
 | `dlake` | Operating a tenant generally — schema, queries, exports, keys, the REST/GraphQL contract |
 
