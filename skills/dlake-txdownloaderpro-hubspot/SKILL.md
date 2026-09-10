@@ -20,6 +20,10 @@ description: >-
 > `npm view @commercient/dlake version`; if they differ, run `npm install -g @commercient/dlake@latest`
 > and then `dlake skills install`, which overwrites the installed skill files with the current text.
 
+**The source ERP has its own page under this skill.** `erps/<erp>.md` is a child file of this
+skill and describes what the shipped templates for that ERP → HubSpot pair set up. §7 lists every
+one of them and how to pick the right row; read this page first, then that one.
+
 `dlake-txdownloaderpro` is the parent skill and the authority for everything general: what the
 writeback objects are and how they are exposed to the Data API (§1–§7), how a key is scoped to
 them, the `TxDownloaderPro` and `TxDownloaderProTrans` tables and their columns (§9, §10), the
@@ -165,7 +169,35 @@ The order of diagnosis here: is the module name right and does the preview retur
 the misspelled root and the unparseable documents bite; and is there a `ResultStructure` at all
 (section 5). The parent's §14 is the authority on the tools, §10 on the state.
 
-## 7. Where this sits
+## 7. The source ERP’s own page
+
+One row per source ERP the catalogue ships default HubSpot templates for. Each page is a child
+file of this skill, addressed as `dlake-txdownloaderpro-hubspot/erps/<erp>` — `dlake skills show
+dlake-txdownloaderpro-hubspot/erps/<erp>` prints one, and `dlake skills install` writes them
+beside this file.
+
+<!-- ERP-TABLE:BEGIN dlake-txdownloaderpro-hubspot -->
+| ERP | Page | What its templates deliver |
+|---|---|---|
+| Microsoft Business Central | [`erps/microsoft-business-central.md`](erps/microsoft-business-central.md) | 4 default templates in 2 processes, mostly JSON module objects; writes back through `Part1` |
+| NetSuite | [`erps/netsuite.md`](erps/netsuite.md) | 8 default templates in 4 processes, mostly JSON module objects; writes back through `Part1` |
+| QuickBooks Desktop | [`erps/quickbooks-desktop.md`](erps/quickbooks-desktop.md) | 7 default templates in 5 processes, mostly JSON module objects; writes back through `Part1` |
+| Sage 100 Contractor | [`erps/sage-100-contractor.md`](erps/sage-100-contractor.md) | 6 default templates in 2 processes, mostly JSON module objects; writes back through `Part1` |
+| Sage 100 Contractor 2018 | [`erps/sage-100-contractor-2018.md`](erps/sage-100-contractor-2018.md) | 6 default templates in 2 processes, mostly JSON module objects; writes back through `Part1` |
+| Sage 50 UK | [`erps/sage-50-uk.md`](erps/sage-50-uk.md) | 1 default template in 1 process, mostly JSON module objects; nothing written back |
+| Sage 50 US | [`erps/sage-50-us.md`](erps/sage-50-us.md) | 6 default templates in 6 processes, mostly JSON module objects; writes back through `Part1` |
+| VAI S2K | [`erps/vai-s2k.md`](erps/vai-s2k.md) | 6 default templates in 3 processes, mostly JSON module objects; writes back through `Part1` |
+<!-- ERP-TABLE:END -->
+
+**Work out which row applies before reading one.** The source is the ERP the tenant was registered
+with: `dlake register erps` lists the catalogue’s names and codes, and `dlake admin
+crmpro_templates` shows what that tenant can actually import. Match that ERP to a row above, then
+read its page alongside this one — this page for the conventions that hold across every source,
+that page for what this source’s own templates set. If no row matches the tenant’s ERP, this skill
+alone applies: the catalogue ships no default templates for that pair, so there is nothing
+ERP-specific to read and nothing to import.
+
+## 8. Where this sits
 
 - `dlake-txdownloaderpro` — the parent: exposure, key scoping, the two tables, `SFUpdated`, the
   mapping columns, the filter vocabulary, the `txdownloaderpro_*` tools. **Read it first.**
