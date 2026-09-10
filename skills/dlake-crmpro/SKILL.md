@@ -195,9 +195,11 @@ window are what you narrow with.
   apply a display fallback, so a row with no stored name still shows one. Get valid ids from
   `crmpro_connections`. And although `crmpro_update_process` preserves what you omit, still send the
   connection pair deliberately whenever changing the target is the point of the edit.
-- **Live CRM providers are Salesforce, HubSpot and ZohoCRM**, each with automatic token refresh.
-  DynamicCRM is recognised but answers `crm_not_supported` — that is the platform telling you it
-  cannot talk to that CRM, not a misconfigured tenant.
+- **Live CRM providers are Salesforce, HubSpot and Zoho CRM**, each with automatic token refresh.
+  Dynamics CRM is recognised but answers `crm_not_supported` — that is the platform telling you it
+  cannot talk to that CRM, not a misconfigured tenant. The platform spells those last two
+  `ZohoCRM` and `DynamicCRM`, which is what a `crmName` argument takes; the products are Zoho CRM
+  and Dynamics CRM.
 - **The delete-records flag has a prerequisite.** Turning `Is_Active_Delete_Records` on is refused
   until the process has a non-empty `Delete_SQL_Query`. Non-empty is not the same as valid: a source
   table without a primary key produces a malformed delete query that the guard cannot catch, so read
@@ -884,8 +886,9 @@ as `Contact.Email` is not an external id.
   row exists, and reports the state before and after, but it moves the whole customer. One object
   belongs in `crmpro_update_process_field`. On a fresh tenant, where the flag row does not exist yet,
   the first call seeds it at `0` and two calls are normal — see §7d.
-- **DynamicCRM answers `crm_not_supported`.** Salesforce, HubSpot and ZohoCRM are the live providers,
-  each refreshing its own tokens. That refusal is the platform being clear, not a tenant fault.
+- **Dynamics CRM answers `crm_not_supported`** (the platform's own value for it is `DynamicCRM`).
+  Salesforce, HubSpot and Zoho CRM are the live providers, each refreshing its own tokens. That
+  refusal is the platform being clear, not a tenant fault.
 - **`TimeStamp_Prefix` is the cursor namespace.** `TimeStampRepository.Key` is built as
   `TimeStamp_Prefix` + the record's source key. Rename the prefix and every existing cursor row for
   that object is orphaned in place — no error, and the next run re-sends the whole object. Treat this
@@ -934,8 +937,16 @@ as `Contact.Email` is not an external id.
 | `dlake-integration-setup` | Standing an integration up: registration, verification, seeding, then the wizard — CRM choice and the ERP connector |
 | **`dlake-crmpro`** (this) | Operating the **forward** leg: the `crmpro_*` tools, and the setup and transaction tables behind them — processes, sync control, field mapping, diagnostics |
 | `dlake-crmpro-hubspot` | The HubSpot values for that leg: the object-name tokens the engine dispatches on, the configuration a HubSpot process needs, the DLO view contract for it, the seed/upsert pair, `CRM_FieldList`, the portal limits that shape the design, and what to check when a run pushes nothing. Read it before building a HubSpot process |
-| `dlake-crmpro-syspro-salesforce` | The Salesforce values for that leg from a SYSPRO source: standard plus managed-package objects, the external-id key, the single-colon repository key, the lookup ladder that makes `Sync_Order` a dependency order, and the create/update pairs |
-| `dlake-crmpro-syspro-shopify` | The Shopify values for that leg from a SYSPRO source: the upper-case object tokens, the insert-only create legs, and the two update legs that compare the ERP value against a mirrored Shopify table instead of using the cursor |
+| `dlake-crmpro-salesforce` | The Salesforce values for that leg: standard plus managed-package objects, the external-id key, the single-colon repository key, the lookup ladder that makes `Sync_Order` a dependency order, and the create/update pairs |
+| `dlake-crmpro-shopify` | The Shopify values for that leg: the upper-case object tokens, the insert-only create legs, and the two update legs that compare the ERP value against a mirrored Shopify table instead of using the cursor |
+| `dlake-crmpro-zohocrm`, `dlake-crmpro-dynamicscrm`, `dlake-crmpro-mdc`, `dlake-crmpro-magento` | The same job for the other destinations the catalogue ships templates for: the objects, the repository key and the view conventions those templates set |
+
+**Each destination skill carries one child page per source ERP, under `erps/`.** The destination
+skill holds what is true of that CRM whatever the source; `erps/<erp>.md` holds what the shipped
+templates for that one ERP set up — the groups, the views, the prefixes, the field mapping. Every
+destination skill opens with an ERP table listing its children and closes the question of which one
+applies; read the destination skill first, then the row for the tenant's source ERP. `dlake skills
+show dlake-crmpro-hubspot/erps/sage100` prints one directly.
 | `dlake-txdownloaderpro` | The **writeback** leg: exposing the TxDownloaderPro objects and scoping a key to them |
 | `dlake` | Operating a tenant generally — schema, queries, exports, keys, the REST/GraphQL contract |
 
