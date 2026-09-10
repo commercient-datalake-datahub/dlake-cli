@@ -838,6 +838,10 @@ time, so there is nothing to expose before then.
 
 ---
 
+The destination sub-skills `dlake-txdownloaderpro-salesforce`, `-hubspot`, `-dynamiccrm`, `-zohocrm` and
+`-shopify` carry what the shipped default templates set for each CRM; one generated page per ERP and CRM pair
+sits beside them in the repository tree `skills-pairs/`, not bundled here.
+
 ## 14. Configuring it through its own API — the `txdownloaderpro_*` tools
 
 Sections 1–12 reach the writeback tables as ROWS, over the Data API. That is the right tool for
