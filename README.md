@@ -265,23 +265,33 @@ array or object argument.
   <https://datalake-ms-dab.commercient.com/datalake/>.
 - **API usage guide** — endpoints, auth, scopes, rate limits: see the Data Lake
   \ Data Hub API guide served from your tenant's Help page.
-- **AI-agent skills** — nine drop-in skills that teach a coding agent to drive
+- **AI-agent skills** — sixteen drop-in skills that teach a coding agent to drive
   this CLI correctly: the right command ordering, the non-obvious gotchas, and
   the HTTP contract for the Data API. [`skills/dlake`](skills/dlake/SKILL.md)
   covers building and operating a tenant;
   [`skills/dlake-integration-setup`](skills/dlake-integration-setup/SKILL.md)
-  stands up a new integration; and one skill each for the sync products —
+  stands up a new integration; one skill each for the sync products —
   [Normal Sync](skills/dlake-normalsync/SKILL.md),
   [ODBC Sync](skills/dlake-odbcsync/SKILL.md),
   [Generic API Sync](skills/dlake-apisync/SKILL.md),
-  [CRMPro](skills/dlake-crmpro/SKILL.md) and its
-  [HubSpot specifics](skills/dlake-crmpro-hubspot/SKILL.md),
-  [TxDownloaderPro](skills/dlake-txdownloaderpro/SKILL.md) — plus
+  [CRMPro](skills/dlake-crmpro/SKILL.md) with its destination skills for
+  [HubSpot](skills/dlake-crmpro-hubspot/SKILL.md),
+  [Salesforce](skills/dlake-crmpro-syspro-salesforce/SKILL.md) and
+  [Shopify](skills/dlake-crmpro-syspro-shopify/SKILL.md), and
+  [TxDownloaderPro](skills/dlake-txdownloaderpro/SKILL.md) with its destination
+  skills for [Salesforce](skills/dlake-txdownloaderpro-salesforce/SKILL.md),
+  [HubSpot](skills/dlake-txdownloaderpro-hubspot/SKILL.md),
+  [Dynamics CRM](skills/dlake-txdownloaderpro-dynamiccrm/SKILL.md),
+  [Zoho CRM](skills/dlake-txdownloaderpro-zohocrm/SKILL.md) and
+  [Shopify](skills/dlake-txdownloaderpro-shopify/SKILL.md) — plus
   [`skills/dlake-syncagent`](skills/dlake-syncagent/SKILL.md) for the
   on-premises agent that runs on the customer's own ERP server. Read one with
   `dlake skills show <name>` or install them all with `dlake skills install`,
   which refreshes any copies already on disk (add `--skip-existing` to keep local
-  edits); see [`skills/README.md`](skills/README.md).
+  edits); see [`skills/README.md`](skills/README.md). Beside them,
+  [`skills-pairs/`](skills-pairs/README.md) holds one generated page per ERP × CRM
+  pair that ships a template set — CRMPro and TxDownloaderPro — describing what
+  those templates set up; they are not bundled in the CLI, so fetch the one you need.
 - **Permissions** — object writes and connection management need
   `data.ingest.manage`; reads accept any `data.ingest.*` tier; scoped API keys
   are enforced server-side (fail-closed) down to entity and field level.
