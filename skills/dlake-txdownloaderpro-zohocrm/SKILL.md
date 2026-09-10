@@ -1,25 +1,29 @@
 ---
 name: dlake-txdownloaderpro-zohocrm
 description: >-
-  What the shipped default TxDownloaderPro templates set up when ZOHO CRM is the writeback
+  What the shipped default TxDownloaderPro templates set up when Zoho CRM is the writeback
   destination: the three-member JSON `Query` naming the module to retrieve, the six templates
   that carry a `SELECT` instead, why the stored `Where` member must not be read as documentation,
   the modules the default set names, the flat `ProcessStructure` mapping with its `Line.` section
   and `Line.mainXml` collection member, the `$FUN_` value-token names the documents carry, the
   `ResultStructure` parts the templates fill for the write back to ZOHO, and the
   `TxDownloaderPro` process row each template becomes on import. Use it when importing or reading
-  a ZOHO CRM writeback template set, when a process retrieves nothing, when a mapped field
+  a Zoho CRM writeback template set, when a process retrieves nothing, when a mapped field
   arrives empty, or when deciding where a change belongs. It extends `dlake-txdownloaderpro`,
   which covers operating TxDownloaderPro generally; the per-ERP pages
   `dlake-txdownloaderpro-<erp>-zohocrm` carry each ERP's own default template set.
 ---
 
-# TxDownloaderPro ← ZOHO CRM: what the shipped default templates set up
+# TxDownloaderPro ← Zoho CRM: what the shipped default templates set up
 
 > **Keep this skill current.** `dlake` ships updates often and this text is embedded in the CLI
 > you have installed. Before relying on it, compare `dlake --version` with
 > `npm view @commercient/dlake version`; if they differ, run `npm install -g @commercient/dlake@latest`
 > and then `dlake skills install`, which overwrites the installed skill files with the current text.
+
+**The source ERP has its own page under this skill.** `erps/<erp>.md` is a child file of this
+skill and describes what the shipped templates for that ERP → Zoho CRM pair set up. §7 lists every
+one of them and how to pick the right row; read this page first, then that one.
 
 `dlake-txdownloaderpro` is the parent skill and the authority for everything general: what the
 writeback objects are and how they are exposed to the Data API (§1–§7), how a key is scoped to
@@ -130,7 +134,7 @@ parseable document carries about 12 members.
   platform-side resolver is dotted path substitution only — these are evaluated by the service on
   the customer's own host.
 
-## 5. Result structure — what goes back to ZOHO CRM
+## 5. Result structure — what goes back to Zoho CRM
 
 Of the 126 default templates, **56 carry a parseable `DefaultResultStructure` and 69 carry none**;
 one does not parse.
@@ -180,7 +184,52 @@ The order of diagnosis: which query shape is this process holding, and is the mo
 lines are expected (section 4); is there a `ResultStructure` at all (section 5). The parent's §14
 is the authority on the tools, §10 on the state.
 
-## 7. Where this sits
+## 7. The source ERP’s own page
+
+One row per source ERP the catalogue ships default Zoho CRM templates for. Each page is a child
+file of this skill, addressed as `dlake-txdownloaderpro-zohocrm/erps/<erp>` — `dlake skills show
+dlake-txdownloaderpro-zohocrm/erps/<erp>` prints one, and `dlake skills install` writes them
+beside this file.
+
+<!-- ERP-TABLE:BEGIN dlake-txdownloaderpro-zohocrm -->
+| ERP | Page | What its templates deliver |
+|---|---|---|
+| Epicor 10 | [`erps/epicor-10.md`](erps/epicor-10.md) | 3 default templates in 2 processes, mostly JSON module objects; writes back through `Part1` |
+| Epicor 9 and 9.5 | [`erps/epicor-9-and-9-5.md`](erps/epicor-9-and-9-5.md) | 2 default templates in 1 process, mostly JSON module objects; writes back through `Part1` |
+| Epicor Prophet 21 (P21) | [`erps/epicor-prophet-21-p21.md`](erps/epicor-prophet-21-p21.md) | 4 default templates in 2 processes, mostly JSON module objects; writes back through `Part1` |
+| Infor SyteLine | [`erps/infor-syteline.md`](erps/infor-syteline.md) | 3 default templates in 3 processes, mostly `SELECT` queries; writes back through `Part1` |
+| Microsoft Business Central | [`erps/microsoft-business-central.md`](erps/microsoft-business-central.md) | 5 default templates in 3 processes, mostly JSON module objects; writes back through `Part1` |
+| Microsoft Dynamics GP | [`erps/microsoft-dynamics-gp.md`](erps/microsoft-dynamics-gp.md) | 2 default templates in 1 process, mostly JSON module objects; writes back through `Part1` |
+| Microsoft Dynamics NAV | [`erps/microsoft-dynamics-nav.md`](erps/microsoft-dynamics-nav.md) | 2 default templates in 1 process, mostly JSON module objects; writes back through `Part1` |
+| MYOB AccountRight | [`erps/myob-accountright.md`](erps/myob-accountright.md) | 4 default templates in 1 process, mostly JSON module objects; writes back through `Part1` |
+| NetSuite | [`erps/netsuite.md`](erps/netsuite.md) | 12 default templates in 4 processes, mostly JSON module objects; writes back through `Part1` |
+| QuickBooks Desktop | [`erps/quickbooks-desktop.md`](erps/quickbooks-desktop.md) | 5 default templates in 3 processes, mostly JSON module objects; writes back through `Part1` |
+| QuickBooks Online | [`erps/quickbooks-online.md`](erps/quickbooks-online.md) | 4 default templates in 3 processes, mostly JSON module objects; nothing written back |
+| Sage 100 (US) | [`erps/sage-100-us.md`](erps/sage-100-us.md) | 10 default templates in 8 processes, mostly JSON module objects; writes back through `Part1` |
+| Sage 100 Contractor | [`erps/sage-100-contractor.md`](erps/sage-100-contractor.md) | 10 default templates in 3 processes, mostly JSON module objects; writes back through `Part1` |
+| Sage 100 Contractor 2018 | [`erps/sage-100-contractor-2018.md`](erps/sage-100-contractor-2018.md) | 10 default templates in 3 processes, mostly JSON module objects; writes back through `Part1` |
+| Sage 200 UK | [`erps/sage-200-uk.md`](erps/sage-200-uk.md) | 2 default templates in 1 process, mostly JSON module objects; writes back through `Part1` |
+| Sage 300 | [`erps/sage-300.md`](erps/sage-300.md) | 5 default templates in 3 processes, mostly JSON module objects; nothing written back |
+| Sage 50 Canada | [`erps/sage-50-canada.md`](erps/sage-50-canada.md) | 2 default templates in 1 process, mostly JSON module objects; nothing written back |
+| Sage 50 UK | [`erps/sage-50-uk.md`](erps/sage-50-uk.md) | 4 default templates in 3 processes, mostly JSON module objects; writes back through `Part1` |
+| Sage 50 US | [`erps/sage-50-us.md`](erps/sage-50-us.md) | 17 default templates in 11 processes, mostly JSON module objects; writes back through `Part1` |
+| Sage 500 | [`erps/sage-500.md`](erps/sage-500.md) | 2 default templates in 1 process, mostly JSON module objects; writes back through `Part1` |
+| Sage Intacct | [`erps/sage-intacct.md`](erps/sage-intacct.md) | 1 default template in 1 process, mostly `SELECT` queries; writes back through `Part1` |
+| Sage Live | [`erps/sage-live.md`](erps/sage-live.md) | 2 default templates in 1 process, mostly JSON module objects; writes back through `Part1` |
+| SAP B1 | [`erps/sap-b1.md`](erps/sap-b1.md) | 7 default templates in 4 processes, mostly JSON module objects; writes back through `Part1` |
+| SYSPRO 6 | [`erps/syspro-6.md`](erps/syspro-6.md) | 2 default templates in 1 process, mostly JSON module objects; writes back through `Part1` |
+| VAI S2K | [`erps/vai-s2k.md`](erps/vai-s2k.md) | 6 default templates in 3 processes, mostly JSON module objects; writes back through `Part1`, `Part2` |
+<!-- ERP-TABLE:END -->
+
+**Work out which row applies before reading one.** The source is the ERP the tenant was registered
+with: `dlake register erps` lists the catalogue’s names and codes, and `dlake admin
+crmpro_templates` shows what that tenant can actually import. Match that ERP to a row above, then
+read its page alongside this one — this page for the conventions that hold across every source,
+that page for what this source’s own templates set. If no row matches the tenant’s ERP, this skill
+alone applies: the catalogue ships no default templates for that pair, so there is nothing
+ERP-specific to read and nothing to import.
+
+## 8. Where this sits
 
 - `dlake-txdownloaderpro` — the parent: exposure, key scoping, the two tables, `SFUpdated`, the
   mapping columns, the filter vocabulary, the `txdownloaderpro_*` tools. **Read it first.**
