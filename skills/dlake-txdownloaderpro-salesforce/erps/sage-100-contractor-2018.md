@@ -53,14 +53,13 @@ destination objects are and what the operation flags allow. Operations are the u
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
-| Create/Update Contact | — | `Contact` → `ClientContact`, `JobContact` | 4 | create / update |
+| Create/Update Contact | Salesforce Contact to Sage 100 Contractor ClientContact | `Contact` → `ClientContact`, `JobContact` | 4 | create / update |
 | Create/Update Customer | Salesforce Account to Sage 100 Contractor Customer | `Account` → `Customer` | 2 | create / update |
 | Create/Update Job | Salesforce Opportunity to Sage 100 Contractor Job | `Opportunity` → `Job` | 2 | create / update |
 
 Across the 8 default templates: 4 carry `IsInsert`, 4 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
-given record. 4 catalogue descriptions were not printed because they are placeholders or carry
-text that is not ours to publish.
+given record.
 
 ## 2. The process rows the import creates
 
