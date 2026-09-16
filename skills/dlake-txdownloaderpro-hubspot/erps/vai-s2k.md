@@ -55,12 +55,11 @@ destination objects are and what the operation flags allow. Operations are the u
 |---|---|---|---|---|
 | TxDownloaderPro_111_1_1 | Hubspot companies To VAIS2K Customer | `companies`, `Account` → `Customer` | 2 | create / update |
 | TxDownloaderPro_111_2_1 | Hubspot Contacts to VAIS2K Contacts | `contacts` → `Contact` | 2 | create / update |
-| TxDownloaderPro_111_4_1 | — | `deals` → `SalesOrder` | 2 | create / update |
+| TxDownloaderPro_111_4_1 | HubSpot Deals to VAIS2K Sales Order | `deals` → `SalesOrder` | 2 | create / update |
 
 Across the 6 default templates: 3 carry `IsInsert`, 3 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
-given record. 2 catalogue descriptions were not printed because they are placeholders or carry
-text that is not ours to publish.
+given record.
 
 ## 2. The process rows the import creates
 
