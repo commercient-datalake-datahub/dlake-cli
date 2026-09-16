@@ -56,7 +56,7 @@ destination objects are and what the operation flags allow. Operations are the u
 | Create Customer | Shopify Customer to MYOBACCOUNTRIGHT Customer | `Customer` → `Customer` | 1 | create |
 | Create Product | Shopify Product to MYOBACCOUNTRIGHT Product | `Product` → `Product` | 1 | create |
 | Create SalesOrder | Shopify Order to MYOBACCOUNTRIGHT Order | `Order` → `SalesOrder` | 1 | create |
-| TxDownloaderPro_36_4 | Shopify Order to MYOBACCOUNTRIGHT SalesInvoice | `Order` → `SalesInvoice` | 1 | create |
+| Create ServiceInvoice | Shopify Order to MYOBACCOUNTRIGHT SalesInvoice | `Order` → `SalesInvoice` | 1 | create |
 
 Across the 4 default templates: 4 carry `IsInsert`, 0 carry `IsUpdate`, 0 carry `IsDelete`, and
 4 carry `IsCustomization`. A flag decides which operation the process is allowed to perform, not
