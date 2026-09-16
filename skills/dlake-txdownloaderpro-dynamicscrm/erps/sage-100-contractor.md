@@ -53,12 +53,12 @@ destination objects are and what the operation flags allow. Operations are the u
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
-| Create/Update Customer version 2019 | — | `Account` → `Customer` | 2 | create / update |
+| Create/Update Customer version 2019 | Dynamics CRM Account to Sage100 Contractor Customer | `Account` → `Customer` | 2 | create / update |
 | Create/Update Job version 2019 | — | `Opportunity` → `Job` | 2 | create / update |
 
 Across the 4 default templates: 2 carry `IsInsert`, 2 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
-given record. 4 catalogue descriptions were not printed because they are placeholders or carry
+given record. 2 catalogue descriptions were not printed because they are placeholders or carry
 text that is not ours to publish.
 
 ## 2. The process rows the import creates
