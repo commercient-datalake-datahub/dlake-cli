@@ -56,7 +56,7 @@ destination objects are and what the operation flags allow. Operations are the u
 | Create New Sales Order | Salesforce Quote to Sage 50 UK Sales Order | `Quote`, `Opportunity` → `Order` | 2 | create |
 | Create new Project | Salesforce Project to Sage50UK new Project | `Project` → `Project` | 1 | create / update |
 | Create New Purchase Order | Salesforce Purchase_Order to Sage50Uk New Purchase Order | `PurchaseOrder` → `PurchaseOrder` | 1 | create / update |
-| Create/Update Product | — | `Product2` → `Product` | 1 | create / update |
+| Create/Update Product | Salesforce Product2 to Sage50UK Update Product | `Product2` → `Product` | 1 | create / update |
 | Delete Customer | Salesforce Account to Sage50UK Delete Customer | `Account` → `Customer` | 1 | delete |
 | Delete Invoice | Salesforce Invoice__c to Sage 50UK Delete Invoice | `Quote` → `Invoice` | 1 | delete |
 | Delete Product | Salesforce Project__c to Sage50Uk Delete Product | `Product2` → `Product` | 1 | delete |
@@ -68,7 +68,7 @@ destination objects are and what the operation flags allow. Operations are the u
 
 Across the 13 default templates: 5 carry `IsInsert`, 5 carry `IsUpdate`, 6 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
-given record. 2 catalogue descriptions were not printed because they are placeholders or carry
+given record. 1 catalogue description was not printed because they are placeholders or carry
 text that is not ours to publish.
 
 ## 2. The process rows the import creates
