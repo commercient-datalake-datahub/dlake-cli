@@ -53,16 +53,16 @@ destination objects are and what the operation flags allow. Operations are the u
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
-| Create/Update Contact version 2019 | — | `Contact` → `ClientContact`, `JobContact` | 4 | create / update |
+| Create/Update Contact version 2019 | Salesforce Contact to Sage 100 Contractor ClientContact | `Contact` → `ClientContact`, `JobContact` | 4 | create / update |
+| Create New DailyPayroll version 2019 | — | `TimeSheetEntry` → `DailyPayroll` | 2 | create / update |
 | Create/Update Customer version 2019 | Salesforce Account to Sage 100 Contractor Customer | `Account` → `Customer` | 2 | create / update |
 | Create/Update Job version 2019 | Salesforce Opportunity to Sage 100 Contractor 2019 Job | `Opportunity` → `Job` | 2 | create / update |
 | Create/Update New WorkOrder version 2019 | Salesforce WorkOrder to Sage 100 Contractor WorkOrder | `WorkOrder` → `WorkOrder` | 2 | create / update |
-| TxDownloaderPro_34_7 | — | `TimeSheetEntry` → `DailyPayroll` | 2 | create / update |
-| TxDownloaderPro_34_8 | — | `Building` → `ClientLocation` | 2 | create / update |
+| TxDownloaderPro_34_8 | Salesforce Building to Sage 100 Contractor ClientLocation | `Building` → `ClientLocation` | 2 | create / update |
 
 Across the 14 default templates: 7 carry `IsInsert`, 7 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
-given record. 8 catalogue descriptions were not printed because they are placeholders or carry
+given record. 2 catalogue descriptions were not printed because they are placeholders or carry
 text that is not ours to publish.
 
 ## 2. The process rows the import creates
