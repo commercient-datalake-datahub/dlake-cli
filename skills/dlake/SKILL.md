@@ -238,9 +238,28 @@ GET /auth/{tenant}/api/{entity}/{keyColumn}/{value}          # by key
 
 URL-encode filter values (spaces in `$orderby=Id desc` must be encoded). List responses are
 `{ "value": [ ... ], "nextLink": "..." }`. OData `$count` and `contains()` are **not** supported —
-use GraphQL for totals and substring search. Listing "not deleted" rows needs
-`$filter=dl_deleted eq null or dl_deleted eq false`: `dl_deleted` is nullable and `eq false` does not
-match `NULL`, so the short form hides every untouched row.
+use GraphQL for totals and substring search.
+
+#### Soft-deleted rows are returned by every read surface
+
+On a concurrency-protected table a delete flags the row rather than removing it, and the platform
+keeps returning it: REST, GraphQL, the MCP data tools, the CLI and raw SQL all include
+`dl_deleted = 1` rows until an administrator sweeps them. Nothing filters them out server-side.
+`dl_deleted` is the filter, and applying it is the caller's job.
+
+An **active** row is one where `dl_deleted` is `NULL` or `0`. The column is only written once a row
+is touched, so an untouched active row carries `NULL` and a bare `dl_deleted eq false` (or `= 0`)
+hides every untouched row. Ask for active rows like this:
+
+| Surface | Active-rows filter |
+|---|---|
+| REST (OData) | `?$filter=dl_deleted eq null or dl_deleted eq false` |
+| MCP `read_records` | `filter`: `dl_deleted eq null or dl_deleted eq false` |
+| CLI | `dlake tool read_records --entity <Entity> --filter "dl_deleted eq null or dl_deleted eq false"` |
+| SQL (`dlake query`, `query` tool) | `WHERE ISNULL(dl_deleted, 0) = 0` |
+
+The column exists only on concurrency-protected tables, so on any other table there is nothing to
+filter and these clauses do not apply.
 
 ### Reading (GraphQL — preferred for joins/nesting/aggregates)
 
