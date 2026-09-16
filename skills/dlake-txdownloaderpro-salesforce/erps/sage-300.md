@@ -54,13 +54,13 @@ destination objects are and what the operation flags allow. Operations are the u
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
 | Sales Order | Salesforce Order to Sage 300 Sales Order | `Order`, `Quote`, `Opprtunity` → `Sales Order` | 3 | create |
-| TxDownloader_15_2 | — | `Order`, `Quote`, `Opprtunity` → `ARInvoice` | 3 | create |
+| TxDownloader_15_2 | Salesforce Order to Sage 300 ARInvoice | `Order`, `Quote`, `Opprtunity` → `ARInvoice` | 3 | create |
 | TxDownloader_15_1 | Salesforce Account to Sage 300 Customer | `Account` → `Customer` | 1 | create |
 | TxDownloader_15_4 | — | — → — | 1 | create |
 
 Across the 8 default templates: 8 carry `IsInsert`, 0 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
-given record. 4 catalogue descriptions were not printed because they are placeholders or carry
+given record. 1 catalogue description was not printed because they are placeholders or carry
 text that is not ours to publish.
 
 ## 2. The process rows the import creates
