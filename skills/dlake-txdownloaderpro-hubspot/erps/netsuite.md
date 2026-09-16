@@ -55,13 +55,12 @@ destination objects are and what the operation flags allow. Operations are the u
 |---|---|---|---|---|
 | Create New Contact | Hubspot Contacts to NetSuite Contacts | `contacts` → `Contact` | 2 | create / update |
 | Create New Customer | Hubspot companies To Netsuite Customer | `companies` → `Customer` | 2 | create / update |
-| Create New Invoice | — | `deals` → `Invoice` | 2 | create / update |
-| Create New SalesOrder | — | `deals` → `SalesOrder` | 2 | create / update |
+| Create New Invoice | Hubspot Deals to NetSuite Invoice | `deals` → `Invoice` | 2 | create / update |
+| Create New SalesOrder | Hubspot Deals to NetSuite SalesOrder | `deals` → `SalesOrder` | 2 | create / update |
 
 Across the 8 default templates: 4 carry `IsInsert`, 4 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
-given record. 4 catalogue descriptions were not printed because they are placeholders or carry
-text that is not ours to publish.
+given record.
 
 ## 2. The process rows the import creates
 
