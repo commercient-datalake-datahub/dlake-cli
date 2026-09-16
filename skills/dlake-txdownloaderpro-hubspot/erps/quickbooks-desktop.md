@@ -53,15 +53,15 @@ destination objects are and what the operation flags allow. Operations are the u
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
-| Customer Import | HubSpot Contacts to QuickBooks Customer | `Companies`, `Contact` → `Customer` | 3 | create / update |
-| Create New Customer with Contact | — | `Account` → `Customer Contact` | 1 | create |
-| Create Sales Order and Job | — | `Deals` → `Sales Order` | 1 | create |
+| Customer Import | HubSpot Companies to QuickBooks Customer | `Companies`, `Contact` → `Customer` | 3 | create / update |
+| Create New Customer with Contact | HubSpot Companies to QuickBooks Customer Contact | `Account` → `Customer Contact` | 1 | create |
+| Create Sales Order and Job | HubSpot Deals to QuickBooks Sales Order with Job | `Deals` → `Sales Order` | 1 | create |
 | New Job Import | — | `Contact` → `Job` | 1 | update |
-| Sales Order Import | — | `Deals` → `Sales Order` | 1 | create |
+| Sales Order Import | HubSpot Deals to QuickBooks Sales Order | `Deals` → `Sales Order` | 1 | create |
 
 Across the 7 default templates: 5 carry `IsInsert`, 2 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
-given record. 5 catalogue descriptions were not printed because they are placeholders or carry
+given record. 1 catalogue description was not printed because they are placeholders or carry
 text that is not ours to publish.
 
 ## 2. The process rows the import creates
