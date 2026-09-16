@@ -61,13 +61,13 @@ destination objects are and what the operation flags allow. Operations are the u
 | Update Sales Order Header Only | Update SalesOrder Header from Sage100 Opportunity | `Opportunity`, `Order`, `Quote` → `SalesOrder`, `SalesaOrder` | 3 | update |
 | Create and Update Contact | Sage100 Account(child) To Sage100 Contact | `Account`, `Contact` → `Conact`, `Contact` | 2 | create |
 | Create New Customer | Salesforce Account To Update Sage100 Customer | `Account` → `Customer` | 2 | create / update |
-| Create new Product | — | `Product2` → `CI_ITEM` | 2 | create / update |
+| Create new Product | Salesforce Product2 To Update Product Sage100 | `Product2` → `CI_ITEM` | 2 | create / update |
 | Create New Ship To Address | Salesforce Account(shipping Address) To Sage100 shipToAddress | `Account` → `ShipToAddress` | 1 | create |
 | Create Vendor | Salesforce Account to Sage 100 Vendor | `Account` → `Vendor` | 1 | create |
 
 Across the 32 default templates: 16 carry `IsInsert`, 10 carry `IsUpdate`, 6 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
-given record. 2 catalogue descriptions were not printed because they are placeholders or carry
+given record. 1 catalogue description was not printed because they are placeholders or carry
 text that is not ours to publish.
 
 ## 2. The process rows the import creates
