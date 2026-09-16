@@ -53,17 +53,16 @@ destination objects are and what the operation flags allow. Operations are the u
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
-| Create New Customer | — | `Companies` → `Customer` | 1 | create |
-| Create New Vendor | — | `Companies` → `Vendor` | 1 | create |
-| Delete Customer | — | `Companies` → `Customer` | 1 | delete |
-| Delete Vendor | — | `Companies` → `Vendor` | 1 | delete |
-| Update Customer | — | `Companies` → `Customer` | 1 | update |
-| Update Vendor | — | `Companies` → `Vendor` | 1 | update |
+| Create New Customer | HubSpot Companies to Sage 50 US Customer | `Companies` → `Customer` | 1 | create |
+| Create New Vendor | HubSpot Companies to Sage 50 US Vendor | `Companies` → `Vendor` | 1 | create |
+| Delete Customer | Delete HubSpot Companies to Delete Sage 50 US Customer | `Companies` → `Customer` | 1 | delete |
+| Delete Vendor | Delete HubSpot Companies to Delete Sage 50 US Vendor | `Companies` → `Vendor` | 1 | delete |
+| Update Customer | Update HubSpot Companies to Update Sage 50 US Customer | `Companies` → `Customer` | 1 | update |
+| Update Vendor | Update HubSpot Companies to Update Sage 50 US Vendor | `Companies` → `Vendor` | 1 | update |
 
 Across the 6 default templates: 2 carry `IsInsert`, 2 carry `IsUpdate`, 2 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
-given record. 6 catalogue descriptions were not printed because they are placeholders or carry
-text that is not ours to publish.
+given record.
 
 ## 2. The process rows the import creates
 
