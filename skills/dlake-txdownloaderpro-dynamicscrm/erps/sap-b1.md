@@ -55,11 +55,11 @@ destination objects are and what the operation flags allow. Operations are the u
 |---|---|---|---|---|
 | Create / Update Customer | Update SAP Customer from Dynamics CRM Accounts | `Account` → `Customer` | 2 | create / update |
 | Create Contact | Update SAP contact From MS Dynamic Contact | `Contact` → `Contact` | 2 | create / update |
-| Create / Update Product | — | `Product2` → `Product` | 1 | create |
+| Create / Update Product | Create SAP Product from Salesforce Product2 | `Product2` → `Product` | 1 | create |
 
 Across the 5 default templates: 3 carry `IsInsert`, 2 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
-given record. 3 catalogue descriptions were not printed because they are placeholders or carry
+given record. 2 catalogue descriptions were not printed because they are placeholders or carry
 text that is not ours to publish.
 
 ## 2. The process rows the import creates
