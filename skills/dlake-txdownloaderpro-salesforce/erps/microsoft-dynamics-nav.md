@@ -55,8 +55,8 @@ destination objects are and what the operation flags allow. Operations are the u
 |---|---|---|---|---|
 | Create Contact | Salesforce Contact To Contact MSDynamicNAV | `Contact` → `contact` | 2 | create / update |
 | Create Customer | Salesforce Account To Customer MSDynamicNAV | `Account` → `Customer` | 2 | create / update |
-| TxDownloaderPro_35_8 | — | `Ordercomment` → `Ordercomment` | 1 | create |
-| TxDownloaderPro_35_9 | — | — → — | 1 | create |
+| Create CustomerComment | — | — → — | 1 | create |
+| Create OrderComment | — | `Ordercomment` → `Ordercomment` | 1 | create |
 
 Across the 6 default templates: 4 carry `IsInsert`, 2 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
