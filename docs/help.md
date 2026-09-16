@@ -564,12 +564,12 @@ The one trap: the endpoint-config save writes **either** the configuration JSON 
 
 **Install** — download the self-contained binary for your platform (no runtime needed) and put it on your `PATH`:
 
-- [Windows (win-x64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.34/win-x64/dlake.exe)
-- [Linux x64](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.34/linux-x64/dlake)
-- [Linux ARM64 (linux-arm64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.34/linux-arm64/dlake)
-- [macOS Apple Silicon (osx-arm64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.34/osx-arm64/dlake)
-- [macOS Intel (osx-x64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.34/osx-x64/dlake)
-- [SHA256 checksums](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.34/SHA256SUMS) · or `npm install -g @commercient/dlake`
+- [Windows (win-x64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.35/win-x64/dlake.exe)
+- [Linux x64](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.35/linux-x64/dlake)
+- [Linux ARM64 (linux-arm64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.35/linux-arm64/dlake)
+- [macOS Apple Silicon (osx-arm64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.35/osx-arm64/dlake)
+- [macOS Intel (osx-x64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.35/osx-x64/dlake)
+- [SHA256 checksums](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.35/SHA256SUMS) · or `npm install -g @commercient/dlake`
 
 **macOS — sign the binary once after downloading.** The Mac builds ship unsigned, so run `xattr -dr com.apple.quarantine ./dlake` then `codesign --force --sign - ./dlake` (then `chmod +x ./dlake`). On Apple Silicon this is required for reliability, not just for Gatekeeper: an unsigned binary is validated page-by-page as it runs and can abort **intermittently at startup** — `System.AccessViolationException ... at Thread+StartHelper.InitializeCulture()`, typically on rapid back-to-back invocations, where a retry succeeds. Ad-hoc signing removes it. (The `InitializeCulture` frame is misleading: `dlake` runs with invariant globalization on every platform, so there is no culture data involved.)
 
@@ -630,6 +630,26 @@ Optimistic-concurrency + soft-delete for a table:
 - UPDATEs must echo the row's current `TimeStamp` (rowversion) as `dl_expected_ts` — a strict AFTER trigger rejects stale writes ("Row was modified").
 - DELETEs are intercepted at the DB layer (INSTEAD OF) and become `dl_deleted = 1` soft deletes; a sweep purges flagged rows on demand. **Through the DAB API a direct `DELETE` is rejected** with `DAB_CONCURRENCY_BLOCKED_DELETE` — soft-delete instead by `PATCH`ing `dl_deleted=true` together with `dl_expected_ts` (the row's current `TimeStamp`).
 - Specific accounts can be exempted by an administrator.
+
+**Soft-deleted rows stay visible on every read surface.** A soft delete flags the row; it does not
+hide it. The Data API, the MCP data tools, the CLI and raw SQL all keep returning `dl_deleted = 1`
+rows until a sweep purges them — nothing filters them out server-side, by design, so that a consumer
+can see what was deleted and when. **`dl_deleted` is the filter, and applying it is the consumer's
+job.** An **active** row is one where `dl_deleted` is `NULL` or `0`: the column is only written once
+a row is touched, so an untouched active row carries `NULL`, and a bare `dl_deleted eq false` (or
+`= 0`) silently hides every untouched row. Ask for active rows like this:
+
+| Surface | Active-rows filter |
+|---|---|
+| Data API (REST, OData) | `?$filter=dl_deleted eq null or dl_deleted eq false` |
+| MCP `read_records` | `filter`: `dl_deleted eq null or dl_deleted eq false` |
+| CLI | `dlake tool read_records --entity <Entity> --filter "dl_deleted eq null or dl_deleted eq false"` |
+| SQL (`dlake query`, SQL Editor, `query` tool) | `WHERE ISNULL(dl_deleted, 0) = 0` |
+
+The Data Browser and the table detail Data tab hide soft-deleted rows by default and offer a **Show
+deleted** toggle, which reports how many of the loaded rows are flagged. The column only exists on
+concurrency-protected tables, so on any other table these filters do not apply.
+
 Enable/disable per table from the table detail page. The protection columns (`dl_expected_ts` is virtual — you send it, it's never stored; `dl_deleted`) are server-managed. Enable and disable **regenerate and restart DAB for you** — necessary both for the new `dl_*` columns and because DAB has to see the new triggers (see [Triggers and the Data API](#triggers-and-the-data-api)). If the response says the redeploy FAILED, restart DAB yourself: writes to that table are failing until you do.
 
 ## Audit Stamping
