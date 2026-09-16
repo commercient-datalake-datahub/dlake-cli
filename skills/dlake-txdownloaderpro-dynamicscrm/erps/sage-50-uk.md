@@ -57,11 +57,11 @@ destination objects are and what the operation flags allow. Operations are the u
 | Create New Sales Invoice | Salesforce Invoice__c to Sage50UK Sales Invoice | `Invoice` → `Invoice` | 1 | create / update |
 | Create New Sales Order | Salesforce Order to Sage 50 UK Sales Order | `Order` → `Order` | 1 | create |
 | TxDownloader_3_1 | Dynamic CRM Account to Sage 50 UK Customer | `Account` → `Customer` | 1 | create / update |
-| Update Product | — | — → — | 1 | create / update |
+| Update Product | Salesforce Product2 to Sage50US Update Product | — → — | 1 | create / update |
 
 Across the 5 default templates: 5 carry `IsInsert`, 4 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
-given record. 2 catalogue descriptions were not printed because they are placeholders or carry
+given record. 1 catalogue description was not printed because they are placeholders or carry
 text that is not ours to publish.
 
 ## 2. The process rows the import creates
