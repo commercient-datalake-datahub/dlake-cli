@@ -1,5 +1,35 @@
 # dlake release notes
 
+## 0.5.35 (2026-09-12)
+
+- **Fixed: registration completes against the current Registration API.** Sign-up now asks
+  for the first API key at the moment it is needed instead of picking it up from a status
+  check. The service no longer hands that key back on a status check, so an earlier CLI waits
+  for a key that never arrives and registration never finishes. 0.5.35 works against both the
+  current service and an older one, with nothing to configure; against the current service it
+  is the version you need to register.
+- **New: agent skills are organised by destination, with a page per source system.** The
+  twenty bundled skills now carry their own child pages — one for each source system a
+  destination supports, 330 in all — so an agent reads the skill for the destination and then
+  the page for the system the tenant actually runs. `dlake skills list` shows how many pages
+  each skill carries, `dlake skills show <skill>/erps/<source>` opens one, and
+  `dlake skills install` writes the children alongside the skill.
+- **`dlake admin` says out loud what a generation did not publish.** When a DAB generation
+  leaves an entity out, the affected entities and the reason for each are now printed after
+  the result instead of sitting several screens down in the payload. Machine-readable output
+  is unchanged.
+- **A waking tenant reads as a waking tenant.** A tenant's Data API scales to zero when idle,
+  and the first call while it comes back up now says so and suggests retrying, rather than
+  reporting a bot-verification page or a bare handshake failure.
+- `dlake txdownloaderpro errors` and `transactions` point at a command that exists when the
+  process id is missing.
+- Help and the CLI reference now state that a delete on a concurrency-protected table flags
+  the row rather than removing it, and give the filter for active rows.
+- Upgrade: `npm install -g @commercient/dlake` (or `npm install -g datalake`), then run
+  `dlake skills install` to refresh the bundled agent skills. Run it **without**
+  `--skip-existing` — the skills were reorganised in this release and every one of them
+  changed.
+
 ## 0.5.34 (2026-09-09)
 
 - **New: `dlake registration products` — say what the customer's Sync Agent should run.** The
