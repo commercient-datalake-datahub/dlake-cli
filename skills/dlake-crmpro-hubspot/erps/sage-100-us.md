@@ -155,7 +155,28 @@ process before activating it.
 | create openinvoice | `deal` | 9 | `CloseDate` → `closedate`, `CloseDate` → `createdate`, `CUSTOMERNAME, INVOICENO` → `dealname`, `INVOICENO` → `externalkey`, `INVOICENO` → `recordkey` |
 | create openinvoicedetail | `line_item` | 6 | `UNITPRICE` → `price`, `QUANTITYORDERED` → `quantity`, `SFDCID` → `hs_product_id`, `ITEMCODE` → `name`, `SFDCID` → `associate_deal` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 306 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 306
+- Default operations: insert on 306, update on 306, delete on 306
+- Marked circular-sync: 0
+- Licence groups they span: 10
+- Destination objects: `deal`, `line_item`, `company`, `contact`, `products`, `commercientsage100_SAGE100_AR_CUSTOMER`, `order`, `CommercientSF8__ACCOUNTMATCHING__c`, `product`, `Account`, `commercientsage100_SAGE100_AR_CUSTOMERCONTACT`, `CommercientSF8__CONTACTMATCHING__c`, `CommercientSF8__SHIPTOMATCHING__c`, `invoice`, `commercientsage100_SAGE100_SO_SHIPTOADDRESS`, `CommercientSF8__AR_CUSTOMER__c`, `CommercientSF8__ARCUSTOMERCONTACT__c`, `CommercientSF8__ARPRODUCTS__c`, `CommercientSF8__CONTACTMATCH__c`, `CommercientSF8__DATAMATCHING__c`, 7 more and 13 custom objects
+- Object display names: upsert customer, upsert item, upsert invoice, upsert order, create customer, create invoicedetail, upsert contact, upsert orderdetail, create orderdetail, create contact, upsert invoicedetail, create invoice, 75 more and 25 further templates
+- Template groups: Account, CRM Opportunity and Line, Product, Salesorder, CRM Order and Line, Customer Multi Ship Addresses, CRM Quote and Line
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -173,7 +194,7 @@ The prefixes these templates set:
 - `HUBSPOT_NEW_LINEITEM`
 - `HUBSPOT_NEW_CONTACT`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
