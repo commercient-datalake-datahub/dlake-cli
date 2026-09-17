@@ -2,8 +2,8 @@
 name: dlake-txdownloaderpro-dynamicscrm/erps/quickbooks-online
 description: >-
   What the shipped default TxDownloaderPro templates set up when Dynamics CRM is the writeback
-  destination and QuickBooks Online is the source: the 2 default templates the catalogue ships
-  for this pair, the 2 field-process versions they are identified by, what each template family
+  destination and QuickBooks Online is the source: the 16 default templates the catalogue ships
+  for this pair, the 16 field-process versions they are identified by, what each template family
   delivers, the shape of the query that finds flagged records and the objects and marker columns
   it reads, the structure of the inbound mapping document, and which `ResultStructure` parts the
   templates fill for the write back to the CRM.
@@ -53,12 +53,27 @@ destination objects are and what the operation flags allow. Operations are the u
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
-| TxDownloader_22_1 | Dynamics CRM Account to QuickBooks Online Customer | `Account` → `Customer` | 1 | create |
-| TxDownloader_22_4 | Dynamic CRM SalesOrder to QuickBooks Online Estimate | `Sales Order` → `Estimate` | 1 | create |
+| Create New Customer | Dynamics CRM Account to QuickBooks Online Customer | `Account` → `Customer` | 1 | create |
+| Create New Estimate | Dynamic CRM SalesOrder to QuickBooks Online Estimate | `Sales Order` → `Estimate` | 1 | create |
+| Create New Item | Dynamic CRM Product to QuickBooks Online Item | `Product` → `Item` | 1 | create |
+| Create New Payment | Dynamic CRM Sales Order to QuickBooks Online Payment | `Sales Order` → `Payment` | 1 | create |
+| TxDownloader_22_10 | — | `Sales Order` → `Purchase` | 1 | create |
+| TxDownloader_22_11 | — | `Sales Order` → `Purchase` | 1 | update |
+| TxDownloader_22_12 | Dynamic CRM Sales Order to QuickBooks Online Bill | `Sales Order` → `Bill` | 1 | create |
+| TxDownloader_22_13 | Dynamic CRM Sales Order to QuickBooks Online Bill - Update Bill | `Sales Order` → `Bill` | 1 | update |
+| TxDownloader_22_15 | Dynamic CRM Sales Order to QuickBooks Online Sales Receipt | `Sales Order` → `SalesReceipt` | 1 | create |
+| TxDownloader_22_3 | Dynamic CRM Sales Order to QuickBooks Online Invoice | `Sales Order` → `Invoice` | 1 | create |
+| TxDownloader_22_5 | Dynamic CRM Sales Order to QuickBooks Online Purchase Order | `Sales Order` → `Purchase Order` | 1 | create |
+| TxDownloader_22_7 | Dynamic CRM Sales Order to QuickBooks Online Invoice - Update Invoice | `Sales Order` → `Invoice` | 1 | update |
+| TxDownloader_22_8 | Dynamic CRM Sales Order to QuickBooks Online Estimate - Update Estimate | `Sales Order` → `Estimate` | 1 | update |
+| TxDownloader_22_9 | Dynamic CRM Sales Order to QuickBooks Online Purchase Order - Update Purchase Order | `Sales Order` → `Purchase Order` | 1 | update |
+| Update Invoice | Dynamic CRM Sales Order to QuickBooks Online Invoice - Update Invoice | `Sales Order` → `Invoice` | 1 | update |
+| Update Product | Dynamic CRM Product to QuickBooks Online Item - Update Item | `Product` → `Item` | 1 | update |
 
-Across the 2 default templates: 2 carry `IsInsert`, 0 carry `IsUpdate`, 0 carry `IsDelete`. A
+Across the 16 default templates: 9 carry `IsInsert`, 7 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
-given record.
+given record. 2 catalogue descriptions were not printed because they are placeholders or carry
+text that is not ours to publish.
 
 ## 2. The process rows the import creates
 
@@ -81,19 +96,22 @@ that never matches a run.
 | `IsInsert` / `IsUpdate` / `IsDelete` | the template’s own flags — section 1 |
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
-The field-process versions this pair’s default templates belong to: `TxDownloader_22_4`,
-`TxDownloader_22_1`.
+The field-process versions this pair’s default templates belong to: `TxDownloader_22_3`,
+`TxDownloader_22_5`, `TxDownloader_22_7`, `TxDownloader_22_8`, `TxDownloader_22_9`,
+`TxDownloader_22_10`, `TxDownloader_22_11`, `TxDownloader_22_12`, `TxDownloader_22_13`,
+`TxDownloader_22_15`, `TxDownloader_22_1`, `TxDownloader_22_4`, `TxDownloader_22_17`,
+`TxDownloader_22_20`, `TxDownloader_22_18`, `TxDownloader_22_19`.
 
 1 of these template rows carry a licence-group id, so what a given tenant is offered in the
 picker is narrower than what the catalogue holds.
 
 ## 3. What the query retrieves
 
-`Query` does not have one shape across the product (parent §9). For this pair, 2 carry a
+`Query` does not have one shape across the product (parent §9). For this pair, 16 carry a
 FetchXML document. **No query text is reproduced here**; what follows is what those queries read
 and filter on.
 
-- **Objects read:** `salesorder`, `salesorderdetail`, `account`, `contact`.
+- **Objects read:** `salesorder`, `salesorderdetail`, `account`, `contact`, `product`.
 - **Child collections pulled in the same query:** `salesorderdetail`, `account`, `contact`. A
   header retrieved without its lines is a query that does not name the child collection.
 - **FetchXML elements used:** `fetch`, `entity`, `attribute`, `link-entity`, `filter`,
@@ -105,25 +123,37 @@ and filter on.
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 2 default templates, 2 carry a `DefaultProcessStructure`; 1 of those do not parse as JSON
-and are counted but not described. A parseable document carries about 19 members.
+pair’s 16 default templates, 16 carry a `DefaultProcessStructure`; 1 of those do not parse as
+JSON and are counted but not described. A parseable document carries about 16 members.
 
-- **Template path roots used:** `salesorder`, `account`, `salesorderLineItem`. A path’s first
-  segment has to match the element the engine emits, and the document root itself is never part
-  of the path.
-- **No `Line.` section.** These templates map a single record, with no repeating child
-  collection.
+- **Template path roots used:** `salesorder`, `salesorderLineItem`, `account`, `product`. A
+  path’s first segment has to match the element the engine emits, and the document root itself
+  is never part of the path.
+- **`Line.` section members present:** `Line.LineItemName`, `Line.LineQty`,
+  `Line.LineUnitPrice`, `Line.LineAmount`, `Line.mainXml`, `Line.LineDescription`. 11 templates
+  name the collection through `Line.mainXml`; the members beside it are resolved against that
+  collection’s own root rather than through the header.
 
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 2 default templates, 0 carry a
-parseable `DefaultResultStructure`, 2 carry none.
+system’s response after the write (parent §11). Of this pair’s 16 default templates, 7 carry a
+parseable `DefaultResultStructure`, 9 carry none.
 
-**No default template for this pair fills a part.** Nothing is written back to Dynamics CRM by
-these templates: the source system’s key stays in `TxDownloaderProTrans` and the CRM record is
-left as the user flagged it. If a tenant needs the key on the CRM record, `ResultStructure` is
-the column to fill, and the parent’s §11 gives its shape.
+| Part | Filled by | What it addresses | Members present |
+|---|---|---|---|
+| `Part1` | 7 templates | the record the run is already working with | a source-path-to-CRM-field map |
+| `Part2` | 0 templates (7 explicitly null) | the child/line records under it | — |
+| `Part3` | 0 templates (7 explicitly null) | a **new** record, matched on an external id field | — |
+| `Part4` | 0 templates (7 explicitly null) | a **different** record, addressed by an id field | — |
+
+- **CRM fields `Part1` writes to:** `comrcint_externalkey`. These are the fields on the flagged
+  record that carry the source system’s key or outcome once the write has happened — the names
+  only; what lands in them is the response, per record.
+- **Response fields it reads them from:** `Id`, `NewInvoiceCode`, `NewPOCode`,
+  `NewPurchaseCode`, `NewSalesReceiptCode`. The map is written **source-path first, CRM-field
+  second** (parent §11); the wrong way round resolves to the same silent empty string as a
+  mistyped path.
 
 ## 6. Verifying
 
