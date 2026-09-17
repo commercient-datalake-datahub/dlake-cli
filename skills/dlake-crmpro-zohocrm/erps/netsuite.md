@@ -193,7 +193,28 @@ process before activating it.
 | Netsuite TaxType | `Netsuite_TaxType` | 8 | `internalId` → `Commercient_ExternalKey`, `name` → `Name`, `description` → `Description`, `doesNotAddToTotal` → `DoesNotAddToTotal`, `isInactive` → `IsInactive` |
 | Netsuite TaxGroup | `Netsuite_TaxGroup` | 16 | `internalId` → `Commercient_ExternalKey`, `taxTypeinternalId` → `Netsuite_TaxType`, `internalId` → `Name`, `city` → `City`, `county` → `County` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 64 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 64
+- Default operations: insert on 64, update on 64, delete on 64
+- Marked circular-sync: 0
+- Licence groups they span: 5
+- Destination objects: `Accounts`, `commercientnetsuite0__Netsuite_Address`, `commercientnetsuite0__Netsuite_Customer`, `commercientnetsuite0__Netsuite_SalesPerson`, `Contacts`, `Products`, `commercientnetsuite0__Netsuite_Invoice`, `commercientnetsuite0__Netsuite_InvoiceItem`, `commercientnetsuite0__Netsuite_Item`, `commercientnetsuite0__Netsuite_SalesOrder`, `commercientnetsuite0__Netsuite_SalesOrderItem`, `commercientnetsuite0__Netsuite_Terms`, `NetsuiteInventoryLocation`, `users`, `commercientnetsuite0__Netsuite_Item_Warehouse`, `Netsuite_TaxGroup`, `Netsuite_TaxType`, `Price_Books`, `CommercientSF13__ACCOUNTMATCHING__c`, `CommercientSF13__CONTACTMATCHING__c`, 1 more and 2 custom objects
+- Object display names: Account, Contact, Netsuite Customer, Netsuite CustomerAddress, Netsuite SalesPerson, Netsuite Invoice, Netsuite InvoiceLine, Netsuite Item, Netsuite SalesOrder, Netsuite SalesOrderLine, Netsuite Term, Product, 15 more and 2 further templates
+- Template groups: Account, CRM Order and Line, Product
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -222,7 +243,7 @@ The prefixes these templates set:
 - `vw_NETSUITE_TaxType:`
 - `vw_NETSUITE_TaxGroup:`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
