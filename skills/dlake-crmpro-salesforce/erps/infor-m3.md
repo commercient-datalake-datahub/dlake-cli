@@ -169,7 +169,28 @@ process before activating it.
 | Product to Item Master Reverse Lookup | `Product2` | 2 | `MMCONO, MMITNO` → `CommercientSF__ExternalKey__c`, `SFDCID` → `CommercientSF18__INFORM3_Item_Master__c` |
 | Get Users | `user` | 1 | — |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 18 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 18
+- Default operations: insert on 18, update on 18, delete on 18
+- Marked circular-sync: 0
+- Licence groups they span: 11
+- Destination objects: `Account`, `Product2`, `user`, `CommercientSF18__MITBAL__c`, `CommercientSF18__MITMAS__c`, `CommercientSF18__OCUSMA__c`, `CommercientSF18__OINVOH__c`, `CommercientSF18__OINVOL__c`, `CommercientSF18__OOHEAD__c`, `CommercientSF18__OOLINE__c`, `CommercientSF18_CSYTAB__c`, `CommercientSF18_OCUSAD_ShipAdd__c`, `Contact`, `Location`, `ProductItem`
+- Object display names: Get Users, Account, Contact, Get Location, INFORM3 Customer, INFORM3 CustomerToAccountLookup, INFORM3 InvoiceHeader, INFORM3 InvoiceLine, INFORM3 ItemMaster, INFORM3 ItemWarehouse, INFORM3 SalesOrderHeader, INFORM3 SalesOrderLine and 5 more
+- Template groups: Account, Product, Invoice, Salesorder, CRM Ownership, Customer Multi Ship Addresses
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -197,7 +218,7 @@ The prefixes these templates set:
 - `vw_INFORM3_SalesOrderHeader`
 - `vw_INFORM3_Salesperson`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
