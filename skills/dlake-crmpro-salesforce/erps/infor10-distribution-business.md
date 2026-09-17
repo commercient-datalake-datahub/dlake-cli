@@ -143,7 +143,28 @@ process before activating it.
 | SYNC INVOICEHEADER | `CommercientSF18__aret_InvoiceHeader__c` | 79 | `cono` → `CommercientSF18__cono__c`, `custno` → `CommercientSF18__custno__c`, `statustype` → `CommercientSF18__statustype__c`, `invno` → `CommercientSF18__invno__c`, `invsuf` → `CommercientSF18__invsuf__c` |
 | SYNC INVOICELINEITEM | `CommercientSF18__oeel_InvoiceDetail__c` | 200 | `INFORSXE_Invoice_Header` → `CommercientSF18__INFORSXE_Invoice_Header__c`, `INFORSXE_Item_Master` → `CommercientSF18__INFORSXE_Item_Master__c`, `Product` → `CommercientSF18__Product__c`, `advertisingcode` → `advertisingcode`, `altwhse` → `CommercientSF18__altwhse__c` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 43 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 43
+- Default operations: insert on 43, update on 43, delete on 43
+- Marked circular-sync: 0
+- Licence groups they span: 12
+- Destination objects: `Account`, `Product2`, `Opportunity`, `CommercientSF18__oeeh__c`, `OpportunityLineItem`, `PricebookEntry`, `CommercientSF14__BAAN_CUSTOMER__c`, `CommercientSF14__BAAN_CUSTOMERADDRESS__c`, `CommercientSF14__BAAN_INVOICEDETAIL__c`, `CommercientSF14__BAAN_INVOICEHEADER__c`, `CommercientSF14__BAAN_ITEM__c`, `CommercientSF14__BAAN_SALESORDERDETAIL__c`, `CommercientSF14__BAAN_SALESORDERHEADER__c`, `CommercientSF18__aret_InvoiceHeader__c`, `CommercientSF18__arsc__c`, `CommercientSF18__oeel__c`, `CommercientSF18__oeel_InvoiceDetail__c`, `CommercientSF18__QUOTEHEADER__c`, `CommercientSF18__smsn__c`, `CommercientSF18_INFORSXE_Quote__c`, 4 more and 8 custom objects
+- Object display names: SYNC ACCOUNT, SYNC CUSTOMER, SYNC CUSTOMERTOACCOUNTLOOKUP, SYNC INVOICEHEADER, SYNC ITEM, SYNC ITEMTOPRODUCTLOOKUP, SYNC PRODUCT, Get Users, INFORSXE QuoteHeader, INFORSXE QuoteLine, Opportunity Header, Opportunity HeaderUpdate, 20 more and 4 further templates
+- Template groups: Account, Product, CRM Opportunity and Line, Invoice, Salesorder, Opportunity, Customer Multi Ship Addresses
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -166,7 +187,7 @@ The prefixes these templates set:
 - `vw_INFORSXE_SalesOrderLine`
 - `vw_INFORSXE_Salesperson`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
