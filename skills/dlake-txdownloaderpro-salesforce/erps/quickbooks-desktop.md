@@ -2,8 +2,8 @@
 name: dlake-txdownloaderpro-salesforce/erps/quickbooks-desktop
 description: >-
   What the shipped default TxDownloaderPro templates set up when Salesforce is the writeback
-  destination and QuickBooks Desktop is the source: the 32 default templates the catalogue ships
-  for this pair, the 12 field-process versions they are identified by, what each template family
+  destination and QuickBooks Desktop is the source: the 45 default templates the catalogue ships
+  for this pair, the 20 field-process versions they are identified by, what each template family
   delivers, the shape of the query that finds flagged records and the objects and marker columns
   it reads, the structure of the inbound mapping document, and which `ResultStructure` parts the
   templates fill for the write back to the CRM.
@@ -61,14 +61,23 @@ destination objects are and what the operation flags allow. Operations are the u
 | Purchase Order Import | Commercient sync's your CRM Purchase Orders with item list and creates standard Order records in the ERP. The Customer's ship to and a bill to addresses are imported and mapped to the ERP fields. | `Opportunity`, `Order`, `Quote` → `Purchase Order` | 3 | create / update |
 | Vendor Credit Memo Import | Commercient sync's your CRM Orders with item list and creates standard Credit Memo records in the ERP. The Customer's ship to and a bill to addresses are imported and mapped to the ERP fields. | `Opportunity`, `Order`, `Quote` → `Vendor Credit Memo` | 3 | create / update |
 | Create New Customer with Contact | Salesforce Account to QuickBooks Customer Contact | `Account` → `Customer`, `Customer Contact` | 2 | create / update |
+| Create New Lead | Salesforce Lead to QuickBooks Lead | `Lead` → `Lead` | 2 | create / update |
+| Create New Non Inventory Item | Salesforce Product to QuickBooks Non Inventory Item | `Product2` → `ItemNonInventory` | 2 | create / update |
+| Create New Sales Receipt | Salesforce Order to QuickBooks Sales Receipt | `Order` → `SalesReceipt` | 2 | create / update |
+| CreateNewEstimate | Salesforce Quote to QuickBooks Estimate | `Quote` → `Estimate` | 2 | create / update |
 | New Job Import | Commercient sync's your CRM Accounts and creates Receivable Customer (AR Customer) list in the ERP. The AR Customer's ship to and a bill to addresses are imported and mapped to the ERP fields. | `Account` → `Customer`, `Job` | 2 | create / update |
+| TxDownloader_5_11 | — | `Order` → `Payment` | 2 | create / update |
+| CustomerShipToAddress | Salesforce Account to QuickBooks Customer Ship To Address | `Account` → `ShipTo` | 1 | update |
+| Delete List Entry | Salesforce Account to QuickBooks Customer - Delete List Entry | `Account` → `List Entry` | 1 | delete |
+| Delete Transaction Entry | Salesforce Order to QuickBooks Sales Order - Delete Transaction Entry | `Order` → `Transaction Entry` | 1 | delete |
 | Inventory Product Import | Commercient sync's your CRM Products/Items with item list and creates standard Product/Items records in the ERP. Item stock, item related taxes, item unit price, unit of measure, description will be imported to its an equivalent field of ERP. | `Product` → `Inventory Product` | 1 | create / update |
 | New Vendor Import | Commercient sync's your CRM Accounts and creates Receivable Customer (AR Customer) list in the ERP. The AR Customer's ship to and a bill to addresses are imported and mapped to the ERP fields. | `Account` → `Vendor` | 1 | create / update |
 | Service Product Import | Salesforce Product to QuickBooks Service Product | `Product` → `Service Product` | 1 | create / update |
 
-Across the 32 default templates: 26 carry `IsInsert`, 29 carry `IsUpdate`, 0 carry `IsDelete`. A
+Across the 45 default templates: 31 carry `IsInsert`, 35 carry `IsUpdate`, 2 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
-given record.
+given record. 2 catalogue descriptions were not printed because they are placeholders or carry
+text that is not ours to publish.
 
 ## 2. The process rows the import creates
 
@@ -92,8 +101,10 @@ that never matches a run.
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
 The field-process versions this pair’s default templates belong to: `TxDownloaderPro_5_22`,
-`TxDownloaderPro_5_25`, `TxDownloader_5_1`, `TxDownloader_5_8`, `TxDownloader_5_6`,
-`TxDownloader_5_4`, `TxDownloader_5_5`, `TxDownloader_5_7`, `TxDownloader_5_3`,
+`TxDownloaderPro_5_25`, `TxDownloaderPro_5_15`, `TxDownloaderPro_5_28`, `TxDownloaderPro_5_27`,
+`TxDownloaderPro_5_16`, `TxDownloader_5_1`, `TxDownloaderPro_5_17`, `TxDownloaderPro_5_19`,
+`TxDownloaderPro_5_20`, `TxDownloader_5_8`, `TxDownloader_5_6`, `TxDownloader_5_4`,
+`TxDownloader_5_5`, `TxDownloader_5_7`, `TxDownloader_5_11`, `TxDownloader_5_3`,
 `TxDownloader_5_2`, `TxDownloader_5_9`, `TxDownloader_5_12`.
 
 10 of these template rows carry a licence-group id, so what a given tenant is offered in the
@@ -101,28 +112,28 @@ picker is narrower than what the catalogue holds.
 
 ## 3. What the query retrieves
 
-`Query` does not have one shape across the product (parent §9). For this pair, 32 carry a
+`Query` does not have one shape across the product (parent §9). For this pair, 45 carry a
 `SELECT` statement in the CRM's own query language. **No query text is reproduced here**; what
 follows is what those queries read and filter on.
 
-- **Objects read:** `OpportunityLineItems`, `OrderItems`, `QuoteLineItems`, `Account`,
-  `CommercientSF11__Customer__c`, `product2`, `CommercientSF11__SalesOrderLines__r`.
+- **Objects read:** `OpportunityLineItems`, `OrderItems`, `QuoteLineItems`, `Account`, `Lead`,
+  `Product2`, `CommercientSF11__Customer__c`, `Order`, `product2`,
+  `CommercientSF11__SalesOrderLines__r`.
 - **Child collections pulled in the same query:** `OpportunityLineItems`, `OrderItems`,
   `QuoteLineItems`, `CommercientSF11__SalesOrderLines__r`. A header retrieved without its lines
   is a query that does not name the child collection.
 - **Marker and key columns the queries name:** `CommercientSF__Commercient_ArCustomerCode__c`,
-  `CommercientSF11__Account__r`, `CommercientSF11__AccountNumber__c`,
-  `CommercientSF11__AltContact__c`, `CommercientSF11__AltPhone__c`,
-  `CommercientSF11__Balance__c`, `CommercientSF11__BillAddressAddr1__c`,
-  `CommercientSF11__BillAddressAddr2__c`, `CommercientSF11__BillAddressAddr3__c`,
-  `CommercientSF11__BillAddressAddr4__c`, `CommercientSF11__BillAddressAddr5__c`,
-  `CommercientSF11__BillAddressBlockAddr1__c`, `CommercientSF11__BillAddressBlockAddr2__c`,
-  `CommercientSF11__BillAddressBlockAddr3__c`, `CommercientSF11__BillAddressBlockAddr4__c`,
-  `CommercientSF11__BillAddressBlockAddr5__c`, `CommercientSF11__BillAddressCity__c`,
-  `CommercientSF11__BillAddressCountry__c`, `CommercientSF11__BillAddressCounty__c`,
-  `CommercientSF11__BillAddressNote__c`, and 148 more. These are the columns a user’s flag lands
-  in and the columns the run writes an outcome back to; which ones are in the `WHERE` is what
-  decides whether a record is in scope at all.
+  `Commercient_ExternalKey__c`, `Commercient_EditSequence__c`, `CommercientSF11__Account__r`,
+  `CommercientSF11__AccountNumber__c`, `CommercientSF11__AltContact__c`,
+  `CommercientSF11__AltPhone__c`, `CommercientSF11__Balance__c`,
+  `CommercientSF11__BillAddressAddr1__c`, `CommercientSF11__BillAddressAddr2__c`,
+  `CommercientSF11__BillAddressAddr3__c`, `CommercientSF11__BillAddressAddr4__c`,
+  `CommercientSF11__BillAddressAddr5__c`, `CommercientSF11__BillAddressBlockAddr1__c`,
+  `CommercientSF11__BillAddressBlockAddr2__c`, `CommercientSF11__BillAddressBlockAddr3__c`,
+  `CommercientSF11__BillAddressBlockAddr4__c`, `CommercientSF11__BillAddressBlockAddr5__c`,
+  `CommercientSF11__BillAddressCity__c`, `CommercientSF11__BillAddressCountry__c`, and 148 more.
+  These are the columns a user’s flag lands in and the columns the run writes an outcome back
+  to; which ones are in the `WHERE` is what decides whether a record is in scope at all.
 - **Operators present:** `!=`, an empty-string test, `=`. The parent’s §12 is the authority on
   the vocabulary; the point here is only which of it these templates use.
 - **Where the filtering happens:** in the query, on the CRM side, before anything reaches the
@@ -132,36 +143,39 @@ follows is what those queries read and filter on.
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 32 default templates, 30 carry a `DefaultProcessStructure` and 2 carry none. A parseable
-document carries about 15 members.
+pair’s 45 default templates, 43 carry a `DefaultProcessStructure` and 2 carry none. A parseable
+document carries about 14 members.
 
-- **Template path roots used:** `Account`, `Order`, `Quote`, `Opportunity`, `OrderItems`,
-  `OpportunityLineItems`, `QuoteLineItems`, `Product2`. A path’s first segment has to match the
-  element the engine emits, and the document root itself is never part of the path.
+- **Template path roots used:** `Order`, `Quote`, `Account`, `Opportunity`, `OrderItems`,
+  `QuoteLineItems`, `OpportunityLineItems`, `Product2`, `Lead`. A path’s first segment has to
+  match the element the engine emits, and the document root itself is never part of the path.
 - **`Line.` section members present:** `Line.Quantity`, `Line.Rate`, `Line.Desc`, `Line.Amount`,
-  `Line.ItemListID`, `Line.UnitOfMeasure`, `Line.ItemRef`.
+  `Line.ItemRef`, `Line.ItemListID`, `Line.UnitOfMeasure`, `Line.mainXml`,
+  `Line.ItemRefFullName`. 4 templates name the collection through `Line.mainXml`; the members
+  beside it are resolved against that collection’s own root rather than through the header.
 
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 32 default templates, 2 carry a
-parseable `DefaultResultStructure`, 28 carry none, and 2 do not parse and are counted but not
+system’s response after the write (parent §11). Of this pair’s 45 default templates, 7 carry a
+parseable `DefaultResultStructure`, 36 carry none, and 2 do not parse and are counted but not
 described. 1 parse but are not in the four-part shape at all — a flat field document where the
 parts should be.
 
 | Part | Filled by | What it addresses | Members present |
 |---|---|---|---|
-| `Part1` | 1 template | the record the run is already working with | a source-path-to-CRM-field map |
-| `Part2` | 0 templates (1 explicitly null) | the child/line records under it | — |
-| `Part3` | 0 templates (1 explicitly null) | a **new** record, matched on an external id field | — |
-| `Part4` | 0 templates (1 explicitly null) | a **different** record, addressed by an id field | — |
+| `Part1` | 6 templates | the record the run is already working with | a source-path-to-CRM-field map |
+| `Part2` | 0 templates (6 explicitly null) | the child/line records under it | — |
+| `Part3` | 0 templates (6 explicitly null) | a **new** record, matched on an external id field | — |
+| `Part4` | 0 templates (6 explicitly null) | a **different** record, addressed by an id field | — |
 
-- **CRM fields `Part1` writes to:** `CommercientSF__Commercient_ArCustomerCode__c`. These are
-  the fields on the flagged record that carry the source system’s key or outcome once the write
-  has happened — the names only; what lands in them is the response, per record.
-- **Response fields it reads them from:** `NewCustomerCode`. The map is written **source-path
-  first, CRM-field second** (parent §11); the wrong way round resolves to the same silent empty
-  string as a mistyped path.
+- **CRM fields `Part1` writes to:** `Commercient_ExternalKey__c`,
+  `CommercientSF__Commercient_ArCustomerCode__c`. These are the fields on the flagged record
+  that carry the source system’s key or outcome once the write has happened — the names only;
+  what lands in them is the response, per record.
+- **Response fields it reads them from:** `ListID`, `NewCustomerCode`. The map is written
+  **source-path first, CRM-field second** (parent §11); the wrong way round resolves to the same
+  silent empty string as a mistyped path.
 
 ## 6. Verifying
 
