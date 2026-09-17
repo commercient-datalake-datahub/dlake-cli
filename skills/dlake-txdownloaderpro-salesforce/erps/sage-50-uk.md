@@ -2,8 +2,8 @@
 name: dlake-txdownloaderpro-salesforce/erps/sage-50-uk
 description: >-
   What the shipped default TxDownloaderPro templates set up when Salesforce is the writeback
-  destination and Sage 50 UK is the source: the 13 default templates the catalogue ships for
-  this pair, the 12 field-process versions they are identified by, what each template family
+  destination and Sage 50 UK is the source: the 15 default templates the catalogue ships for
+  this pair, the 14 field-process versions they are identified by, what each template family
   delivers, the shape of the query that finds flagged records and the objects and marker columns
   it reads, the structure of the inbound mapping document, and which `ResultStructure` parts the
   templates fill for the write back to the CRM.
@@ -58,15 +58,17 @@ destination objects are and what the operation flags allow. Operations are the u
 | Create New Purchase Order | Salesforce Purchase_Order to Sage50Uk New Purchase Order | `PurchaseOrder` → `PurchaseOrder` | 1 | create / update |
 | Create/Update Product | Salesforce Product2 to Sage50UK Update Product | `Product2` → `Product` | 1 | create / update |
 | Delete Customer | Salesforce Account to Sage50UK Delete Customer | `Account` → `Customer` | 1 | delete |
+| Delete Customer Contact | Salesforce Contact to Sage50UK Delete Customer Contact | `Contact` → `Contact` | 1 | delete |
 | Delete Invoice | Salesforce Invoice__c to Sage 50UK Delete Invoice | `Quote` → `Invoice` | 1 | delete |
 | Delete Product | Salesforce Project__c to Sage50Uk Delete Product | `Product2` → `Product` | 1 | delete |
 | Delete Purchase Order | Salesforce Purchase_Order__c to Sage50UK Delete Purchase Order | `Opportunity` → `PurchaseOrder` | 1 | delete |
 | Delete Sales Order | Salesforce Quote to Sage 50 Order | `Quote` → `Order` | 1 | delete |
 | Delete Supplier | Salesforce Account to Sage50UK Delete Supplier | `Account` → `Customer` | 1 | delete |
 | TxDownloader_3_1 | Salesforce Update Account To Sage50UK Update Customer | `Account` → `Customer` | 1 | update |
+| Update Contact | Salesforce Contact to Sage50UK Update Contact | `Contact` → `Contact` | 1 | update |
 | Update Customer | — | `Account` → `Customer` | 1 | update |
 
-Across the 13 default templates: 5 carry `IsInsert`, 5 carry `IsUpdate`, 6 carry `IsDelete`. A
+Across the 15 default templates: 5 carry `IsInsert`, 6 carry `IsUpdate`, 7 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
 given record. 1 catalogue description was not printed because they are placeholders or carry
 text that is not ours to publish.
@@ -94,20 +96,21 @@ that never matches a run.
 
 The field-process versions this pair’s default templates belong to: `TxDownloader_3_4`,
 `TxDownloader_3_10`, `TxDownloader_3_2`, `TxDownloader_3_5`, `TxDownloader_3_12`,
-`TxDownloader_3_14`, `TxDownloader_3_15`, `TxDownloader_3_17`, `TxDownloader_3_13`,
-`TxDownloader_3_16`, `TxDownloader_3_1`, `TxDownloader_3_7`.
+`TxDownloader_3_18`, `TxDownloader_3_14`, `TxDownloader_3_15`, `TxDownloader_3_17`,
+`TxDownloader_3_13`, `TxDownloader_3_16`, `TxDownloader_3_1`, `TxDownloader_3_9`,
+`TxDownloader_3_7`.
 
 3 of these template rows carry a licence-group id, so what a given tenant is offered in the
 picker is narrower than what the catalogue holds.
 
 ## 3. What the query retrieves
 
-`Query` does not have one shape across the product (parent §9). For this pair, 13 carry a
+`Query` does not have one shape across the product (parent §9). For this pair, 15 carry a
 `SELECT` statement in the CRM's own query language. **No query text is reproduced here**; what
 follows is what those queries read and filter on.
 
 - **Objects read:** `Project__c`, `Purchase_Order_Products__r`, `QuoteLineItems`,
-  `OpportunityLineItems`, `Product2`, `Account`, `Quote`, `Opportunity`.
+  `OpportunityLineItems`, `Product2`, `Account`, `Contact`, `Quote`, `Opportunity`.
 - **Child collections pulled in the same query:** `Purchase_Order_Products__r`,
   `QuoteLineItems`, `OpportunityLineItems`. A header retrieved without its lines is a query that
   does not name the child collection.
@@ -125,11 +128,11 @@ follows is what those queries read and filter on.
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 13 default templates, 13 carry a `DefaultProcessStructure`. A parseable document carries
+pair’s 15 default templates, 15 carry a `DefaultProcessStructure`. A parseable document carries
 about 6 members.
 
-- **Template path roots used:** `Opportunity`, `Account`, `Purchase_Order__c`, `Accounts`,
-  `Quote`, `OpportunityLineItems`, `QuoteLineItems`, `ExternalKey__c`, `Project__c`,
+- **Template path roots used:** `Opportunity`, `Contact`, `Account`, `Purchase_Order__c`,
+  `Accounts`, `Quote`, `OpportunityLineItems`, `QuoteLineItems`, `ExternalKey__c`, `Project__c`,
   `Purchase_Order_Products__r`, `Product2`, `Commercient_ExternalKey__c`. A path’s first segment
   has to match the element the engine emits, and the document root itself is never part of the
   path.
@@ -146,8 +149,8 @@ about 6 members.
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 13 default templates, 2 carry a
-parseable `DefaultResultStructure`, 11 carry none.
+system’s response after the write (parent §11). Of this pair’s 15 default templates, 2 carry a
+parseable `DefaultResultStructure`, 13 carry none.
 
 | Part | Filled by | What it addresses | Members present |
 |---|---|---|---|
