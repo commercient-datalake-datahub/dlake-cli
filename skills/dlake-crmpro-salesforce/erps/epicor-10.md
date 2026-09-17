@@ -222,7 +222,28 @@ process before activating it.
 | Standard Order Update | `Order` | 27 | `Company, OrderNum` → `ExternalKey__c`, `CustNum` → `AccountId`, `BTConNum` → `BillToContactId`, `ShpConNum` → `ShipToContactId`, `QuoteNum` → `OpportunityId` |
 | Standard_Order_Line_Update | `OrderItem` | 10 | `Company, OrderLine, OrderNum` → `ExternalKey__c`, `SFDCID` → `OrderId`, `SFDCID` → `QuoteLineItemId`, `LineDesc` → `Description`, `RequestDate` → `EndDate` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 430 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 430
+- Default operations: insert on 430, update on 430, delete on 430
+- Marked circular-sync: 6
+- Licence groups they span: 17
+- Destination objects: `Account`, `PricebookEntry`, `Contact`, `PriceBookEntry`, `Product2`, `CommercientSF10__EPICOR10_Customer__c`, `CommercientSF10__EPICOR10_InvcDtl__c`, `CommercientSF10__EPICOR10_InvcHead__c`, `CommercientSF10__EPICOR10_OrderDtl__c`, `CommercientSF10__EPICOR10_OrderHed__c`, `CommercientSF10__EPICOR10_SalesRep__c`, `CommercientSF10__EPICOR10_ShipTo__c`, `CommercientSF10__EPICOR10_ItemMaster__c`, `CommercientSF10__EPICOR10_ItemWarehouse__c`, `Opportunity`, `OrderItem`, `Order`, `Quote`, `CommercientSF10__EPICOR10_QuoteDtl__c`, `CommercientSF10__EPICOR10_QuoteHed__c`, 42 more and 16 custom objects
+- Object display names: Account, Account Reverse Lookup, EPICOR10 Customer, EPICOR10 Invoice Header, EPICOR10 Sales Order Detail, EPICOR10 Sales Order Header, EPICOR10 ShipToAddress, Contacts, Create Standard PriceBook, EPICOR10 Invoice Detail, EPICOR10 Sales Person, Product, 85 more and 23 further templates
+- Template groups: Account, Product, Salesorder, Invoice, Customer Multi Ship Addresses, CRM Order and Line, CRM Opportunity and Line, CRM Quote and Line, Opportunity, File/Document Sync, Pricebook
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -257,7 +278,7 @@ The prefixes these templates set:
 - `vw_EPICOR10_SalesOrderDetail`
 - `vw_EPICOR10_SalesPerson`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
