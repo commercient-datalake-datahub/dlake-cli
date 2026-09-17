@@ -57,7 +57,7 @@ destination objects are and what the operation flags allow. Operations are the u
 | Create a Cash Receipt | HubSpot deals to Microsoft Dynamics GP RMCashReceipt | `deals` → `RMCashReceipt` | 1 | create |
 | Create a Payment | HubSpot deals to Microsoft Dynamics GP Payment | `deals` → `Payment` | 1 | create |
 | Create a Product | HubSpot products to Microsoft Dynamics GP Product | `products` → `Product` | 1 | create |
-| TxDownloader_13_2 | HubSpot deals to Microsoft Dynamics GP SalesOrder | `deals` → `SalesOrder` | 1 | create |
+| Create New Sales Order | HubSpot deals to Microsoft Dynamics GP SalesOrder | `deals` → `SalesOrder` | 1 | create |
 
 Across the 6 default templates: 5 carry `IsInsert`, 1 carries `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
@@ -84,8 +84,8 @@ that never matches a run.
 | `IsInsert` / `IsUpdate` / `IsDelete` | the template’s own flags — section 1 |
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
-The field-process versions this pair’s default templates belong to: `TxDownloader_13_2`,
-`TxDownloaderPro_13_5`, `TxDownloaderPro_13_4`, `TxDownloaderPro_13_3`, `TxDownloader_13_1`.
+The field-process versions this pair’s default templates belong to: `TxDownloaderPro_13_5`,
+`TxDownloaderPro_13_4`, `TxDownloaderPro_13_3`, `TxDownloader_13_1`, `TxDownloader_13_2`.
 
 ## 3. What the query retrieves
 
@@ -106,7 +106,7 @@ value is a template resolved against the retrieved record’s XML document (pare
 pair’s 6 default templates, 6 carry a `DefaultProcessStructure`. A parseable document carries
 about 12 members.
 
-- **Template path roots used:** `deals`, `companies`, `LineItem`, `products`. A path’s first
+- **Template path roots used:** `deals`, `companies`, `products`, `LineItem`. A path’s first
   segment has to match the element the engine emits, and the document root itself is never part
   of the path.
 - **`Line.` section members present:** `Line.mainXml`, `Line.ITEMNMBR`, `Line.ITEMDESC`,
