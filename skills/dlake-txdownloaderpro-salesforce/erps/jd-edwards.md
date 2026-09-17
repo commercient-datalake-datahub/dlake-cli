@@ -57,8 +57,8 @@ destination objects are and what the operation flags allow. Operations are the u
 |---|---|---|---|---|
 | Create/update New Contact | Salesforce Contact to JD Edwards Contact | `Contact` → `Contact` | 2 | create / update |
 | Create/update New SalesOrder | Salesforce Order to JD Edwards Sales Order | `Order` → `SalesOrder` | 2 | create / update |
+| Create New Record | — | — → — | 1 | create |
 | Create New SalesOrder | Create New Sales Order from Salesforce to JDEdwards | `SalesOrder` → `SalesOrder` | 1 | create |
-| TxDownloader_16_1 | — | — → — | 1 | create |
 
 Across the 6 default templates: 4 carry `IsInsert`, 2 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
