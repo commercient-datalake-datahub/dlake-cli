@@ -2,8 +2,8 @@
 name: dlake-txdownloaderpro-shopify/erps/epicor-10
 description: >-
   What the shipped default TxDownloaderPro templates set up when Shopify is the writeback
-  destination and Epicor 10 is the source: the 3 default templates the catalogue ships for this
-  pair, the 3 field-process versions they are identified by, what each template family delivers,
+  destination and Epicor 10 is the source: the 4 default templates the catalogue ships for this
+  pair, the 4 field-process versions they are identified by, what each template family delivers,
   the shape of the query that finds flagged records and the objects and marker columns it reads,
   the structure of the inbound mapping document, and which `ResultStructure` parts the templates
   fill for the write back to the CRM.
@@ -53,11 +53,12 @@ destination objects are and what the operation flags allow. Operations are the u
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
+| Create ShipTo Address | Shopify Customer to Epicor 10 ShipTo | `Customer` → `ShipTo` | 1 | create |
+| Create/Update Customer | Shopify Customer to Epicor 10 Customer | `Customer` → `Customer` | 1 | create |
+| Create/Update SalesOrder | Shopify Order to Epicor 10 SalesOrder | `Order` → `SalesOrder` | 1 | create |
 | Product sync | Shopify Product to Epicor 10 Product | `Product` → `Product` | 1 | create |
-| TxDownloader_19_1 | Shopify Customer to Epicor 10 Customer | `Customer` → `Customer` | 1 | create |
-| TxDownloader_19_5 | Shopify Order to Epicor 10 SalesOrder | `Order` → `SalesOrder` | 1 | create |
 
-Across the 3 default templates: 3 carry `IsInsert`, 0 carry `IsUpdate`, 0 carry `IsDelete`, and
+Across the 4 default templates: 4 carry `IsInsert`, 0 carry `IsUpdate`, 0 carry `IsDelete`, and
 3 carry `IsCustomization`. A flag decides which operation the process is allowed to perform, not
 which one it performs on a given record.
 
@@ -82,20 +83,20 @@ that never matches a run.
 | `IsInsert` / `IsUpdate` / `IsDelete` | the template’s own flags — section 1 |
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
-The field-process versions this pair’s default templates belong to: `TxDownloader_19_1`,
-`TxDownloader_19_5`, `TxDownloader_19_10`.
+The field-process versions this pair’s default templates belong to: `TxDownloaderPro_19_11`,
+`TxDownloader_19_1`, `TxDownloader_19_5`, `TxDownloader_19_10`.
 
 1 of these template rows carry a licence-group id, so what a given tenant is offered in the
 picker is narrower than what the catalogue holds.
 
 ## 3. What the query retrieves
 
-`Query` does not have one shape across the product (parent §9). For this pair, 3 carry a JSON
+`Query` does not have one shape across the product (parent §9). For this pair, 4 carry a JSON
 object naming the module to retrieve. **No query text is reproduced here**; what follows is what
 those queries read and filter on.
 
 - **Objects read:** `customer`, `order`, `product`.
-- **Members present in the JSON query object:** `ModuleName` (3). Where a `Where` member is
+- **Members present in the JSON query object:** `ModuleName` (4). Where a `Where` member is
   present it is empty.
 - **Where the filtering happens:** the query names a module rather than a condition, so the
   selection the parent’s §12 describes is applied after retrieval, not by the query.
@@ -104,7 +105,7 @@ those queries read and filter on.
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 3 default templates, 3 carry a `DefaultProcessStructure`. A parseable document carries
+pair’s 4 default templates, 4 carry a `DefaultProcessStructure`. A parseable document carries
 about 10 members.
 
 - **Template path roots used:** `Customer`, `Order`, `line_items`, `Product`. A path’s first
@@ -118,8 +119,8 @@ about 10 members.
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 3 default templates, 0 carry a
-parseable `DefaultResultStructure`, 3 carry none.
+system’s response after the write (parent §11). Of this pair’s 4 default templates, 0 carry a
+parseable `DefaultResultStructure`, 4 carry none.
 
 **No default template for this pair fills a part.** Nothing is written back to Shopify by these
 templates: the source system’s key stays in `TxDownloaderProTrans` and the CRM record is left as
