@@ -133,7 +133,28 @@ process before activating it.
 | create quote | `deal` | 10 | `OrderNbr` → `RecordKey`, `OrderNbr` → `externalkey`, `EffectiveDate` → `closedate`, `Date` → `createdate`, `OrderTotal` → `amount` |
 | create quotedetail | `line_item` | 5 | `inventoryID` → `hs_product_id`, `lineDescription` → `name`, `orderQty` → `quantity`, `unitPrice` → `price`, `OrderNbr` → `associate_deal` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 86 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 86
+- Default operations: insert on 86, update on 86, delete on 86
+- Marked circular-sync: 0
+- Licence groups they span: 5
+- Destination objects: `deal`, `line_item`, `company`, `contact`, `product`, `invoice`, `notes`, `commercientacumatica_ACUMATICA_SalesInvoice`, `commercientacumatica_ACUMATICA_StockItem`, `CommercientSF24__MATCHING__c`, `CommercientSF24__OWNERSHIP__c`, `CommercientSF24__PRODUCTCLASS__c`, `contacts/merge` and 2 custom objects
+- Object display names: create invoicedetail, create invoice, create orderdetail, upsert company, upsert contact, upsert invoice, upsert order, create batch order, create company, create order, create product, upsert orderdetail, 43 more and 10 further templates
+- Template groups: Account, CRM Opportunity and Line, Product, Customer Multi Ship Addresses
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -150,7 +171,7 @@ The prefixes these templates set:
 - `HUBSPOT_NEW_ITEM`
 - `HUBSPOT_NEW_CUSTOMER`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
