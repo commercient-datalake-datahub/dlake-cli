@@ -256,81 +256,102 @@ dlake tool query --profile <tenant> --sql "SELECT LEFT([Key], CHARINDEX('::',[Ke
 
 ## 10. The source ERP’s own page
 
-One row per source ERP the catalogue ships Standard HubSpot templates for. Each page is a child
-file of this skill, addressed as `dlake-crmpro-hubspot/erps/<erp>` — `dlake skills show
+One row per source ERP the catalogue carries HubSpot templates for. Each page is a child file of
+this skill, addressed as `dlake-crmpro-hubspot/erps/<erp>` — `dlake skills show
 dlake-crmpro-hubspot/erps/<erp>` prints one, and `dlake skills install` writes them beside this
 file.
 
 <!-- ERP-TABLE:BEGIN dlake-crmpro-hubspot -->
 | ERP | Page | What its templates deliver |
 |---|---|---|
-| Acumatica | [`erps/acumatica.md`](erps/acumatica.md) | 8 Standard templates in 8 groups, pushing `deal`, `line_item`, `product`, `company`; `::` repository keys |
-| Acumatica Cloud | [`erps/acumatica-cloud.md`](erps/acumatica-cloud.md) | 9 Standard templates in 8 groups, pushing `deal`, `line_item`, `product`, `company`; `::` repository keys |
+| Acumatica | [`erps/acumatica.md`](erps/acumatica.md) | 8 Standard templates in 8 groups, pushing `deal`, `line_item`, `product`, `company`; `::` repository keys; 86 community templates |
+| Acumatica Cloud | [`erps/acumatica-cloud.md`](erps/acumatica-cloud.md) | 9 Standard templates in 8 groups, pushing `deal`, `line_item`, `product`, `company`; `::` repository keys; 10 community templates |
+| Applied Epic | [`erps/applied-epic.md`](erps/applied-epic.md) | no Standard templates; 15 community templates |
 | Aptean Intuitive | [`erps/aptean-intuitive.md`](erps/aptean-intuitive.md) | 6 Standard templates in 6 groups, pushing `product`, `deal`, `line_item`, `company`; `::` repository keys |
-| Aptean Ross | [`erps/aptean-ross.md`](erps/aptean-ross.md) | 6 Standard templates in 6 groups, pushing `products`, `deal`, `line_item`, `company`; `::` repository keys |
-| Aptean WorkWise | [`erps/aptean-workwise.md`](erps/aptean-workwise.md) | 1 Standard template in 1 group, pushing `contact`; `::` repository keys |
-| Datacor Chempax | [`erps/datacor-chempax.md`](erps/datacor-chempax.md) | 1 Standard template in 1 group, pushing `contact`; `::` repository keys |
-| Deltek Ajera | [`erps/deltek-ajera.md`](erps/deltek-ajera.md) | 1 Standard template in 1 group, pushing `contact`; `::` repository keys |
+| Aptean Made2Manage | [`erps/aptean-made2manage.md`](erps/aptean-made2manage.md) | no Standard templates; 21 community templates |
+| Aptean Ross | [`erps/aptean-ross.md`](erps/aptean-ross.md) | 6 Standard templates in 6 groups, pushing `products`, `deal`, `line_item`, `company`; `::` repository keys; 4 community templates |
+| Aptean WorkWise | [`erps/aptean-workwise.md`](erps/aptean-workwise.md) | 1 Standard template in 1 group, pushing `contact`; `::` repository keys; 12 community templates |
+| Datacor Chempax | [`erps/datacor-chempax.md`](erps/datacor-chempax.md) | 1 Standard template in 1 group, pushing `contact`; `::` repository keys; 16 community templates |
+| DELMIAworks | [`erps/delmiaworks.md`](erps/delmiaworks.md) | no Standard templates; 5 community templates |
+| Deltek Ajera | [`erps/deltek-ajera.md`](erps/deltek-ajera.md) | 1 Standard template in 1 group, pushing `contact`; `::` repository keys; 3 community templates |
+| Deltek Vantagepoint | [`erps/deltek-vantagepoint.md`](erps/deltek-vantagepoint.md) | no Standard templates; 5 community templates |
 | Deltek Vision | [`erps/deltek-vision.md`](erps/deltek-vision.md) | 3 Standard templates in 3 groups, pushing `company`, `deal`; `::` repository keys |
-| Dynamics Business Central | [`erps/dynamics-business-central.md`](erps/dynamics-business-central.md) | 3 Standard templates in 3 groups, pushing `product`, `company`, `contact`; `::` repository keys |
-| Epicor 10 | [`erps/epicor-10.md`](erps/epicor-10.md) | 9 Standard templates in 9 groups, pushing `deal`, `line_item`, `company`, `products` and more; `::` repository keys |
-| Epicor 11 Kinetic | [`erps/epicor-11-kinetic.md`](erps/epicor-11-kinetic.md) | 5 Standard templates in 5 groups, pushing `contact`, `company`, `product`, `deal` and more; `::` repository keys |
-| Epicor BisTrack | [`erps/epicor-bistrack.md`](erps/epicor-bistrack.md) | 3 Standard templates in 3 groups, pushing `contact`, `company`, `product`; `::` repository keys |
-| Epicor Cloud | [`erps/epicor-cloud.md`](erps/epicor-cloud.md) | 9 Standard templates in 9 groups, pushing `products`, `deal`, `line_item`, `comapany` and more; `::` repository keys |
-| Epicor Kinetic (EPICORKINECT) | [`erps/epicor-kinetic-epicorkinect.md`](erps/epicor-kinetic-epicorkinect.md) | 1 Standard template in 1 group, pushing `contact`; `::` repository keys |
+| Dynamics Business Central | [`erps/dynamics-business-central.md`](erps/dynamics-business-central.md) | 3 Standard templates in 3 groups, pushing `product`, `company`, `contact`; `::` repository keys; 62 community templates |
+| EBMS | [`erps/ebms.md`](erps/ebms.md) | no Standard templates; 12 community templates |
+| ECi M1 | [`erps/eci-m1.md`](erps/eci-m1.md) | no Standard templates; 7 community templates |
+| EFACS 8 | [`erps/efacs-8.md`](erps/efacs-8.md) | no Standard templates; 11 community templates |
+| Epicor 10 | [`erps/epicor-10.md`](erps/epicor-10.md) | 9 Standard templates in 9 groups, pushing `deal`, `line_item`, `company`, `products` and more; `::` repository keys; 57 community templates |
+| Epicor 11 Kinetic | [`erps/epicor-11-kinetic.md`](erps/epicor-11-kinetic.md) | 5 Standard templates in 5 groups, pushing `contact`, `company`, `product`, `deal` and more; `::` repository keys; 171 community templates |
+| Epicor BisTrack | [`erps/epicor-bistrack.md`](erps/epicor-bistrack.md) | 3 Standard templates in 3 groups, pushing `contact`, `company`, `product`; `::` repository keys; 19 community templates |
+| Epicor Cloud | [`erps/epicor-cloud.md`](erps/epicor-cloud.md) | 9 Standard templates in 9 groups, pushing `products`, `deal`, `line_item`, `comapany` and more; `::` repository keys; 8 community templates |
+| Epicor Kinetic (EPICORKINECT) | [`erps/epicor-kinetic-epicorkinect.md`](erps/epicor-kinetic-epicorkinect.md) | 1 Standard template in 1 group, pushing `contact`; `::` repository keys; 60 community templates |
 | Epicor Kinetic (EPICORKINETIC) | [`erps/epicor-kinetic-epicorkinetic.md`](erps/epicor-kinetic-epicorkinetic.md) | 4 Standard templates in 4 groups, pushing `company`, `product`, `deal`, `line_item`; `::` repository keys |
-| Epicor Prophet 21 (P21) | [`erps/epicor-prophet-21-p21.md`](erps/epicor-prophet-21-p21.md) | 9 Standard templates in 9 groups, pushing `product`, `deal`, `line_item`, `company` and more; `::` repository keys |
+| Epicor Kinetic Cloud | [`erps/epicor-kinetic-cloud.md`](erps/epicor-kinetic-cloud.md) | no Standard templates; 26 community templates |
+| Epicor Prophet 21 (P21) | [`erps/epicor-prophet-21-p21.md`](erps/epicor-prophet-21-p21.md) | 9 Standard templates in 9 groups, pushing `product`, `deal`, `line_item`, `company` and more; `::` repository keys; 128 community templates |
 | Exact MAX | [`erps/exact-max.md`](erps/exact-max.md) | 6 Standard templates in 6 groups, pushing `product`, `deal`, `line_item`, `company`; `::` repository keys |
 | Exact Online | [`erps/exact-online.md`](erps/exact-online.md) | 8 Standard templates in 8 groups, pushing `product`, `deal`, `line_item`, `company`; `::` repository keys |
-| GlobalShop | [`erps/globalshop.md`](erps/globalshop.md) | 8 Standard templates in 8 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
+| GlobalShop | [`erps/globalshop.md`](erps/globalshop.md) | 8 Standard templates in 8 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys; 17 community templates |
 | HubSpot | [`erps/hubspot.md`](erps/hubspot.md) | 1 Standard template in 1 group, pushing `deal`; `:` repository keys |
 | IFS | [`erps/ifs.md`](erps/ifs.md) | 6 Standard templates in 6 groups, pushing `products`, `deal`, `line_item`, `company`; `::` repository keys |
-| Infor CloudSuite | [`erps/infor-cloudsuite.md`](erps/infor-cloudsuite.md) | 3 Standard templates in 3 groups, pushing `contact`, `company`, `deal`; `::` repository keys |
-| Infor CSD | [`erps/infor-csd.md`](erps/infor-csd.md) | 10 Standard templates in 9 groups, pushing `company`, `products`, `deal`, `line_item` and more; `::` repository keys |
-| Infor FACTS | [`erps/infor-facts.md`](erps/infor-facts.md) | 8 Standard templates in 8 groups, pushing `product`, `company`, `deal`, `line_item`; `::` repository keys |
-| Infor SXe | [`erps/infor-sxe.md`](erps/infor-sxe.md) | 6 Standard templates in 6 groups, pushing `deal`, `line_item`, `company`, `products`; `::` repository keys |
-| Infor SyteLine V9 | [`erps/infor-syteline-v9.md`](erps/infor-syteline-v9.md) | 6 Standard templates in 6 groups, pushing `product`, `company`, `deal`, `line_item`; `::` repository keys |
-| Infor Visual | [`erps/infor-visual.md`](erps/infor-visual.md) | 7 Standard templates in 7 groups, pushing `product`, `company`, `deal`, `line_item` and more; `::` repository keys |
-| Infor Visual 9 | [`erps/infor-visual-9.md`](erps/infor-visual-9.md) | 7 Standard templates in 7 groups, pushing `product`, `company`, `deal`, `line_item` and more; `::` repository keys |
+| Infor CloudSuite | [`erps/infor-cloudsuite.md`](erps/infor-cloudsuite.md) | 3 Standard templates in 3 groups, pushing `contact`, `company`, `deal`; `::` repository keys; 52 community templates |
+| Infor CSD | [`erps/infor-csd.md`](erps/infor-csd.md) | 10 Standard templates in 9 groups, pushing `company`, `products`, `deal`, `line_item` and more; `::` repository keys; 18 community templates |
+| Infor FACTS | [`erps/infor-facts.md`](erps/infor-facts.md) | 8 Standard templates in 8 groups, pushing `product`, `company`, `deal`, `line_item`; `::` repository keys; 12 community templates |
+| Infor M3 | [`erps/infor-m3.md`](erps/infor-m3.md) | no Standard templates; 8 community templates |
+| Infor SXe | [`erps/infor-sxe.md`](erps/infor-sxe.md) | 6 Standard templates in 6 groups, pushing `deal`, `line_item`, `company`, `products`; `::` repository keys; 15 community templates |
+| Infor SyteLine V10 | [`erps/infor-syteline-v10.md`](erps/infor-syteline-v10.md) | no Standard templates; 7 community templates |
+| Infor SyteLine V9 | [`erps/infor-syteline-v9.md`](erps/infor-syteline-v9.md) | 6 Standard templates in 6 groups, pushing `product`, `company`, `deal`, `line_item`; `::` repository keys; 15 community templates |
+| Infor Visual | [`erps/infor-visual.md`](erps/infor-visual.md) | 7 Standard templates in 7 groups, pushing `product`, `company`, `deal`, `line_item` and more; `::` repository keys; 54 community templates |
+| Infor Visual 9 | [`erps/infor-visual-9.md`](erps/infor-visual-9.md) | 7 Standard templates in 7 groups, pushing `product`, `company`, `deal`, `line_item` and more; `::` repository keys; 4 community templates |
+| Infor XA | [`erps/infor-xa.md`](erps/infor-xa.md) | no Standard templates; 10 community templates |
 | Infor10 Distribution Business | [`erps/infor10-distribution-business.md`](erps/infor10-distribution-business.md) | 8 Standard templates in 8 groups, pushing `product`, `company`, `deal`, `line_item`; `::` repository keys |
-| JobBOSS | [`erps/jobboss.md`](erps/jobboss.md) | 9 Standard templates in 9 groups, pushing `deal`, `line_item`, `company`, `products` and more; `::` repository keys |
-| Macola 10 | [`erps/macola-10.md`](erps/macola-10.md) | 8 Standard templates in 8 groups, pushing `deal`, `line_item`, `company`, `products`; `::` repository keys |
+| IQMS | [`erps/iqms.md`](erps/iqms.md) | no Standard templates; 4 community templates |
+| JD Edwards | [`erps/jd-edwards.md`](erps/jd-edwards.md) | no Standard templates; 6 community templates |
+| JobBOSS | [`erps/jobboss.md`](erps/jobboss.md) | 9 Standard templates in 9 groups, pushing `deal`, `line_item`, `company`, `products` and more; `::` repository keys; 56 community templates |
+| Macola 10 | [`erps/macola-10.md`](erps/macola-10.md) | 8 Standard templates in 8 groups, pushing `deal`, `line_item`, `company`, `products`; `::` repository keys; 19 community templates |
 | Macola ES | [`erps/macola-es.md`](erps/macola-es.md) | 8 Standard templates in 8 groups, pushing `deal`, `line_item`, `company`, `products`; `::` repository keys |
 | Macola Progression | [`erps/macola-progression.md`](erps/macola-progression.md) | 8 Standard templates in 8 groups, pushing `deal`, `line_item`, `company`, `products`; `::` repository keys |
+| Made2Manage | [`erps/made2manage.md`](erps/made2manage.md) | no Standard templates; 12 community templates |
 | Microsoft Business Central | [`erps/microsoft-business-central.md`](erps/microsoft-business-central.md) | 6 Standard templates in 6 groups, pushing `deal`, `line_item`, `company`, `products`; `::` repository keys |
 | Microsoft Dynamics AX | [`erps/microsoft-dynamics-ax.md`](erps/microsoft-dynamics-ax.md) | 8 Standard templates in 8 groups, pushing `deal`, `line_item`, `product`, `company`; `::` repository keys |
 | Microsoft Dynamics GP 2016 | [`erps/microsoft-dynamics-gp-2016.md`](erps/microsoft-dynamics-gp-2016.md) | 6 Standard templates in 6 groups, pushing `deal`, `line_item`, `product`, `company`; `::` repository keys |
 | Microsoft Dynamics GP 2017 | [`erps/microsoft-dynamics-gp-2017.md`](erps/microsoft-dynamics-gp-2017.md) | 6 Standard templates in 6 groups, pushing `deal`, `line_item`, `product`, `company`; `::` repository keys |
 | Microsoft Dynamics NAV | [`erps/microsoft-dynamics-nav.md`](erps/microsoft-dynamics-nav.md) | 5 Standard templates in 5 groups, pushing `deal`, `line_item`, `company`; `::` repository keys |
-| MYOB AccountRight | [`erps/myob-accountright.md`](erps/myob-accountright.md) | 8 Standard templates in 8 groups, pushing `deal`, `line_item`, `company`, `products`; `::` repository keys |
-| NetSuite | [`erps/netsuite.md`](erps/netsuite.md) | 11 Standard templates in 11 groups, pushing `deal`, `line_item`, `company`, `products`; `::` repository keys |
-| Plex | [`erps/plex.md`](erps/plex.md) | 6 Standard templates in 6 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
+| MYOB AccountRight | [`erps/myob-accountright.md`](erps/myob-accountright.md) | 8 Standard templates in 8 groups, pushing `deal`, `line_item`, `company`, `products`; `::` repository keys; 32 community templates |
+| NetSuite | [`erps/netsuite.md`](erps/netsuite.md) | 11 Standard templates in 11 groups, pushing `deal`, `line_item`, `company`, `products`; `::` repository keys; 29 community templates |
+| Plex | [`erps/plex.md`](erps/plex.md) | 6 Standard templates in 6 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys; 9 community templates |
 | Process PRO | [`erps/process-pro.md`](erps/process-pro.md) | 6 Standard templates in 6 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
-| QuickBooks Desktop | [`erps/quickbooks-desktop.md`](erps/quickbooks-desktop.md) | 9 Standard templates in 9 groups, pushing `company`, `products`, `deal`, `line_item` and more; `::` repository keys |
+| Produce PRO | [`erps/produce-pro.md`](erps/produce-pro.md) | no Standard templates; 16 community templates |
+| QuickBooks Desktop | [`erps/quickbooks-desktop.md`](erps/quickbooks-desktop.md) | 9 Standard templates in 9 groups, pushing `company`, `products`, `deal`, `line_item` and more; `::` repository keys; 646 community templates |
 | QuickBooks Desktop (QUICKBOOKS) | [`erps/quickbooks-desktop-quickbooks.md`](erps/quickbooks-desktop-quickbooks.md) | 9 Standard templates in 9 groups, pushing `company`, `products`, `deal`, `line_item` and more; `::` repository keys |
-| Sage 100 (US) | [`erps/sage-100-us.md`](erps/sage-100-us.md) | 11 Standard templates in 11 groups, pushing `company`, `products`, `deal`, `line_item` and more; `::` repository keys |
+| QuickBooks Online | [`erps/quickbooks-online.md`](erps/quickbooks-online.md) | no Standard templates; 2 community templates |
+| Sage 100 (US) | [`erps/sage-100-us.md`](erps/sage-100-us.md) | 11 Standard templates in 11 groups, pushing `company`, `products`, `deal`, `line_item` and more; `::` repository keys; 306 community templates |
 | Sage 100 2013 V5 | [`erps/sage-100-2013-v5.md`](erps/sage-100-2013-v5.md) | 10 Standard templates in 10 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
 | Sage 100 2014 | [`erps/sage-100-2014.md`](erps/sage-100-2014.md) | 10 Standard templates in 10 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
 | Sage 100 2015 | [`erps/sage-100-2015.md`](erps/sage-100-2015.md) | 10 Standard templates in 10 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
 | Sage 100 2016 | [`erps/sage-100-2016.md`](erps/sage-100-2016.md) | 10 Standard templates in 10 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
-| Sage 100 2017 | [`erps/sage-100-2017.md`](erps/sage-100-2017.md) | 11 Standard templates in 11 groups, pushing `company`, `products`, `deal`, `line_item` and more; `::` repository keys |
-| Sage 100 Contractor 2019 | [`erps/sage-100-contractor-2019.md`](erps/sage-100-contractor-2019.md) | 6 Standard templates in 6 groups, pushing `company`, `products`, `deal`, `line_item` and more; `::` repository keys |
-| Sage 100 Germany | [`erps/sage-100-germany.md`](erps/sage-100-germany.md) | 1 Standard template in 1 group, pushing `contact`; `::` repository keys |
+| Sage 100 2017 | [`erps/sage-100-2017.md`](erps/sage-100-2017.md) | 11 Standard templates in 11 groups, pushing `company`, `products`, `deal`, `line_item` and more; `::` repository keys; 22 community templates |
+| Sage 100 Contractor 2018 | [`erps/sage-100-contractor-2018.md`](erps/sage-100-contractor-2018.md) | no Standard templates; 4 community templates |
+| Sage 100 Contractor 2019 | [`erps/sage-100-contractor-2019.md`](erps/sage-100-contractor-2019.md) | 6 Standard templates in 6 groups, pushing `company`, `products`, `deal`, `line_item` and more; `::` repository keys; 7 community templates |
+| Sage 100 Germany | [`erps/sage-100-germany.md`](erps/sage-100-germany.md) | 1 Standard template in 1 group, pushing `contact`; `::` repository keys; 4 community templates |
 | Sage 100 US (SAGE100US) | [`erps/sage-100-us-sage100us.md`](erps/sage-100-us-sage100us.md) | 10 Standard templates in 10 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
-| Sage 200 UK | [`erps/sage-200-uk.md`](erps/sage-200-uk.md) | 6 Standard templates in 6 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
+| Sage 200 UK | [`erps/sage-200-uk.md`](erps/sage-200-uk.md) | 6 Standard templates in 6 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys; 24 community templates |
 | Sage 200 US | [`erps/sage-200-us.md`](erps/sage-200-us.md) | 6 Standard templates in 6 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
-| Sage 300 | [`erps/sage-300.md`](erps/sage-300.md) | 7 Standard templates in 7 groups, pushing `company`, `products`, `deal`, `line_item` and more; `::` repository keys |
-| Sage 300 CRE | [`erps/sage-300-cre.md`](erps/sage-300-cre.md) | 6 Standard templates in 6 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
-| Sage 50 Cloud | [`erps/sage-50-cloud.md`](erps/sage-50-cloud.md) | 1 Standard template in 1 group, pushing `contact`; `::` repository keys |
-| Sage 50 UK | [`erps/sage-50-uk.md`](erps/sage-50-uk.md) | 5 Standard templates in 5 groups, pushing `deal`, `line_item`, `company`; `::` repository keys |
-| Sage 50 US | [`erps/sage-50-us.md`](erps/sage-50-us.md) | 9 Standard templates in 9 groups, pushing `deal`, `line_item`, `product`, `company` and more; `::` repository keys |
+| Sage 300 | [`erps/sage-300.md`](erps/sage-300.md) | 7 Standard templates in 7 groups, pushing `company`, `products`, `deal`, `line_item` and more; `::` repository keys; 74 community templates |
+| Sage 300 CRE | [`erps/sage-300-cre.md`](erps/sage-300-cre.md) | 6 Standard templates in 6 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys; 3 community templates |
+| Sage 50 Cloud | [`erps/sage-50-cloud.md`](erps/sage-50-cloud.md) | 1 Standard template in 1 group, pushing `contact`; `::` repository keys; 8 community templates |
+| Sage 50 UK | [`erps/sage-50-uk.md`](erps/sage-50-uk.md) | 5 Standard templates in 5 groups, pushing `deal`, `line_item`, `company`; `::` repository keys; 34 community templates |
+| Sage 50 US | [`erps/sage-50-us.md`](erps/sage-50-us.md) | 9 Standard templates in 9 groups, pushing `deal`, `line_item`, `product`, `company` and more; `::` repository keys; 87 community templates |
 | Sage 500 | [`erps/sage-500.md`](erps/sage-500.md) | 8 Standard templates in 8 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
-| Sage X3 | [`erps/sage-x3.md`](erps/sage-x3.md) | 8 Standard templates in 8 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
-| SAP B1 | [`erps/sap-b1.md`](erps/sap-b1.md) | 9 Standard templates in 9 groups, pushing `company`, `products`, `deal`, `line_item` and more; `::` repository keys |
-| SAP Business ByDesign | [`erps/sap-business-bydesign.md`](erps/sap-business-bydesign.md) | 4 Standard templates in 4 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
+| Sage Intacct | [`erps/sage-intacct.md`](erps/sage-intacct.md) | no Standard templates; 5 community templates |
+| Sage X3 | [`erps/sage-x3.md`](erps/sage-x3.md) | 8 Standard templates in 8 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys; 33 community templates |
+| SAP B1 | [`erps/sap-b1.md`](erps/sap-b1.md) | 9 Standard templates in 9 groups, pushing `company`, `products`, `deal`, `line_item` and more; `::` repository keys; 39 community templates |
+| SAP B1 Cloud | [`erps/sap-b1-cloud.md`](erps/sap-b1-cloud.md) | no Standard templates; 25 community templates |
+| SAP Business ByDesign | [`erps/sap-business-bydesign.md`](erps/sap-business-bydesign.md) | 4 Standard templates in 4 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys; 7 community templates |
 | SouthWare | [`erps/southware.md`](erps/southware.md) | 6 Standard templates in 6 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
 | Steelviking | [`erps/steelviking.md`](erps/steelviking.md) | 6 Standard templates in 6 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
-| SYSPRO 7 and above | [`erps/syspro-7-and-above.md`](erps/syspro-7-and-above.md) | 9 Standard templates in 9 groups, pushing `comapny`, `product`, `deal`, `line_item` and more; `::` repository keys |
+| SYSPRO 6 | [`erps/syspro-6.md`](erps/syspro-6.md) | no Standard templates; 9 community templates |
+| SYSPRO 7 and above | [`erps/syspro-7-and-above.md`](erps/syspro-7-and-above.md) | 9 Standard templates in 9 groups, pushing `company`, `product`, `deal`, `line_item` and more; `::` repository keys; 170 community templates |
+| Traverse Process PRO Global | [`erps/traverse-process-pro-global.md`](erps/traverse-process-pro-global.md) | no Standard templates; 6 community templates |
 | VAI S2K | [`erps/vai-s2k.md`](erps/vai-s2k.md) | 6 Standard templates in 6 groups, pushing `company`, `products`, `deal`, `line_item`; `::` repository keys |
 <!-- ERP-TABLE:END -->
 
