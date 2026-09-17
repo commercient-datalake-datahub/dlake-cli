@@ -53,7 +53,7 @@ destination objects are and what the operation flags allow. Operations are the u
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
-| TxDownloader_21_1 | — | `Account` → `Customer` | 2 | create / update |
+| Create/Update Customer | — | `Account` → `Customer` | 2 | create / update |
 
 Across the 2 default templates: 1 carries `IsInsert`, 1 carries `IsUpdate`, 0 carry `IsDelete`.
 A flag decides which operation the process is allowed to perform, not which one it performs on a
