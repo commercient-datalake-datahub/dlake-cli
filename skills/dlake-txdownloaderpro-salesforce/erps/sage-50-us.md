@@ -6,7 +6,8 @@ description: >-
   this pair, the 27 field-process versions they are identified by, what each template family
   delivers, the shape of the query that finds flagged records and the objects and marker columns
   it reads, the structure of the inbound mapping document, and which `ResultStructure` parts the
-  templates fill for the write back to the CRM.
+  templates fill for the write back to the CRM. It also lists the 76 community templates the
+  catalogue carries for this pair.
   Use it when importing or reading this pair's template set, when deciding which templates to
   import and activate, or when a process runs and writes nothing and the answer is in the query
   or in the mapping document.
@@ -42,7 +43,8 @@ What follows is only what the shipped **default** templates for this pair themse
 described from their `DefaultQuery`, `DefaultProcessStructure` and `DefaultResultStructure`
 columns. It is a description of structure: which objects and marker columns are read, which
 parts and members are filled, which token names appear. No template text is reproduced. This
-page grows as the default catalogue does.
+page grows as the default catalogue does. The community templates the catalogue also carries for
+this pair are listed in a section of their own below, by count, object and name only.
 
 ## 1. What the templates deliver
 
@@ -186,7 +188,60 @@ parseable `DefaultResultStructure`, 30 carry none.
   `InvoiceNumber`, `SequenceNumber`. The map is written **source-path first, CRM-field second**
   (parent §11); the wrong way round resolves to the same silent empty string as a mistyped path.
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries community templates for this pair as well as the default set above:
+templates written on a tenant rather than shipped. Their content is not read and not described
+here — no query, no mapping document, no field. What this section states is how many there are,
+which objects they start from, what they are called where the name is a product artefact name,
+and which field-process versions they belong to.
+
+- **How many:** 76 community templates, across 22 field-process versions.
+- **Operations:** 53 carry `IsInsert`, 16 carry `IsUpdate`, 0 carry `IsDelete`. A flag decides
+  which operation the template is allowed to perform, as it does for a default template.
+
+| Source → destination | Templates |
+|---|---|
+| `Customer` → — | 23 |
+| `Sales Order` → — | 9 |
+| `Vendor` → — | 8 |
+| `Sales Invoice` → — | 7 |
+| `Contact` → — | 6 |
+| `General Journal` → — | 5 |
+| `Item` → — | 4 |
+| `Job` → — | 4 |
+| `Payment` → — | 3 |
+| `Purcahse Order Entry` → — | 2 |
+| `Purchase Order` → — | 2 |
+| `Quote` → — | 1 |
+| `Receipt` → — | 1 |
+| `ShipTo` → — | 1 |
+
+None of these rows carries a destination object name in the catalogue, so the destination side
+of every shape above is empty.
+
+- **Template names the catalogue carries:** `Create New Customer` (10), `Update Customer` (5),
+  `Create Customer` (4), `Create Sales Order` (4), `Create Contact` (3), `Create New Sales
+  Order` (3), `New Account` (3), `Create Invoice` (2), `Create New Product` (2), `Create New
+  Sales Invoice` (2), `Create Purchase Order` (2), `Create Vendor` (2), `New Invoice` (2),
+  `Update Job` (2), `Create GL Journal` (1), `Create Job` (1), `Create New Account` (1), `Create
+  New Bill` (1), `Create New Contact` (1), `Create New Customer Contact` (1), `Create New GL
+  Entry` (1), `Create New GL Entry 2` (1), `Create New Invoice` (1), `Create New Payment 1099`
+  (1), and 12 more.
+- **Names not reproduced:** 8 of these templates carry a name that is not a product artefact
+  name, and it is not printed here.
+- **Field-process versions they belong to:** `TxDownloader_1_27`, `TxDownloader_1_33`,
+  `TxDownloader_1_1`, `TxDownloader_1_29`, `TxDownloader_1_25`, `TxDownloader_1_32`,
+  `TxDownloader_1_19`, `TxDownloader_1_36`, `TxDownloader_1_21`, `TxDownloader_1_22`,
+  `TxDownloader_1_38`, `TxDownloader_1_3`, `TxDownloader_1_2`, `TxDownloader_1_20`,
+  `TxDownloader_1_28`, `TxDownloader_1_12`, `TxDownloader_1_30`, `TxDownloader_1_17`,
+  `TxDownloader_1_34`, `TxDownloader_1_15`, `TxDownloader_1_13`, `TxDownloader_1_14`.
+
+Importing one of these writes the same `TxDownloaderPro` row that importing a default template
+writes (parent §9); what differs is where the template came from, not how it is stored. What any
+one of them contains is read from the imported row itself, with the tools below.
+
+## 7. Verifying
 
 Read the imported row before a run, not after. The parent’s §14 is the authority on these tools
 and §10 on the state they report.
@@ -210,7 +265,7 @@ the query’s own condition and not the mapping; and a record that arrives with 
 which is a path that does not match the emitted document. Both are read through
 `txdownloaderpro_preview_xml`, against a real record.
 
-## 7. Where this sits
+## 8. Where this sits
 
 - `dlake-txdownloaderpro` — the parent: exposure, key scoping, the two tables, `SFUpdated`,
   the mapping columns, the filter vocabulary, the `txdownloaderpro_*` tools. **Read it first.**
