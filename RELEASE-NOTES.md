@@ -1,5 +1,20 @@
 # dlake release notes
 
+## 0.5.36 (2026-09-17)
+
+- **Skills: community templates are now part of every page.** Each destination skill's source-system
+  pages describe the community templates the catalogue carries for that pair alongside the shipped
+  defaults, and a pair that ships only community templates now has a page of its own. The bundled
+  skills carry 488 source-system pages, up from 330; the HubSpot skills grow the most, to 67 pages
+  for TxDownloaderPro and 89 for CRMPro.
+- **Skills: HubSpot default templates for 56 more source systems.** The template catalogue now ships
+  HubSpot defaults for every source system that had them for another CRM, and the pages reflect it.
+- **Skills: every process row carries its name.** Process versions that were listed by an internal
+  identifier now show their process name.
+
+No changes to commands, authentication or output formats. Run `dlake skills install` after
+upgrading to refresh the installed skill files.
+
 ## 0.5.35 (2026-09-12)
 
 - **Fixed: registration completes against the current Registration API.** Sign-up now asks
