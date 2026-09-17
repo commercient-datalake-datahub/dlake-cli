@@ -141,7 +141,28 @@ process before activating it.
 | Sage Invoice History Detail | `CommercientSF8__AR_INVOICEHISTORYDETAIL__c` | 57 | `INVOICENO, HEADERSEQNO, DETAILSEQNO` → `CommercientSF8__ExternalKey__c`, `INVOICENO` → `CommercientSF8__INVOICENO__c`, `HEADERSEQNO` → `CommercientSF8__HEADERSEQNO__c`, `DETAILSEQNO` → `CommercientSF8__DETAILSEQNO__c`, `ITEMCODE` → `CommercientSF8__ITEMCODE__c` |
 | Sage Transaction Payment History | `CommercientSF8__AR_TRANSACTIONPAYMENTHISTORY__c` | 30 | `ARDIVISIONNO` → `CommercientSF8__ARDIVISIONNO__c`, `CUSTOMERNO` → `CommercientSF8__CUSTOMERNO__c`, `INVOICENO` → `CommercientSF8__INVOICENO__c`, `INVOICETYPE` → `CommercientSF8__INVOICETYPE__c`, `INVOICEHISTORYHEADERSEQNO` → `CommercientSF8__INVOICEHISTORYHEADERSEQNO__c` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 50 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 50
+- Default operations: insert on 50, update on 50, delete on 50
+- Marked circular-sync: 0
+- Licence groups they span: 12
+- Destination objects: `CommercientSF8__SO_SALESORDERDETAIL__c`, `CommercientSF8__SO_SALESORDERHEADER__c`, `PriceBookEntry`, `Product2`, `CommercientSF8__SAGE100_CI_Item__c`, `ACCOUNT`, `CommercientSF8__AR_CUSTOMER__c`, `CommercientSF8__AR_INVOICEHISTORYDETAIL__c`, `CommercientSF8__AR_INVOICEHISTORYHEADER__c`, `CommercientSF8__AR_TRANSACTIONPAYMENTHISTORY__c`, `CommercientSF8__SAGE100_AP_VENDOR__c`, `CommercientSF8__SAGE100_PO_PURCHASEORDERDETAIL__c`, `CommercientSF8__SAGE100_PO_PURCHASEORDERHEADER__c`, `CommercientSF8__SO_SHIPTOADDRESS__c`, `Account`, `CASE`, `CommercientSF8__PRIMARYVENDORNO__c`, `CommercientSF8__Sage100_Invoice_Tracking_History__c`, `CommercientSF8__SAGE100_ItemWarehouse__c`, `CommercientSF8__SAGE100_SALESORDERHISTORYDETAIL__c`, 4 more and 2 custom objects
+- Object display names: AR_CUSTOMER, CI Item to Vendor lookup, Get Account, GET CASE, Get So_Salesorderheader, Invoice Details, Invoice Header, Invoice Tracking History, PriceBookEntry Create, PriceBookEntry Update, Product Reverse Lookup, Purchase Order, 29 more and 9 further templates
+- Template groups: Product, Salesorder, Account, Purchase Order, Customer Multi Ship Addresses, Invoice, Invoice History Headers
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -164,7 +185,7 @@ The prefixes these templates set:
 - `vw_SAGEMASS90_SALESORDERDETAIL`
 - `vw_SAGEMASS90_SALESPERSON`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
