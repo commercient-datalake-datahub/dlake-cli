@@ -55,8 +55,8 @@ destination objects are and what the operation flags allow. Operations are the u
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
+| Create New AR Invoice | ZOHO Quotes to SAGE300 Invoice | `Quotes`, `SalesOrder` → `Invoice` | 2 | create |
 | Sales Order | ZOHO Order to Sage 300 Sales Order | `SalesOrder`, `Quotes` → `SalesOrder` | 2 | create |
-| TxDownloader_15_2 | ZOHO Quotes to SAGE300 Invoice | `Quotes`, `SalesOrder` → `Invoice` | 2 | create |
 | Create New Customer | Zoho Account to SAGE300 Customer | `Account` → `Customer` | 1 | create |
 | Create or Update M/T Contact | Zoho Contacts to Sage 300 M/T Contact | `Contacts` → `M/T Contact` | 1 | create |
 
@@ -153,7 +153,7 @@ of every shape above is empty.
 
 - **Template names the catalogue carries:** `Create New A/P Invoice` (1), `Create New A/R
   Invoice` (1), `Create New Account` (1), `Create New Contact` (1), `Update Contact` (1).
-- **Field-process versions they belong to:** `TxDownloader_15_2`, `TxDownloaderPro_15_10`,
+- **Field-process versions they belong to:** `TxDownloaderPro_15_10`, `TxDownloader_15_2`,
   `TxDownloader_15_1`, `TxDownloaderPro_15_7`.
 
 Importing one of these writes the same `TxDownloaderPro` row that importing a default template
