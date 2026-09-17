@@ -140,7 +140,28 @@ process before activating it.
 | SYNC INVOICEHEADER | `CommercientSF18__MBF9REP__c` | 140 | `FEAENB` → `CommercientSF18__FEAENB__c`, `FEGGNB` → `CommercientSF18__FEGGNB__c`, `FEHYNB` → `CommercientSF18__FEHYNB__c`, `FEH5NB` → `CommercientSF18__FEH5NB__c`, `FEH1NB` → `CommercientSF18__FEH1NB__c` |
 | SYNC INVOICEDETAIL | `CommercientSF18__MBDDREP__c` | 121 | `DDAENB` → `CommercientSF18__DDAENB__c`, `DDDCCD` → `DDDCCD`, `DDCVNB` → `DDCVNB`, `DDK4NB` → `CommercientSF18__DDK4NB__c`, `DDLCNB` → `DDLCNB` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 24 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 24
+- Default operations: insert on 24, update on 24, delete on 24
+- Marked circular-sync: 0
+- Licence groups they span: 10
+- Destination objects: `PriceBookEntry`, `Account`, `Product2`, `CommercientSF18__CUSMAS__c`, `CommercientSF18__MBC6REP__c`, `CommercientSF18__MBCDREP__c`, `CommercientSF18__MBDDREP__c`, `CommercientSF18__MBF9REP__c`, `CommercientSF18__MBS2REP__c`, `CommercientSF18__SLSMAS__c`, `INFORXA_CUSTOMERCONTRACT__c`, `INFORXA_CUSTOMERCONTRACTDETAIL__c`, `INFORXA_DISCOUNT__c`, `INFORXA_ITEMPRICE__c`, `Opportunity`, `OpportunityLineItem`, `Pricebook2`, `User` and 2 custom objects
+- Object display names: CREATE LIST PRICEBOOK, CREATE STANDARD PRICEBOOK, GET PRICEBOOK, GET USERS, SYNC ACCOUNT, SYNC CUSTOMER, SYNC CUSTOMERCONTRACT, SYNC CUSTOMERCONTRACTDETAIL, SYNC CUSTOMERTOACCOUNTLOOKUP, SYNC DISCOUNT, SYNC INVOICEDETAIL, SYNC INVOICEHEADER and 12 more
+- Template groups: Product, Account, CRM Opportunity and Line, Invoice, Salesorder, Customer Multi Ship Addresses
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -163,7 +184,7 @@ The prefixes these templates set:
 - `vw_INFORXA_SalesOrderDetail`
 - `vw_INFORXA_Salesperson`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
