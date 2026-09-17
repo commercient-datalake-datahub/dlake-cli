@@ -2,8 +2,8 @@
 name: dlake-txdownloaderpro-shopify/erps/abas-business-software
 description: >-
   What the shipped default TxDownloaderPro templates set up when Shopify is the writeback
-  destination and Abas Business Software is the source: the 1 default template the catalogue
-  ships for this pair, the 1 field-process version they are identified by, what each template
+  destination and Abas Business Software is the source: the 8 default templates the catalogue
+  ships for this pair, the 8 field-process versions they are identified by, what each template
   family delivers, the shape of the query that finds flagged records and the objects and marker
   columns it reads, the structure of the inbound mapping document, and which `ResultStructure`
   parts the templates fill for the write back to the CRM.
@@ -54,10 +54,17 @@ destination objects are and what the operation flags allow. Operations are the u
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
 | Create New Customer | Shopify Customer to ABASBusinessSoftware Customer | `Customer` → `Customer` | 1 | create |
+| Create New Customer Contact | Shopify Customer to ABASBusinessSoftware Customer Contact | `Customer` → `CustomerContact` | 1 | create |
+| Create New Prospect Contact | Shopify Customer to ABASBusinessSoftware Prospect Contact | `Customer` → `ProspectContact` | 1 | create |
+| Create New Prospects | Shopify Customer to ABASBusinessSoftware Prospect | `Customer` → `Prospect` | 1 | create |
+| Update Customer | Shopify Customer to ABASBusinessSoftware Update Customer | `Customer` → `Customer` | 1 | update |
+| Update Customer Contact | Shopify Customer to ABASBusinessSoftware Update Customer Contact | `Customer` → `CustomerContact` | 1 | update |
+| Update Prospect Contact | Shopify Customer to ABASBusinessSoftware Update Prospect Contact | `Customer` → `ProspectContact` | 1 | update |
+| Update Prospects | Shopify Customer to ABASBusinessSoftware Update Prospect | `Customer` → `Prospect` | 1 | update |
 
-Across the single default template: 1 carries `IsInsert`, 0 carry `IsUpdate`, 0 carry
-`IsDelete`, and 1 carries `IsCustomization`. A flag decides which operation the process is
-allowed to perform, not which one it performs on a given record.
+Across the 8 default templates: 4 carry `IsInsert`, 4 carry `IsUpdate`, 0 carry `IsDelete`, and
+1 carries `IsCustomization`. A flag decides which operation the process is allowed to perform,
+not which one it performs on a given record.
 
 ## 2. The process rows the import creates
 
@@ -80,16 +87,18 @@ that never matches a run.
 | `IsInsert` / `IsUpdate` / `IsDelete` | the template’s own flags — section 1 |
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
-The field-process versions this pair’s default templates belong to: `TxDownloader_117_3`.
+The field-process versions this pair’s default templates belong to: `TxDownloader_117_3`,
+`TxDownloader_117_7`, `TxDownloader_117_5`, `TxDownloader_117_1`, `TxDownloader_117_4`,
+`TxDownloader_117_8`, `TxDownloader_117_6`, `TxDownloader_117_2`.
 
 ## 3. What the query retrieves
 
-`Query` does not have one shape across the product (parent §9). For this pair, 1 carries a JSON
+`Query` does not have one shape across the product (parent §9). For this pair, 8 carry a JSON
 object naming the module to retrieve. **No query text is reproduced here**; what follows is what
 those queries read and filter on.
 
 - **Objects read:** `customer`.
-- **Members present in the JSON query object:** `ModuleName` (1). Where a `Where` member is
+- **Members present in the JSON query object:** `ModuleName` (8). Where a `Where` member is
   present it is empty.
 - **Where the filtering happens:** the query names a module rather than a condition, so the
   selection the parent’s §12 describes is applied after retrieval, not by the query.
@@ -98,8 +107,8 @@ those queries read and filter on.
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 1 default template, 1 carries a `DefaultProcessStructure`. A parseable document carries
-about 4 members.
+pair’s 8 default templates, 8 carry a `DefaultProcessStructure`. A parseable document carries
+about 9 members.
 
 - **Template path roots used:** `Customer`. A path’s first segment has to match the element the
   engine emits, and the document root itself is never part of the path.
@@ -109,13 +118,22 @@ about 4 members.
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 1 default template, 0 carry a
-parseable `DefaultResultStructure`, 1 carries none.
+system’s response after the write (parent §11). Of this pair’s 8 default templates, 3 carry a
+parseable `DefaultResultStructure`, 5 carry none.
 
-**No default template for this pair fills a part.** Nothing is written back to Shopify by these
-templates: the source system’s key stays in `TxDownloaderProTrans` and the CRM record is left as
-the user flagged it. If a tenant needs the key on the CRM record, `ResultStructure` is the
-column to fill, and the parent’s §11 gives its shape.
+| Part | Filled by | What it addresses | Members present |
+|---|---|---|---|
+| `Part1` | 3 templates | the record the run is already working with | a source-path-to-CRM-field map |
+| `Part2` | 0 templates (3 explicitly null) | the child/line records under it | — |
+| `Part3` | 0 templates (3 explicitly null) | a **new** record, matched on an external id field | — |
+| `Part4` | 0 templates (3 explicitly null) | a **different** record, addressed by an id field | — |
+
+- **CRM fields `Part1` writes to:** `Commercient_ERPId`. These are the fields on the flagged
+  record that carry the source system’s key or outcome once the write has happened — the names
+  only; what lands in them is the response, per record.
+- **Response fields it reads them from:** `id`. The map is written **source-path first,
+  CRM-field second** (parent §11); the wrong way round resolves to the same silent empty string
+  as a mistyped path.
 
 ## 6. Verifying
 
