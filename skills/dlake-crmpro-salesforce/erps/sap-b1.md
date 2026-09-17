@@ -203,7 +203,28 @@ process before activating it.
 | SAPB1 Sales Delivery Header | `CommercientSF16__ODLN__c` | 4 | `DocEntry` → `CommercientSF16__ExternalKey__c`, `CardCode` → `CommercientSF16__Account__c`, `CardCode` → `CommercientSF16__SAP_Customer__c`, `DocEntry` → `CommercientSF16__SAP_Sales_order__c` |
 | SAPB1 Sales Delivery Detail | `CommercientSF16__DLN1__c` | 282 | `DocEntry,LineNum` → `CommercientSF16__ExternalKey__c`, `DocNum,LineNum` → `Name`, `SFDCID` → `CommercientSF16__SAP_Sales_Delivery_Header__c`, `DocEntry` → `DocEntry`, `LineNum` → `LineNum` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 437 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 437
+- Default operations: insert on 437, update on 437, delete on 437
+- Marked circular-sync: 0
+- Licence groups they span: 15
+- Destination objects: `Account`, `Product2`, `CommercientSF16__SAP_Customer__c`, `CommercientSF16__SAP_Invoice__c`, `CommercientSF16__SAP_SalesOrder__c`, `PricebookEntry`, `CommercientSF16__SAP_Address__c`, `CommercientSF16__SAP_InvoiceDetail__c`, `CommercientSF16__SAP_SalesOrderLine__c`, `PriceBookEntry`, `CommercientSF16__OITM__c`, `CommercientSF16__OITW__c`, `Contact`, `CommercientSF16__SAP_SalesPerson__c`, `CommercientSF16__ORIN__c`, `User`, `CommercientSF16__OPOR__c`, `QuoteLineItem`, `CommercientSF16__POR1__c`, `Opportunity`, 20 more and 14 custom objects
+- Object display names: Account, SAPB1 Invoice, SAPB1 Sales Order, SAPB1 Invoice Line, SAPB1 Sales Order Line, Price Book Entry Create, Product, SAPB1 Address, SAPB1 Customer, Account Reverse lookup, SAPB1 Item Master, SAPB1 Item Warehouse, 89 more and 16 further templates
+- Template groups: Account, Product, Invoice, Salesorder, Customer Multi Ship Addresses, Opportunity, CRM Quote and Line, Purchase Order, CRM Opportunity and Line, CRM Ownership
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -237,7 +258,7 @@ The prefixes these templates set:
 - `SAPB1SalesDeliveryHeader`
 - `SAPB1SalesDeliveryDetail`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
