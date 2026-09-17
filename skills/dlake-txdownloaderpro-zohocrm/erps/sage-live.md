@@ -54,8 +54,8 @@ destination objects are and what the operation flags allow. Operations are the u
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
 | Create/Update Customer | Zoho Account to SageLive Customer | `Accounts` → `Customer` | 2 | create / update |
-| TxDownloader_4_3 | Zoho SalesOrder to Sage Live Sales Credit | `Sales_Orders` → `Sales Credit` | 1 | create |
-| TxDownloader_4_5 | Zoho SalesOrder to Sage Live Sales Order | `Sales_Orders` → `Sales Order` | 1 | create |
+| Create New Sales Credit | Zoho SalesOrder to Sage Live Sales Credit | `Sales_Orders` → `Sales Credit` | 1 | create |
+| Create New Sales Order | Zoho SalesOrder to Sage Live Sales Order | `Sales_Orders` → `Sales Order` | 1 | create |
 
 Across the 4 default templates: 3 carry `IsInsert`, 1 carries `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
