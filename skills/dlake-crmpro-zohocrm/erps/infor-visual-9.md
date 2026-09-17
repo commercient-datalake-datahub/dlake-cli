@@ -221,7 +221,28 @@ process before activating it.
 | Sales_Orders | `Sales_Orders` | 17 | `ID` → `Commercient_ExternalKey__c`, `CUSTOMER_ID` → `Account_Name`, `ID` → `Name`, `ID` → `SO_Number`, `CREATE_DATE` → `ERP_Created_Date__c` |
 | Invoices | `Invoices` | 17 | `INVOICE_ID` → `Commercient_ExternalKey__c`, `INVOICE_ID` → `Name`, `INVOICE_ID` → `Invoice_Number`, `CREATE_DATE` → `Invoice_Date`, `INVOICE_ID` → `Subject` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 23 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 23
+- Default operations: insert on 23, update on 23, delete on 23
+- Marked circular-sync: 0
+- Licence groups they span: 5
+- Destination objects: `Infor_Visual_Notes`, `Accounts`, `commercientinforvisual__Infor_Visual_Address`, `commercientinforvisual__Infor_Visual_Customer`, `commercientinforvisual__Infor_Visual_Order`, `commercientinforvisual__Infor_Visual_Order_Line`, `commercientinforvisual__Infor_Visual_Part`, `commercientinforvisual__Infor_Visual_Quote_Line`, `commercientinforvisual__Infor_Visual_Quote_Price`, `commercientinforvisual__Infor_Visual_Qutoe`, `commercientinforvisual__Infor_Visual_Receivable`, `commercientinforvisual__Infor_Visual_SalesPerson`, `commercientinforvisual__Infor_Visual_Terms`, `Contacts`, `Invoices`, `Products`, `Quotes`, `Sales_Orders`, `users` and a custom object
+- Object display names: Account, Account Notes, Contact, Customer Reverse Lookup Account, Infor Visual Customer, Infor Visual Customer Address, Infor Visual Order, Infor Visual Order Line, Infor Visual Part, Infor Visual Quote, Infor Visual Quote Line, Infor Visual Quote Price and 11 more
+- Template groups: Account, CRM Order and Line, CRM Quote and Line
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -256,7 +277,7 @@ The prefixes these templates set:
 - `vw_INFORVISUAL9_DOrder:`
 - `vw_INFORVISUAL9_DInvoice:`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
