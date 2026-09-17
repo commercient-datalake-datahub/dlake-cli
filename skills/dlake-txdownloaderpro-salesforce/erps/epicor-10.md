@@ -2,8 +2,8 @@
 name: dlake-txdownloaderpro-salesforce/erps/epicor-10
 description: >-
   What the shipped default TxDownloaderPro templates set up when Salesforce is the writeback
-  destination and Epicor 10 is the source: the 3 default templates the catalogue ships for this
-  pair, the 1 field-process version they are identified by, what each template family delivers,
+  destination and Epicor 10 is the source: the 4 default templates the catalogue ships for this
+  pair, the 2 field-process versions they are identified by, what each template family delivers,
   the shape of the query that finds flagged records and the objects and marker columns it reads,
   the structure of the inbound mapping document, and which `ResultStructure` parts the templates
   fill for the write back to the CRM.
@@ -53,9 +53,10 @@ destination objects are and what the operation flags allow. Operations are the u
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
-| TxDownloader_19_1 | Salesfoce Update Account TO Epicor10 Update Customer | `Account` → `Customer` | 3 | create / update |
+| Create/Update Customer | Salesfoce Update Account TO Epicor10 Update Customer | `Account` → `Customer` | 3 | create / update |
+| Create ShipTo Address | Salesforce ShipTo to Epicor 10 ShipTo | `CommercientSF10__EPICOR10_ShipTo__c` → `ShipTo` | 1 | create |
 
-Across the 3 default templates: 2 carry `IsInsert`, 1 carries `IsUpdate`, 0 carry `IsDelete`. A
+Across the 4 default templates: 3 carry `IsInsert`, 1 carries `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
 given record. 1 catalogue description was not printed because they are placeholders or carry
 text that is not ours to publish.
@@ -81,25 +82,31 @@ that never matches a run.
 | `IsInsert` / `IsUpdate` / `IsDelete` | the template’s own flags — section 1 |
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
-The field-process versions this pair’s default templates belong to: `TxDownloader_19_1`.
+The field-process versions this pair’s default templates belong to: `TxDownloaderPro_19_11`,
+`TxDownloader_19_1`.
 
 1 of these template rows carry a licence-group id, so what a given tenant is offered in the
 picker is narrower than what the catalogue holds.
 
 ## 3. What the query retrieves
 
-`Query` does not have one shape across the product (parent §9). For this pair, 3 carry a
+`Query` does not have one shape across the product (parent §9). For this pair, 4 carry a
 `SELECT` statement in the CRM's own query language. **No query text is reproduced here**; what
 follows is what those queries read and filter on.
 
-- **Objects read:** `Account`.
-- **Marker and key columns the queries name:** `Commercient_Import__c`,
-  `Commercient_Company_Name__c`, `Commercient_Customer_ID__c`,
-  `CommercientSF__Commercient_ArCustomerCode__c`. These are the columns a user’s flag lands in
-  and the columns the run writes an outcome back to; which ones are in the `WHERE` is what
-  decides whether a record is in scope at all.
-- **Operators present:** `=`, `!=`, an empty-string test. The parent’s §12 is the authority on
-  the vocabulary; the point here is only which of it these templates use.
+- **Objects read:** `CommercientSF10__EPICOR10_ShipTo__c`, `Account`.
+- **Marker and key columns the queries name:** `CommercientSF10__Account__r`,
+  `CommercientSF__Commercient_ArCustomerCode__c`, `CommercientSF10__ExternalKey__c`,
+  `CommercientSF10__Address1__c`, `CommercientSF10__Address2__c`,
+  `CommercientSF10__Address3__c`, `CommercientSF10__City__c`, `CommercientSF10__State__c`,
+  `CommercientSF10__ZIP__c`, `CommercientSF10__Country__c`, `CommercientSF10__PhoneNum__c`,
+  `CommercientSF10__FaxNum__c`, `CommercientSF10__EMailAddress__c`,
+  `CommercientSF10__ShipToNum__c`, `CommercientSF10__EPICOR10_ShipTo__c`,
+  `Commercient_Import__c`, `Commercient_Company_Name__c`, `Commercient_Customer_ID__c`. These
+  are the columns a user’s flag lands in and the columns the run writes an outcome back to;
+  which ones are in the `WHERE` is what decides whether a record is in scope at all.
+- **Operators present:** `!=`, `=`, `AND`, an empty-string test. The parent’s §12 is the
+  authority on the vocabulary; the point here is only which of it these templates use.
 - **Where the filtering happens:** in the query, on the CRM side, before anything reaches the
   source system. Narrowing a template means editing its query — not its mapping.
 
@@ -107,33 +114,39 @@ follows is what those queries read and filter on.
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 3 default templates, 3 carry a `DefaultProcessStructure`. A parseable document carries
-about 17 members.
+pair’s 4 default templates, 4 carry a `DefaultProcessStructure`. A parseable document carries
+about 16 members.
 
-- **Template path roots used:** `Account`. A path’s first segment has to match the element the
-  engine emits, and the document root itself is never part of the path.
+- **Template path roots used:** `Account`, `CommercientSF10__EPICOR10_ShipTo__c`. A path’s first
+  segment has to match the element the engine emits, and the document root itself is never part
+  of the path.
 - **No `Line.` section.** These templates map a single record, with no repeating child
   collection.
+- **`$FUN_` value tokens the documents carry:** `$FUN_SPLIT`. The names are what the templates
+  carry; **no semantics are claimed for them here** — the parent’s §12 is explicit that the
+  platform-side resolver is dotted path substitution only, and these tokens are evaluated on the
+  customer’s own host.
 
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 3 default templates, 2 carry a
+system’s response after the write (parent §11). Of this pair’s 4 default templates, 3 carry a
 parseable `DefaultResultStructure`, 1 carries none.
 
 | Part | Filled by | What it addresses | Members present |
 |---|---|---|---|
-| `Part1` | 2 templates | the record the run is already working with | a source-path-to-CRM-field map |
-| `Part2` | 0 templates (2 explicitly null) | the child/line records under it | — |
-| `Part3` | 0 templates (2 explicitly null) | a **new** record, matched on an external id field | — |
-| `Part4` | 0 templates (2 explicitly null) | a **different** record, addressed by an id field | — |
+| `Part1` | 3 templates | the record the run is already working with | a source-path-to-CRM-field map |
+| `Part2` | 0 templates (3 explicitly null) | the child/line records under it | — |
+| `Part3` | 0 templates (3 explicitly null) | a **new** record, matched on an external id field | — |
+| `Part4` | 0 templates (3 explicitly null) | a **different** record, addressed by an id field | — |
 
-- **CRM fields `Part1` writes to:** `CommercientSF__Commercient_ArCustomerCode__c`. These are
-  the fields on the flagged record that carry the source system’s key or outcome once the write
-  has happened — the names only; what lands in them is the response, per record.
-- **Response fields it reads them from:** `Company`, `CustID`. The map is written **source-path
-  first, CRM-field second** (parent §11); the wrong way round resolves to the same silent empty
-  string as a mistyped path.
+- **CRM fields `Part1` writes to:** `CommercientSF__Commercient_ArCustomerCode__c`,
+  `CommercientSF10__ExternalKey__c`. These are the fields on the flagged record that carry the
+  source system’s key or outcome once the write has happened — the names only; what lands in
+  them is the response, per record.
+- **Response fields it reads them from:** `Company`, `CustID`, `CustNum`, `ShipToNum`. The map
+  is written **source-path first, CRM-field second** (parent §11); the wrong way round resolves
+  to the same silent empty string as a mistyped path.
 
 ## 6. Verifying
 
