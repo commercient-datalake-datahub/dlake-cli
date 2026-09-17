@@ -54,23 +54,22 @@ destination objects are and what the operation flags allow. Operations are the u
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
 | Create/Update Vendor | HubSpot companies to QuickBooks Online Vendor | `companies` → `Vendor` | 2 | create / update |
+| Update Invoice | HubSpot Update deals to QuickBooks Online Update Invoice | `deals` → `Invoice` | 2 | update |
+| Create New Bill | HubSpot deals to QuickBooks Online Bill | `deals` → `Bill` | 1 | create |
 | Create New Customer | HubSpot companies to QuickBooks Online Customer | `companies` → `Customer` | 1 | create |
 | Create New Estimate | HubSpot deals to QuickBooks Online Estimate | `deals` → `Estimate` | 1 | create |
+| Create New Invoice | HubSpot deals to QuickBooks Online Invoice | `deals` → `Invoice` | 1 | create |
 | Create New Item | HubSpot products to QuickBooks Online Item | `products` → `Item` | 1 | create |
 | Create New Payment | HubSpot deals to QuickBooks Online Payment | `deals` → `Payment` | 1 | create |
-| TxDownloader_22_10 | HubSpot deals to QuickBooks Online Purchase | `deals` → `Purchase` | 1 | create |
-| TxDownloader_22_11 | HubSpot Update deals to QuickBooks Online Update Purchase | `deals` → `Purchase` | 1 | update |
-| TxDownloader_22_12 | HubSpot deals to QuickBooks Online Bill | `deals` → `Bill` | 1 | create |
-| TxDownloader_22_13 | HubSpot Update deals to QuickBooks Online Update Bill | `deals` → `Bill` | 1 | update |
-| TxDownloader_22_15 | HubSpot deals to QuickBooks Online SalesReceipt | `deals` → `SalesReceipt` | 1 | create |
-| TxDownloader_22_3 | HubSpot deals to QuickBooks Online Invoice | `deals` → `Invoice` | 1 | create |
-| TxDownloader_22_5 | HubSpot deals to QuickBooks Online Purchase Order | `deals` → `Purchase Order` | 1 | create |
-| TxDownloader_22_7 | HubSpot Update deals to QuickBooks Online Update Invoice | `deals` → `Invoice` | 1 | update |
-| TxDownloader_22_8 | HubSpot Update deals to QuickBooks Online Update Estimate | `deals` → `Estimate` | 1 | update |
-| TxDownloader_22_9 | HubSpot Update deals to QuickBooks Online Update Purchase Order | `deals` → `Purchase Order` | 1 | update |
+| Create New Purchase | HubSpot deals to QuickBooks Online Purchase | `deals` → `Purchase` | 1 | create |
+| Create New Purchase Order | HubSpot deals to QuickBooks Online Purchase Order | `deals` → `Purchase Order` | 1 | create |
+| Create New Sales Receipt | HubSpot deals to QuickBooks Online SalesReceipt | `deals` → `SalesReceipt` | 1 | create |
+| Update Bill | HubSpot Update deals to QuickBooks Online Update Bill | `deals` → `Bill` | 1 | update |
 | Update Customer | HubSpot Update companies to QuickBooks Online Update Customer | `companies` → `Customer` | 1 | update |
-| Update Invoice | HubSpot Update deals to QuickBooks Online Update Invoice | `deals` → `Invoice` | 1 | update |
+| Update Estimate | HubSpot Update deals to QuickBooks Online Update Estimate | `deals` → `Estimate` | 1 | update |
 | Update Product | HubSpot Update products to QuickBooks Online Update Item | `products` → `Item` | 1 | update |
+| Update Purchase | HubSpot Update deals to QuickBooks Online Update Purchase | `deals` → `Purchase` | 1 | update |
+| Update Purchase Order | HubSpot Update deals to QuickBooks Online Update Purchase Order | `deals` → `Purchase Order` | 1 | update |
 
 Across the 19 default templates: 10 carry `IsInsert`, 9 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
@@ -97,12 +96,12 @@ that never matches a run.
 | `IsInsert` / `IsUpdate` / `IsDelete` | the template’s own flags — section 1 |
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
-The field-process versions this pair’s default templates belong to: `TxDownloader_22_3`,
-`TxDownloader_22_5`, `TxDownloader_22_7`, `TxDownloader_22_8`, `TxDownloader_22_9`,
-`TxDownloader_22_10`, `TxDownloader_22_11`, `TxDownloader_22_12`, `TxDownloader_22_13`,
-`TxDownloader_22_15`, `TxDownloader_22_1`, `TxDownloader_22_4`, `TxDownloader_22_17`,
-`TxDownloader_22_20`, `TxDownloader_22_14`, `TxDownloader_22_6`, `TxDownloader_22_18`,
-`TxDownloader_22_19`.
+The field-process versions this pair’s default templates belong to: `TxDownloader_22_12`,
+`TxDownloader_22_1`, `TxDownloader_22_4`, `TxDownloader_22_3`, `TxDownloader_22_17`,
+`TxDownloader_22_20`, `TxDownloader_22_10`, `TxDownloader_22_5`, `TxDownloader_22_15`,
+`TxDownloader_22_14`, `TxDownloader_22_13`, `TxDownloader_22_6`, `TxDownloader_22_8`,
+`TxDownloader_22_7`, `TxDownloader_22_18`, `TxDownloader_22_19`, `TxDownloader_22_11`,
+`TxDownloader_22_9`.
 
 ## 3. What the query retrieves
 
@@ -148,10 +147,10 @@ parseable `DefaultResultStructure`, 11 carry none.
 - **CRM fields `Part1` writes to:** `externalkey`, `arcustomercode`. These are the fields on the
   flagged record that carry the source system’s key or outcome once the write has happened — the
   names only; what lands in them is the response, per record.
-- **Response fields it reads them from:** `Id`, `NewInvoiceCode`, `NewPOCode`,
-  `NewPurchaseCode`, `NewSalesReceiptCode`, `NewCustomerCode`. The map is written **source-path
-  first, CRM-field second** (parent §11); the wrong way round resolves to the same silent empty
-  string as a mistyped path.
+- **Response fields it reads them from:** `Id`, `NewCustomerCode`, `NewInvoiceCode`,
+  `NewPurchaseCode`, `NewPOCode`, `NewSalesReceiptCode`. The map is written **source-path first,
+  CRM-field second** (parent §11); the wrong way round resolves to the same silent empty string
+  as a mistyped path.
 
 ## 6. Verifying
 
