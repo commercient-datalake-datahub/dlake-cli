@@ -183,8 +183,8 @@ first colon, which is the prefix boundary whether the key separator is `:` or `:
 
 ## 6. The source ERP’s own page
 
-One row per source ERP the catalogue ships Standard MDC templates for. Each page is a child file
-of this skill, addressed as `dlake-crmpro-mdc/erps/<erp>` — `dlake skills show
+One row per source ERP the catalogue carries MDC templates for. Each page is a child file of this
+skill, addressed as `dlake-crmpro-mdc/erps/<erp>` — `dlake skills show
 dlake-crmpro-mdc/erps/<erp>` prints one, and `dlake skills install` writes them beside this file.
 
 <!-- ERP-TABLE:BEGIN dlake-crmpro-mdc -->
