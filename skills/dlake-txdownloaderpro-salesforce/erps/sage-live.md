@@ -55,8 +55,8 @@ destination objects are and what the operation flags allow. Operations are the u
 |---|---|---|---|---|
 | Create New Invoice | Salesforce Order to Sage Live Sales Invoice | `Order`, `Quote`, `Opportunity` → `Invoice` | 3 | create |
 | Create/Update Customer | Salesforce Account to Sage Customer | `Account` → `Customer` | 2 | create / update |
-| TxDownloader_4_3 | Salesforce Order to Sage Live Sales Credit | `Order` → `Sales Credit` | 1 | create |
-| TxDownloader_4_5 | Salesforce Order to Sage Live Sales Order | `Order` → `Sales Order` | 1 | create |
+| Create New Sales Credit | Salesforce Order to Sage Live Sales Credit | `Order` → `Sales Credit` | 1 | create |
+| Create New Sales Order | Salesforce Order to Sage Live Sales Order | `Order` → `Sales Order` | 1 | create |
 
 Across the 7 default templates: 6 carry `IsInsert`, 1 carries `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
@@ -83,8 +83,8 @@ that never matches a run.
 | `IsInsert` / `IsUpdate` / `IsDelete` | the template’s own flags — section 1 |
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
-The field-process versions this pair’s default templates belong to: `TxDownloader_4_3`,
-`TxDownloader_4_5`, `TxDownloader_4_2`, `TxDownloader_4_1`.
+The field-process versions this pair’s default templates belong to: `TxDownloader_4_2`,
+`TxDownloader_4_3`, `TxDownloader_4_5`, `TxDownloader_4_1`.
 
 3 of these template rows carry a licence-group id, so what a given tenant is offered in the
 picker is narrower than what the catalogue holds.
@@ -103,7 +103,7 @@ follows is what those queries read and filter on.
   `ExternalKey__c`. These are the columns a user’s flag lands in and the columns the run writes
   an outcome back to; which ones are in the `WHERE` is what decides whether a record is in scope
   at all.
-- **Operators present:** `!=`, `=`, `AND`, an empty-string test, a null test. The parent’s §12
+- **Operators present:** `!=`, a null test, `=`, `AND`, an empty-string test. The parent’s §12
   is the authority on the vocabulary; the point here is only which of it these templates use.
 - **Where the filtering happens:** in the query, on the CRM side, before anything reaches the
   source system. Narrowing a template means editing its query — not its mapping.
