@@ -121,7 +121,27 @@ process before activating it.
 | create invoice | `deal` | 8 | `Invoice_Amount` → `amount`, `Due_Date` → `closedate`, `Invoice_Date` → `createdate`, `Invoice` → `dealname`, `Customer` → `associate_company` |
 | create invoicedetail | `line_item` | 5 | `itemRepo.SFDCID` → `hs_product_id`, `dealRepo.SFDCID` → `associate_deal`, `a.Description` → `name`, `a.Amount` → `price`, `1` → `quantity` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 3 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 3
+- Default operations: insert on 3, update on 3, delete on 3
+- Marked circular-sync: 0
+- Licence groups they span: 1
+- Destination objects: `company`, `deal`, `line_item`
+- Object display names: create customer, create invoicedetail, upsert invoice
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -138,7 +158,7 @@ The prefixes these templates set:
 - `HUBSPOT_NEW_DEAL`
 - `HUBSPOT_NEW_LINEITEM`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
