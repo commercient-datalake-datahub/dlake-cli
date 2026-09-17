@@ -185,7 +185,28 @@ process before activating it.
 | sage100 fr CustomerPricebook | `Commercient_SAGE100FR_CustPricebook__c` | 35 | `CT_Intitule` → `ct_intitule__c`, `AR_Ref` → `ar_ref__c`, `cbAR_Ref` → `cbar_ref__c`, `AR_Design` → `ar_design__c`, `AC_Categorie` → `ac_categorie__c` |
 | SAGE100 FR VendorPricebook | `Commercient_SAGE100FR_VendrPricebook__c` | 37 | `AR_Ref` → `ar_ref__c`, `cbAR_Ref` → `cbar_ref__c`, `CT_Num` → `ct_num__c`, `cbCT_Num` → `cbct_num__c`, `AF_RefFourniss` → `af_reffourniss__c` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 18 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 18
+- Default operations: insert on 18, update on 18, delete on 18
+- Marked circular-sync: 0
+- Licence groups they span: 9
+- Destination objects: `Account`, `PriceBookEntry`, `Product2`, `Commercient_SAGE100FR_CustPricebook__c`, `Commercient_SAGE100FR_VendrPricebook__c`, `CommercientSF8__SAGE100FRANCE_ITEM__c`, `CommercientSF8__SAGE100FRANCE_ShipToAddress__c`, `Opportunity` and 6 custom objects
+- Object display names: Account, Customer Sync, CUSTOMERTOACCOUNTLOOKUP, Invoice Header Sync, Invoice Line Sync, ITEM TO PRODUCT LOOKUP, Opportunity, Product, sage100 fr CustomerPricebook, sage100 FR ItemMaster, SAGE100 FR VendorPricebook, Salesorder Header Sync and 6 more
+- Template groups: Account, Product, Invoice, Salesorder, CRM Opportunity and Line, Customer Multi Ship Addresses
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -216,7 +237,7 @@ The prefixes these templates set:
 - `vw_SAGE100FRANCE_SalesOrderLine`
 - `vw_SAGE100FRANCE_Salesperson`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
