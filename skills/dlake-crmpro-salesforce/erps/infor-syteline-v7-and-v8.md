@@ -152,7 +152,28 @@ process before activating it.
 | EstimateLine | `OpportunityLineItem` | 7 | `co_num, co_line, co_release` → `ExternalKey__c`, `item` → `ProductCode`, `qty_ordered` → `Quantity`, `price` → `UnitPrice`, `disc` → `Discount` |
 | Customer Address | `CommercientSF18__custaddr__c` | 43 | `Account` → `Account`, `cust_num` → `CommercientSF18__cust_num__c`, `cust_seq` → `CommercientSF18__cust_seq__c`, `city` → `CommercientSF18__city__c`, `state` → `CommercientSF18__state__c` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 58 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 58
+- Default operations: insert on 58, update on 58, delete on 58
+- Marked circular-sync: 0
+- Licence groups they span: 10
+- Destination objects: `Account`, `CommercientSF18__co_all__c`, `CommercientSF18__coitem_all__c`, `CommercientSF18__customer_all__c`, `CommercientSF18__inv_hdr_all__c`, `CommercientSF18__inv_item_all__c`, `CommercientSF18__slsman_all__c`, `Contact`, `Opportunity`, `OpportunityLineItem`, `Product2`, `account`, `AccountContactRelation`, `CommercientSF18__custaddr__c`, `CommercientSF18__item_all__c` and 2 custom objects
+- Object display names: Customer, CustomerOrder, CustomerOrderLine, Estimate, EstimateLine, InvoiceHeader, InvoiceLineItem, SalesPerson, account, Account, AccountContactRelation, Child Account and 9 more
+- Template groups: Account, Product, CRM Opportunity and Line, Invoice, Salesorder, Customer Multi Ship Addresses
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -177,7 +198,7 @@ The prefixes these templates set:
 - `vw_INFORSYTELINE_CustomerOrderLine`
 - `vw_INFORSYTELINE_SalesPerson`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
