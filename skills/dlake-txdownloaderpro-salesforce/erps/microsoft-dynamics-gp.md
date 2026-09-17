@@ -56,7 +56,7 @@ destination objects are and what the operation flags allow. Operations are the u
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
 | Create New Customer | Salesforce Account to MSDynamicGP Customer | `Account` → `Customer` | 3 | create / update |
-| TxDownloader_13_2 | Salesforce Order to Microsoft GP Sales Order | `Opportunity` → `Order` | 3 | create |
+| Create New Sales Order | Salesforce Order to Microsoft GP Sales Order | `Opportunity` → `Order` | 3 | create |
 | Create a Cash Receipt | Salesforce Order to Microsoft GP Cash Receipt | `Order` → `RMCashReceipt` | 1 | create |
 | Create a Payment | Salesforce Order to Microsoft GP Payment | `Order` → `Payment` | 1 | create |
 | Create a Product | Salesforce Product to Dynamic GP Items | `Product2` → — | 1 | create |
@@ -87,8 +87,8 @@ that never matches a run.
 | `IsInsert` / `IsUpdate` / `IsDelete` | the template’s own flags — section 1 |
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
-The field-process versions this pair’s default templates belong to: `TxDownloader_13_2`,
-`TxDownloaderPro_13_5`, `TxDownloaderPro_13_4`, `TxDownloaderPro_13_3`, `TxDownloader_13_1`.
+The field-process versions this pair’s default templates belong to: `TxDownloaderPro_13_5`,
+`TxDownloaderPro_13_4`, `TxDownloaderPro_13_3`, `TxDownloader_13_1`, `TxDownloader_13_2`.
 
 2 of these template rows carry a licence-group id, so what a given tenant is offered in the
 picker is narrower than what the catalogue holds.
@@ -99,15 +99,15 @@ picker is narrower than what the catalogue holds.
 `SELECT` statement in the CRM's own query language. **No query text is reproduced here**; what
 follows is what those queries read and filter on.
 
-- **Objects read:** `OrderItems`, `QuoteLineItems`, `OpportunityLineItems`, `Order`, `Product2`,
-  `Account`.
+- **Objects read:** `Order`, `Product2`, `Account`, `OrderItems`, `QuoteLineItems`,
+  `OpportunityLineItems`.
 - **Child collections pulled in the same query:** `OrderItems`, `QuoteLineItems`,
   `OpportunityLineItems`. A header retrieved without its lines is a query that does not name the
   child collection.
 - **Marker and key columns the queries name:** `CommercientSF__Commercient_ArCustomerCode__c`.
   These are the columns a user’s flag lands in and the columns the run writes an outcome back
   to; which ones are in the `WHERE` is what decides whether a record is in scope at all.
-- **Operators present:** `!=`, a null test, `=`, `AND`, an empty-string test. The parent’s §12
+- **Operators present:** `!=`, `=`, `AND`, an empty-string test, a null test. The parent’s §12
   is the authority on the vocabulary; the point here is only which of it these templates use.
 - **Where the filtering happens:** in the query, on the CRM side, before anything reaches the
   source system. Narrowing a template means editing its query — not its mapping.
@@ -171,8 +171,8 @@ of every shape above is empty.
 
 - **Template names the catalogue carries:** `Create Item` (1), `Create New Account` (1), `Create
   New Invoice` (1), `Create New Payment` (1).
-- **Field-process versions they belong to:** `TxDownloader_13_2`, `TxDownloaderPro_13_5`,
-  `TxDownloaderPro_13_3`, `TxDownloader_13_1`.
+- **Field-process versions they belong to:** `TxDownloaderPro_13_5`, `TxDownloaderPro_13_3`,
+  `TxDownloader_13_1`, `TxDownloader_13_2`.
 
 Importing one of these writes the same `TxDownloaderPro` row that importing a default template
 writes (parent §9); what differs is where the template came from, not how it is stored. What any
