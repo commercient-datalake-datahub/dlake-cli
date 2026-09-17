@@ -57,21 +57,20 @@ destination objects are and what the operation flags allow. Operations are the u
 |---|---|---|---|---|
 | Create New Customer | Salesforce Account to QuickBooks Online Customer | `Account` → `Customer` | 2 | create |
 | Create/Update Vendor | Salesforce Account to QuickBooks Online Vendor - Update Vendor | `Account` → `Vendor` | 2 | create / update |
+| Update Invoice | Salesforce Order to QuickBooks Online Invoice - Update Invoice | `Order` → `Invoice` | 2 | update |
+| Create New Bill | Salesforce Order to QuickBooks Online Bill | `Order` → `Bill` | 1 | create |
+| Create New Invoice | Salesforce Order to QuickBooks Online Invoice | `Order` → `Invoice` | 1 | create |
 | Create New Item | Salesforce Product2 to QuickBooks Online Item | `Product2` → `Item` | 1 | create |
 | Create New Payment | Salesforce Order to QuickBooks Online Payment | `Order` → `Payment` | 1 | create |
-| TxDownloader_22_10 | — | `Order` → `Purchase` | 1 | create |
-| TxDownloader_22_11 | — | `Order` → `Purchase` | 1 | update |
-| TxDownloader_22_12 | Salesforce Order to QuickBooks Online Bill | `Order` → `Bill` | 1 | create |
-| TxDownloader_22_13 | Salesforce Order to QuickBooks Online Bill - Update Bill | `Order` → `Bill` | 1 | update |
-| TxDownloader_22_15 | Salesforce Order to QuickBooks Online Sales Receipt | `Order` → `SalesReceipt` | 1 | create |
-| TxDownloader_22_3 | Salesforce Order to QuickBooks Online Invoice | `Order` → `Invoice` | 1 | create |
-| TxDownloader_22_5 | Salesforce Order to QuickBooks Online Purchase Order | `Order` → `Purchase Order` | 1 | create |
-| TxDownloader_22_7 | Salesforce Order to QuickBooks Online Invoice - Update Invoice | `Order` → `Invoice` | 1 | update |
-| TxDownloader_22_8 | Salesforce Order to QuickBooks Online Estimate - Update Estimate | `Order` → `Estimate` | 1 | update |
-| TxDownloader_22_9 | Salesforce Order to QuickBooks Online Purchase Order - Update Purchase Order | `Order` → `Purchase Order` | 1 | update |
+| Create New Purchase | — | `Order` → `Purchase` | 1 | create |
+| Create New Purchase Order | Salesforce Order to QuickBooks Online Purchase Order | `Order` → `Purchase Order` | 1 | create |
+| Create New Sales Receipt | Salesforce Order to QuickBooks Online Sales Receipt | `Order` → `SalesReceipt` | 1 | create |
+| Update Bill | Salesforce Order to QuickBooks Online Bill - Update Bill | `Order` → `Bill` | 1 | update |
 | Update Customer | Salesforce Account to QuickBooks Online Customer - Update Customer | `Account` → `Customer` | 1 | update |
-| Update Invoice | Salesforce Order to QuickBooks Online Invoice - Update Invoice | `Order` → `Invoice` | 1 | update |
+| Update Estimate | Salesforce Order to QuickBooks Online Estimate - Update Estimate | `Order` → `Estimate` | 1 | update |
 | Update Product | Salesforce Product2 to QuickBooks Online Item - Update Item | `Product2` → `Item` | 1 | update |
+| Update Purchase | — | `Order` → `Purchase` | 1 | update |
+| Update Purchase Order | Salesforce Order to QuickBooks Online Purchase Order - Update Purchase Order | `Order` → `Purchase Order` | 1 | update |
 
 Across the 19 default templates: 10 carry `IsInsert`, 9 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
@@ -99,11 +98,11 @@ that never matches a run.
 | `IsInsert` / `IsUpdate` / `IsDelete` | the template’s own flags — section 1 |
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
-The field-process versions this pair’s default templates belong to: `TxDownloader_22_3`,
-`TxDownloader_22_5`, `TxDownloader_22_7`, `TxDownloader_22_8`, `TxDownloader_22_9`,
-`TxDownloader_22_10`, `TxDownloader_22_11`, `TxDownloader_22_12`, `TxDownloader_22_13`,
-`TxDownloader_22_15`, `TxDownloader_22_1`, `TxDownloader_22_17`, `TxDownloader_22_20`,
-`TxDownloader_22_14`, `TxDownloader_22_6`, `TxDownloader_22_18`, `TxDownloader_22_19`.
+The field-process versions this pair’s default templates belong to: `TxDownloader_22_12`,
+`TxDownloader_22_1`, `TxDownloader_22_3`, `TxDownloader_22_17`, `TxDownloader_22_20`,
+`TxDownloader_22_10`, `TxDownloader_22_5`, `TxDownloader_22_15`, `TxDownloader_22_14`,
+`TxDownloader_22_13`, `TxDownloader_22_6`, `TxDownloader_22_8`, `TxDownloader_22_7`,
+`TxDownloader_22_18`, `TxDownloader_22_19`, `TxDownloader_22_11`, `TxDownloader_22_9`.
 
 2 of these template rows carry a licence-group id, so what a given tenant is offered in the
 picker is narrower than what the catalogue holds.
@@ -134,7 +133,7 @@ value is a template resolved against the retrieved record’s XML document (pare
 pair’s 19 default templates, 18 carry a `DefaultProcessStructure` and 1 carries none. A
 parseable document carries about 15 members.
 
-- **Template path roots used:** `Order`, `OrderItems`, `Account`, `ExternalKey__c`, `Product2`,
+- **Template path roots used:** `Order`, `OrderItems`, `Account`, `Product2`, `ExternalKey__c`,
   `CommercientSF__ExternalKey__c`. A path’s first segment has to match the element the engine
   emits, and the document root itself is never part of the path.
 - **`Line.` section members present:** `Line.LineItemName`, `Line.LineQty`,
@@ -163,10 +162,9 @@ described.
 - **CRM fields `Part1` writes to:** `ExternalKey__c`, `CommercientSF__ExternalKey__c`. These are
   the fields on the flagged record that carry the source system’s key or outcome once the write
   has happened — the names only; what lands in them is the response, per record.
-- **Response fields it reads them from:** `Id`, `NewInvoiceCode`, `NewPOCode`,
-  `NewPurchaseCode`, `NewSalesReceiptCode`. The map is written **source-path first, CRM-field
-  second** (parent §11); the wrong way round resolves to the same silent empty string as a
-  mistyped path.
+- **Response fields it reads them from:** `Id`, `NewInvoiceCode`, `NewPurchaseCode`,
+  `NewPOCode`, `NewSalesReceiptCode`. The map is written **source-path first, CRM-field second**
+  (parent §11); the wrong way round resolves to the same silent empty string as a mistyped path.
 
 ## 6. Community templates
 
@@ -197,9 +195,9 @@ of every shape above is empty.
   `Update Customer` (1), `Update Invoice` (1), `Update Vendor` (1).
 - **Names not reproduced:** 2 of these templates carry a name that is not a product artefact
   name, and it is not printed here.
-- **Field-process versions they belong to:** `TxDownloader_22_3`, `TxDownloader_22_12`,
-  `TxDownloader_22_7`, `TxDownloader_22_13`, `TxDownloader_22_15`, `TxDownloader_22_1`,
-  `TxDownloader_22_14`, `TxDownloader_22_6`.
+- **Field-process versions they belong to:** `TxDownloader_22_12`, `TxDownloader_22_1`,
+  `TxDownloader_22_3`, `TxDownloader_22_15`, `TxDownloader_22_14`, `TxDownloader_22_13`,
+  `TxDownloader_22_6`, `TxDownloader_22_7`.
 
 Importing one of these writes the same `TxDownloaderPro` row that importing a default template
 writes (parent §9); what differs is where the template came from, not how it is stored. What any
