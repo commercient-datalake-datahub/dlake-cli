@@ -53,7 +53,7 @@ destination objects are and what the operation flags allow. Operations are the u
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
-| TxDownloader_14_1 | Create Account from Salesforce to MACOLAES | `Account` → `Customer` | 2 | create |
+| Create New Customer | Create Account from Salesforce to MACOLAES | `Account` → `Customer` | 2 | create |
 
 Across the 2 default templates: 2 carry `IsInsert`, 0 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
