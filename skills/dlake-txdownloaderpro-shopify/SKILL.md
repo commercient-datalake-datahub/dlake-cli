@@ -5,8 +5,8 @@ description: >-
   the one-member JSON `Query` that names the module and nothing else, the three modules the
   default set names, the flat `ProcessStructure` mapping with its `Line.` section and
   `Line.mainXml` collection member over the order's line items, the single `$FUN_` value-token
-  name these documents carry, the fact that no default Shopify template fills a
-  `ResultStructure` part and therefore nothing is written back to Shopify, and the
+  name these documents carry, the fact that only three default Shopify templates fill a
+  `ResultStructure` part and therefore almost nothing is written back to Shopify, and the
   `TxDownloaderPro` process row each template becomes on import. Use it when importing or reading
   a Shopify template set, when an order reaches the ERP with no lines, when a mapped field
   arrives empty, or when someone expects the ERP's order number to appear in Shopify. It extends
@@ -38,12 +38,13 @@ described from their `DefaultQuery`, `DefaultProcessStructure` and `DefaultResul
 columns — structure only. **No template text is reproduced.** This page grows as the default
 catalogue does.
 
-The default set ships **64 templates across 21 ERP names, in 61 field-process versions** — almost
+The default set ships **92 templates across 21 ERP names, in 89 field-process versions** — almost
 one version per template, which is what a set built ERP by ERP looks like. Each of those ERPs has
 its own page, `dlake-txdownloaderpro-<erp>-shopify`.
 
 **Shopify is the one destination in this family that is really a source.** The templates move a
-store's customers, products and orders into the ERP, and nothing comes back — see section 5.
+store's customers, products and orders into the ERP, and almost nothing comes back — see
+section 5.
 
 ## 1. What the templates deliver
 
@@ -55,9 +56,9 @@ store's customers, products and orders into the ERP, and nothing comes back — 
 | **Sales invoice** | The same order aimed at the ERP's invoice object instead | create |
 | **Contact** | A customer becomes an ERP customer contact, on the ERPs whose contact object is separate | create |
 
-**All 64 default templates carry `IsInsert`, and none carries `IsUpdate` or `IsDelete`.** This set
-creates records in the ERP; it does not maintain them. 63 of the 64 also carry
-`IsCustomization`, so the picker treats nearly the whole set as customisable, and 11 carry a
+**81 of the 92 default templates carry `IsInsert`, 8 carry `IsUpdate` and 3 carry `IsDelete`.**
+This set mostly creates records in the ERP rather than maintaining them. 63 of the 92 also carry
+`IsCustomization`, so the picker treats most of the set as customisable, and 11 carry a
 licence-group id.
 
 **The catalogue carries no `BusinessDescription` on any Shopify row.** The business language on
@@ -75,8 +76,8 @@ every process has one that survives publication.
 | the DLL and `erpProcessId` | the **field-process version**, not the template |
 
 **A default template carries no `TxDownloaderDllName` and no template name of its own**; the
-field-process version is its identity and supplies the DLL on a create. With 61 versions behind
-64 templates, picking the version is effectively picking the template — a create against the
+field-process version is its identity and supplies the DLL on a create. With 89 versions behind
+92 templates, picking the version is effectively picking the template — a create against the
 wrong one produces a process that no run matches.
 
 In-flight state is in `TxDownloaderProTrans`, keyed by `SFUpdated` — parent §10.
@@ -84,7 +85,7 @@ In-flight state is in `TxDownloaderProTrans`, keyed by `SFUpdated` — parent §
 ## 3. The queries
 
 **A Shopify `Query` is a JSON object with a single member, `ModuleName`, and nothing else** — all
-64 templates. There is no `selectedFields` and no `Where`: unlike the other JSON-query
+92 templates. There is no `selectedFields` and no `Where`: unlike the other JSON-query
 destinations in this family, the default Shopify templates do not carry those members at all.
 
 - **The modules the default set names:** `customer`, `order`, `product`.
@@ -98,13 +99,13 @@ destinations in this family, the default Shopify templates do not carry those me
 ## 4. The inbound mapping document
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
-value is a template resolved against the retrieved record's XML document (parent §11). **All 64
-default templates carry one and all 64 parse** — the only destination in this family with no
-unparseable documents. A document carries about 13 members.
+value is a template resolved against the retrieved record's XML document (parent §11). **All 92
+default templates carry one and all 92 parse** — the only destination in this family with no
+unparseable documents. A document carries about 12 members.
 
 - **Path roots the documents use:** `Order`, `Customer`, `Product`, and `line_items` for the
   order's lines. Four roots for the whole destination, because there are only three modules.
-- **29 documents carry a `Line.` section and 25 name the collection through `Line.mainXml`.** On
+- **30 documents carry a `Line.` section and 26 name the collection through `Line.mainXml`.** On
   this destination the collection is always the order's line items. The members beside it — item
   or SKU, quantity, unit price, amount and description in each ERP's spelling — resolve against
   the line-items root, **not** through the order. **An order that reaches the ERP with a header
@@ -116,19 +117,19 @@ unparseable documents. A document carries about 13 members.
   parent's §12 is explicit that the platform-side resolver is dotted path substitution only, and
   the token is evaluated by the service on the customer's own host.
 
-## 5. Result structure — nothing goes back to Shopify
+## 5. Result structure — almost nothing goes back to Shopify
 
-**No default Shopify template carries a `DefaultResultStructure` at all** — 64 of 64 are empty,
-not merely four explicit nulls the way the other destinations store them.
+**Almost no default Shopify template carries a `DefaultResultStructure` at all** — 89 of the 92
+are empty, not merely four explicit nulls the way the other destinations store them.
 
-So none of `Part1` through `Part4` is filled anywhere in this set, and **nothing is written back
-into the store**: the ERP's customer code, item number or order number stays in
-`TxDownloaderProTrans` and the Shopify record is left exactly as it was. That is the designed
-behaviour of this set, not a gap in a particular template.
+So `Part1` is filled on three templates and `Part2` through `Part4` nowhere in this set, and on
+the other 89 **nothing is written back into the store**: the ERP's customer code, item number or
+order number stays in `TxDownloaderProTrans` and the Shopify record is left exactly as it was.
+That is the designed behaviour of this set, not a gap in a particular template.
 
 If a tenant needs the ERP's number to appear against the Shopify record, `ResultStructure` is the
-column to fill and the parent's §11 gives its shape — but be clear with them that no shipped
-default template does this, so it is new configuration and not a repair.
+column to fill and the parent's §11 gives its shape — but be clear with them that only three
+shipped default templates do this, so for the rest it is new configuration and not a repair.
 
 ## 6. Verifying
 
@@ -161,25 +162,26 @@ beside this file.
 <!-- ERP-TABLE:BEGIN dlake-txdownloaderpro-shopify -->
 | ERP | Page | What its templates deliver |
 |---|---|---|
-| Abas Business Software | [`erps/abas-business-software.md`](erps/abas-business-software.md) | 1 default template in 1 process, mostly JSON module objects; nothing written back |
-| Acumatica Cloud | [`erps/acumatica-cloud.md`](erps/acumatica-cloud.md) | 3 default templates in 3 processes, mostly JSON module objects; nothing written back |
-| Epicor 10 | [`erps/epicor-10.md`](erps/epicor-10.md) | 3 default templates in 3 processes, mostly JSON module objects; nothing written back |
+| Abas Business Software | [`erps/abas-business-software.md`](erps/abas-business-software.md) | 8 default templates in 8 processes, mostly JSON module objects; writes back through `Part1` |
+| Acumatica Cloud | [`erps/acumatica-cloud.md`](erps/acumatica-cloud.md) | 4 default templates in 4 processes, mostly JSON module objects; nothing written back |
+| ECi Spruce | [`erps/eci-spruce.md`](erps/eci-spruce.md) | no default templates; 3 community templates |
+| Epicor 10 | [`erps/epicor-10.md`](erps/epicor-10.md) | 4 default templates in 4 processes, mostly JSON module objects; nothing written back |
 | Epicor 9 and 9.5 | [`erps/epicor-9-and-9-5.md`](erps/epicor-9-and-9-5.md) | 2 default templates in 2 processes, mostly JSON module objects; nothing written back |
-| Epicor Prophet 21 (P21) | [`erps/epicor-prophet-21-p21.md`](erps/epicor-prophet-21-p21.md) | 2 default templates in 2 processes, mostly JSON module objects; nothing written back |
-| Exact Globe Next | [`erps/exact-globe-next.md`](erps/exact-globe-next.md) | 1 default template in 1 process, mostly JSON module objects; nothing written back |
-| Infor Visual 9 | [`erps/infor-visual-9.md`](erps/infor-visual-9.md) | 1 default template in 1 process, mostly JSON module objects; nothing written back |
-| Microsoft Business Central | [`erps/microsoft-business-central.md`](erps/microsoft-business-central.md) | 8 default templates in 5 processes, mostly JSON module objects; nothing written back |
-| Microsoft Dynamics GP | [`erps/microsoft-dynamics-gp.md`](erps/microsoft-dynamics-gp.md) | 3 default templates in 3 processes, mostly JSON module objects; nothing written back |
+| Epicor Prophet 21 (P21) | [`erps/epicor-prophet-21-p21.md`](erps/epicor-prophet-21-p21.md) | 2 default templates in 2 processes, mostly JSON module objects; nothing written back; 2 community templates |
+| Exact Globe Next | [`erps/exact-globe-next.md`](erps/exact-globe-next.md) | 3 default templates in 3 processes, mostly JSON module objects; nothing written back |
+| Infor Visual 9 | [`erps/infor-visual-9.md`](erps/infor-visual-9.md) | 2 default templates in 2 processes, mostly JSON module objects; nothing written back |
+| Microsoft Business Central | [`erps/microsoft-business-central.md`](erps/microsoft-business-central.md) | 9 default templates in 6 processes, mostly JSON module objects; nothing written back |
+| Microsoft Dynamics GP | [`erps/microsoft-dynamics-gp.md`](erps/microsoft-dynamics-gp.md) | 5 default templates in 5 processes, mostly JSON module objects; nothing written back |
 | Microsoft Dynamics NAV | [`erps/microsoft-dynamics-nav.md`](erps/microsoft-dynamics-nav.md) | 2 default templates in 2 processes, mostly JSON module objects; nothing written back |
-| MYOB AccountRight | [`erps/myob-accountright.md`](erps/myob-accountright.md) | 4 default templates in 4 processes, mostly JSON module objects; nothing written back |
+| MYOB AccountRight | [`erps/myob-accountright.md`](erps/myob-accountright.md) | 5 default templates in 5 processes, mostly JSON module objects; nothing written back |
 | NetSuite | [`erps/netsuite.md`](erps/netsuite.md) | 3 default templates in 3 processes, mostly JSON module objects; nothing written back |
-| Plex | [`erps/plex.md`](erps/plex.md) | 2 default templates in 2 processes, mostly JSON module objects; nothing written back |
+| Plex | [`erps/plex.md`](erps/plex.md) | 4 default templates in 4 processes, mostly JSON module objects; nothing written back |
 | QuickBooks Desktop | [`erps/quickbooks-desktop.md`](erps/quickbooks-desktop.md) | 5 default templates in 5 processes, mostly JSON module objects; nothing written back |
-| Sage 100 (US) | [`erps/sage-100-us.md`](erps/sage-100-us.md) | 4 default templates in 4 processes, mostly JSON module objects; nothing written back |
-| Sage 300 | [`erps/sage-300.md`](erps/sage-300.md) | 3 default templates in 3 processes, mostly JSON module objects; nothing written back |
-| Sage 50 UK | [`erps/sage-50-uk.md`](erps/sage-50-uk.md) | 4 default templates in 4 processes, mostly JSON module objects; nothing written back |
+| Sage 100 (US) | [`erps/sage-100-us.md`](erps/sage-100-us.md) | 4 default templates in 4 processes, mostly JSON module objects; nothing written back; 3 community templates |
+| Sage 300 | [`erps/sage-300.md`](erps/sage-300.md) | 4 default templates in 4 processes, mostly JSON module objects; nothing written back |
+| Sage 50 UK | [`erps/sage-50-uk.md`](erps/sage-50-uk.md) | 5 default templates in 5 processes, mostly JSON module objects; nothing written back |
 | Sage 50 US | [`erps/sage-50-us.md`](erps/sage-50-us.md) | 4 default templates in 4 processes, mostly JSON module objects; nothing written back |
-| SYSPRO 6 | [`erps/syspro-6.md`](erps/syspro-6.md) | 3 default templates in 3 processes, mostly JSON module objects; nothing written back |
+| SYSPRO 6 | [`erps/syspro-6.md`](erps/syspro-6.md) | 11 default templates in 11 processes, mostly JSON module objects; nothing written back; 9 community templates |
 | Traverse 11 | [`erps/traverse-11.md`](erps/traverse-11.md) | 3 default templates in 3 processes, mostly JSON module objects; nothing written back |
 | Xero | [`erps/xero.md`](erps/xero.md) | 3 default templates in 3 processes, mostly JSON module objects; nothing written back |
 <!-- ERP-TABLE:END -->
