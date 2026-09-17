@@ -54,9 +54,9 @@ destination objects are and what the operation flags allow. Operations are the u
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
 | Create New Invoice | — | `SalesOrder` → `Invoice` | 1 | create |
+| Create New Sales Credit | Dynamics SalesOrder to Sage Live Sales Credit | `salesorder` → `Sales Credit` | 1 | create |
+| Create New Sales Order | Dynamics SalesOrder to Sage Live Sales Order | `salesorder` → `Sales Order` | 1 | create |
 | Create/Update Customer | Dynamic CRM Account to Sage Customer | `Account` → — | 1 | create |
-| TxDownloader_4_3 | Dynamics SalesOrder to Sage Live Sales Credit | `salesorder` → `Sales Credit` | 1 | create |
-| TxDownloader_4_5 | Dynamics SalesOrder to Sage Live Sales Order | `salesorder` → `Sales Order` | 1 | create |
 
 Across the 4 default templates: 4 carry `IsInsert`, 0 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
@@ -84,8 +84,8 @@ that never matches a run.
 | `IsInsert` / `IsUpdate` / `IsDelete` | the template’s own flags — section 1 |
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
-The field-process versions this pair’s default templates belong to: `TxDownloader_4_3`,
-`TxDownloader_4_5`, `TxDownloader_4_2`, `TxDownloader_4_1`.
+The field-process versions this pair’s default templates belong to: `TxDownloader_4_2`,
+`TxDownloader_4_3`, `TxDownloader_4_5`, `TxDownloader_4_1`.
 
 ## 3. What the query retrieves
 
@@ -96,8 +96,8 @@ and filter on.
 - **Objects read:** `salesorder`, `salesorderdetail`, `account`.
 - **Child collections pulled in the same query:** `salesorderdetail`, `account`. A header
   retrieved without its lines is a query that does not name the child collection.
-- **FetchXML elements used:** `fetch`, `entity`, `attribute`, `link-entity`, `filter`,
-  `condition`, `order`; condition operators: `not-null`, `eq`, `null`.
+- **FetchXML elements used:** `fetch`, `entity`, `attribute`, `order`, `link-entity`, `filter`,
+  `condition`; condition operators: `not-null`, `eq`, `null`.
 - **Where the filtering happens:** in the query, on the CRM side, before anything reaches the
   source system. Narrowing a template means editing its query — not its mapping.
 
