@@ -134,7 +134,28 @@ process before activating it.
 | SYNC INVOICE HEADER | `CommercientSF9__Dynamics_SL_Invoice_Header__c` | 91 | `CurrentNbr` → `CommercientSF9__CurrentNbr__c`, `Cycle` → `Cycle`, `DraftIssued` → `CommercientSF9__DraftIssued__c`, `InstallNbr` → `CommercientSF9__InstallNbr__c`, `JobCntr` → `JobCntr` |
 | SYNC INVOICE DETAIL | `CommercientSF9__Dynamics_SL_Invoice_Detail__c` | 91 | `AcctDist` → `AcctDist`, `Excpt` → `Excpt`, `FlatRateLineNbr` → `CommercientSF9__FlatRateLineNbr__c`, `InstallNbr` → `CommercientSF9__InstallNbr__c`, `ServiceCallLineNbr` → `ServiceCallLineNbr` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 8 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 8
+- Default operations: insert on 8, update on 8, delete on 8
+- Marked circular-sync: 0
+- Licence groups they span: 5
+- Destination objects: `Account`, `CommercientSF9__Address__c`, `CommercientSF9__Customer__c`, `CommercientSF9__Dynamics_SL_Invoice_Detail__c`, `CommercientSF9__Dynamics_SL_Invoice_Header__c`, `CommercientSF9__Dynamics_SL_Sales_Order_Detail__c`, `CommercientSF9__Dynamics_SL_Sales_Order_Header__c`
+- Object display names: Account, SYNC ADDRESS, SYNC CUSTOMER, SYNC CUSTOMERTOACCOUNTLOOKUP, SYNC INVOICE DETAIL, SYNC INVOICE HEADER, SYNC SALES ORDER DETAIL, SYNC SALES ORDER HEADER
+- Template groups: Account, Invoice, Salesorder, Customer Multi Ship Addresses
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -155,7 +176,7 @@ The prefixes these templates set:
 - `vw_MSDYNAMICSL2015_SalesOrderHeader`
 - `vw_MSDYNAMICSL2015_SalesOrderDetail`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
