@@ -2,8 +2,8 @@
 name: dlake-txdownloaderpro-salesforce/erps/sage-50-us
 description: >-
   What the shipped default TxDownloaderPro templates set up when Salesforce is the writeback
-  destination and Sage 50 US is the source: the 34 default templates the catalogue ships for
-  this pair, the 19 field-process versions they are identified by, what each template family
+  destination and Sage 50 US is the source: the 42 default templates the catalogue ships for
+  this pair, the 27 field-process versions they are identified by, what each template family
   delivers, the shape of the query that finds flagged records and the objects and marker columns
   it reads, the structure of the inbound mapping document, and which `ResultStructure` parts the
   templates fill for the write back to the CRM.
@@ -61,18 +61,26 @@ destination objects are and what the operation flags allow. Operations are the u
 | Create New Customer | Salesforce Account to Sage50US Customer | `Account` → `Customer` | 2 | create / update |
 | Delete SalesInvoice | Salesforce Quote to Sage 50 US Invoice - Delete Invoice | — → — | 2 | delete |
 | Delete SalesOrder | Salesforce Order to Sage 50 US Sales Order - Delete Sales Order | — → — | 2 | delete |
+| Create CustomerContact | Salesforce Contact to Sage50US Contact | `Contact` → `Contact` | 1 | create |
 | Create New Product | Salesforce Product/Item to Sage50US Product | `Product` → `Item` | 1 | create |
+| Create New Purchase Entry | Salesforce Order to Sage 50 US Purchase Entry | `Order` → `Purchase Order Entry` | 1 | create |
+| Create New PurchaseOrder | Salesforce Order to Sage 50 US Purchase Order | `Order` → `Purchase Order` | 1 | create |
+| Create New Quote | Salesforce Quote to Sage 50 US Quote | `Quote` → `Quote` | 1 | create |
 | Create New Vendor | Salesforce Account to Sage 50 US Vendor | `Account` → `Vendor` | 1 | create |
 | Create/Update Ship To Customer Address | — | `CommercientSF8__SAGE50US_Address` → `ShipToAddress` | 1 | create / update |
 | Delete Customer | Salesforce Customer to Sage 50 US Account - Delete Customer | — → — | 1 | delete |
 | Delete Product | Salesforce Product to Sage 50 US item - Delete Item | `Product` → `Item` | 1 | delete |
+| Delete PurchaseOrder | Salesforce Order to Sage 50 US Purchase Order - Delete Purchase Order | `Order` → `Purchase Order` | 1 | delete |
 | Delete Vendor | Delete Salesforce Account to Delete Sage 50 US Vendor | `Account` → `Vendor` | 1 | delete |
-| TxDownloader_1_27 | Salesforce Contact to Sage50US Contact | `Contact` → `Contact` | 1 | create |
+| TxDownloader_1_33 | Salesforce Account to Sage 50 US Vendor | `Account` → `Vendor` | 1 | create |
+| TxDownloader_1_34 | Salesforce Update Account to Sage 50 US Update Vendor | `Account` → `Vendor` | 1 | update |
 | Update Customer | Salesforce Account to Sage50US Customer - Update Customer | `Account` → `Customer` | 1 | update |
 | Update Product | Salesforce Product/Item to Sage50US Product - Update Product | `Product` → `Item` | 1 | update |
+| Update PurchaseOrder | Salesforce Update Order to Sage 50 US Update Purchase Order | `Order` → `Purchase Order` | 1 | update |
+| Update Quote | Salesforce Update Quote to Sage 50 US Update Quote | `Quote` → `Quote` | 1 | update |
 | Update Vendor | Salesforce Account to Sage 50 US Vendor | `Account` → `Vendor` | 1 | update |
 
-Across the 34 default templates: 12 carry `IsInsert`, 13 carry `IsUpdate`, 10 carry `IsDelete`.
+Across the 42 default templates: 16 carry `IsInsert`, 16 carry `IsUpdate`, 11 carry `IsDelete`.
 A flag decides which operation the process is allowed to perform, not which one it performs on a
 given record. 4 catalogue descriptions were not printed because they are placeholders or carry
 text that is not ours to publish.
@@ -99,29 +107,30 @@ that never matches a run.
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
 The field-process versions this pair’s default templates belong to: `TxDownloader_1_27`,
-`TxDownloader_1_1`, `TxDownloader_1_19`, `TxDownloader_1_3`, `TxDownloader_1_2`,
+`TxDownloader_1_33`, `TxDownloader_1_1`, `TxDownloader_1_19`, `TxDownloader_1_36`,
+`TxDownloader_1_21`, `TxDownloader_1_22`, `TxDownloader_1_3`, `TxDownloader_1_2`,
 `TxDownloader_1_20`, `TxDownloader_1_28`, `TxDownloader_1_6`, `TxDownloader_1_11`,
-`TxDownloader_1_24`, `TxDownloader_1_8`, `TxDownloader_1_7`, `TxDownloader_1_10`,
-`TxDownloader_1_12`, `TxDownloader_1_15`, `TxDownloader_1_16`, `TxDownloader_1_5`,
-`TxDownloader_1_13`, `TxDownloader_1_14`.
+`TxDownloader_1_9`, `TxDownloader_1_24`, `TxDownloader_1_8`, `TxDownloader_1_7`,
+`TxDownloader_1_10`, `TxDownloader_1_12`, `TxDownloader_1_34`, `TxDownloader_1_15`,
+`TxDownloader_1_18`, `TxDownloader_1_23`, `TxDownloader_1_16`, and 3 more.
 
 3 of these template rows carry a licence-group id, so what a given tenant is offered in the
 picker is narrower than what the catalogue holds.
 
 ## 3. What the query retrieves
 
-`Query` does not have one shape across the product (parent §9). For this pair, 34 carry a
+`Query` does not have one shape across the product (parent §9). For this pair, 42 carry a
 `SELECT` statement in the CRM's own query language. **No query text is reproduced here**; what
 follows is what those queries read and filter on.
 
-- **Objects read:** `Contact`, `Account`, `Product2`, `OpportunityLineItems`, `OrderItems`,
-  `QuoteLineItems`, `CommercientSF8__SAGE50US_Address__c`, `product2`, `Quote`, `Order`,
+- **Objects read:** `Contact`, `Account`, `Product2`, `OrderItems`, `QuoteLineItems`,
+  `OpportunityLineItems`, `CommercientSF8__SAGE50US_Address__c`, `product2`, `Order`, `Quote`,
   `Opportunity`.
-- **Child collections pulled in the same query:** `OpportunityLineItems`, `OrderItems`,
-  `QuoteLineItems`. A header retrieved without its lines is a query that does not name the child
-  collection.
+- **Child collections pulled in the same query:** `OrderItems`, `QuoteLineItems`,
+  `OpportunityLineItems`. A header retrieved without its lines is a query that does not name the
+  child collection.
 - **Marker and key columns the queries name:** `CommercientSF__Commercient_ArCustomerCode__c`,
-  `CommercientSF8__Account__r`, `CommercientSF8__AddressLine1__c`,
+  `ExternalKey__c`, `CommercientSF8__Account__r`, `CommercientSF8__AddressLine1__c`,
   `CommercientSF8__AddressLine2__c`, `CommercientSF8__City__c`, `CommercientSF8__Country__c`,
   `CommercientSF8__ExternalKey__c`, `CommercientSF8__Customer__c`, `CommercientSF8__Name__c`,
   `CommercientSF8__State__c`, `CommercientSF8__AddressTypeNumber__c`,
@@ -129,7 +138,7 @@ follows is what those queries read and filter on.
   `Commercient_Import__c`, `Commercient_Message__c`. These are the columns a user’s flag lands
   in and the columns the run writes an outcome back to; which ones are in the `WHERE` is what
   decides whether a record is in scope at all.
-- **Operators present:** `=`, an empty-string test, `!=`, a null test, `>`, `AND`. The parent’s
+- **Operators present:** `!=`, an empty-string test, `=`, `AND`, a null test, `>`. The parent’s
   §12 is the authority on the vocabulary; the point here is only which of it these templates
   use.
 - **Where the filtering happens:** in the query, on the CRM side, before anything reaches the
@@ -139,19 +148,18 @@ follows is what those queries read and filter on.
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 34 default templates, 34 carry a `DefaultProcessStructure`; 5 of those do not parse as
+pair’s 42 default templates, 42 carry a `DefaultProcessStructure`; 5 of those do not parse as
 JSON and are counted but not described. A parseable document carries about 10 members.
 
-- **Template path roots used:** `Account`, `Quote`, `Order`, `Opportunity`,
-  `OpportunityLineItems`, `QuoteLineItems`, `OrderLineItems`,
-  `CommercientSF8__SAGE50US_Address__c`, `OrderItems`, `Contact`, `Product2`, `product2`,
-  `QuoteQuoteLineItems`. A path’s first segment has to match the element the engine emits, and
-  the document root itself is never part of the path.
-- **`Line.` section members present:** `Line.Quantity`, `Line.GL_Account`, `Line.Unit_Price`,
-  `Line.Tax_Type`, `Line.Item_ID`, `Line.mainXml`, `Line.Amount`, `Line.Description`,
-  `Line.Stocking_Quantity`, `Line.SO_Description`. 10 templates name the collection through
-  `Line.mainXml`; the members beside it are resolved against that collection’s own root rather
-  than through the header.
+- **Template path roots used:** `Order`, `Account`, `Quote`, `Opportunity`, `QuoteLineItems`,
+  `OpportunityLineItems`, `OrderItems`, `OrderLineItems`, `CommercientSF8__SAGE50US_Address__c`,
+  `Contact`, `Product2`, `product2`, `QuoteQuoteLineItems`. A path’s first segment has to match
+  the element the engine emits, and the document root itself is never part of the path.
+- **`Line.` section members present:** `Line.Quantity`, `Line.mainXml`, `Line.Item_ID`,
+  `Line.Unit_Price`, `Line.Description`, `Line.GL_Account`, `Line.Tax_Type`, `Line.Amount`,
+  `Line.Stocking_Quantity`, `Line.SO_Description`, `Line.ItemId`, `Line.UnitPrice`. 15 templates
+  name the collection through `Line.mainXml`; the members beside it are resolved against that
+  collection’s own root rather than through the header.
 - **`$FUN_` value tokens the documents carry:** `$FUN_STRREPLACE`. The names are what the
   templates carry; **no semantics are claimed for them here** — the parent’s §12 is explicit
   that the platform-side resolver is dotted path substitution only, and these tokens are
@@ -160,23 +168,23 @@ JSON and are counted but not described. A parseable document carries about 10 me
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 34 default templates, 5 carry a
-parseable `DefaultResultStructure`, 29 carry none.
+system’s response after the write (parent §11). Of this pair’s 42 default templates, 12 carry a
+parseable `DefaultResultStructure`, 30 carry none.
 
 | Part | Filled by | What it addresses | Members present |
 |---|---|---|---|
-| `Part1` | 5 templates | the record the run is already working with | a source-path-to-CRM-field map |
-| `Part2` | 0 templates (5 explicitly null) | the child/line records under it | — |
-| `Part3` | 0 templates (5 explicitly null) | a **new** record, matched on an external id field | — |
-| `Part4` | 0 templates (5 explicitly null) | a **different** record, addressed by an id field | — |
+| `Part1` | 12 templates | the record the run is already working with | a source-path-to-CRM-field map |
+| `Part2` | 0 templates (12 explicitly null) | the child/line records under it | — |
+| `Part3` | 0 templates (12 explicitly null) | a **new** record, matched on an external id field | — |
+| `Part4` | 0 templates (12 explicitly null) | a **different** record, addressed by an id field | — |
 
 - **CRM fields `Part1` writes to:** `CommercientSF__Commercient_ArCustomerCode__c`,
-  `CommercientSF8__AddressTypeNumber__c`. These are the fields on the flagged record that carry
-  the source system’s key or outcome once the write has happened — the names only; what lands in
-  them is the response, per record.
-- **Response fields it reads them from:** `CustomerID`, `SequenceNumber`, `VendorId`. The map is
-  written **source-path first, CRM-field second** (parent §11); the wrong way round resolves to
-  the same silent empty string as a mistyped path.
+  `ExternalKey__c`, `CommercientSF8__AddressTypeNumber__c`. These are the fields on the flagged
+  record that carry the source system’s key or outcome once the write has happened — the names
+  only; what lands in them is the response, per record.
+- **Response fields it reads them from:** `VendorId`, `CustomerID`, `PO_Number`, `Quote_Number`,
+  `InvoiceNumber`, `SequenceNumber`. The map is written **source-path first, CRM-field second**
+  (parent §11); the wrong way round resolves to the same silent empty string as a mistyped path.
 
 ## 6. Verifying
 
