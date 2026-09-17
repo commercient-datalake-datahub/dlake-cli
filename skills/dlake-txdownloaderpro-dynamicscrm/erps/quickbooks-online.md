@@ -55,22 +55,21 @@ destination objects are and what the operation flags allow. Operations are the u
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
+| Update Invoice | Dynamic CRM Sales Order to QuickBooks Online Invoice - Update Invoice | `Sales Order` → `Invoice` | 2 | update |
+| Create New Bill | Dynamic CRM Sales Order to QuickBooks Online Bill | `Sales Order` → `Bill` | 1 | create |
 | Create New Customer | Dynamics CRM Account to QuickBooks Online Customer | `Account` → `Customer` | 1 | create |
 | Create New Estimate | Dynamic CRM SalesOrder to QuickBooks Online Estimate | `Sales Order` → `Estimate` | 1 | create |
+| Create New Invoice | Dynamic CRM Sales Order to QuickBooks Online Invoice | `Sales Order` → `Invoice` | 1 | create |
 | Create New Item | Dynamic CRM Product to QuickBooks Online Item | `Product` → `Item` | 1 | create |
 | Create New Payment | Dynamic CRM Sales Order to QuickBooks Online Payment | `Sales Order` → `Payment` | 1 | create |
-| TxDownloader_22_10 | — | `Sales Order` → `Purchase` | 1 | create |
-| TxDownloader_22_11 | — | `Sales Order` → `Purchase` | 1 | update |
-| TxDownloader_22_12 | Dynamic CRM Sales Order to QuickBooks Online Bill | `Sales Order` → `Bill` | 1 | create |
-| TxDownloader_22_13 | Dynamic CRM Sales Order to QuickBooks Online Bill - Update Bill | `Sales Order` → `Bill` | 1 | update |
-| TxDownloader_22_15 | Dynamic CRM Sales Order to QuickBooks Online Sales Receipt | `Sales Order` → `SalesReceipt` | 1 | create |
-| TxDownloader_22_3 | Dynamic CRM Sales Order to QuickBooks Online Invoice | `Sales Order` → `Invoice` | 1 | create |
-| TxDownloader_22_5 | Dynamic CRM Sales Order to QuickBooks Online Purchase Order | `Sales Order` → `Purchase Order` | 1 | create |
-| TxDownloader_22_7 | Dynamic CRM Sales Order to QuickBooks Online Invoice - Update Invoice | `Sales Order` → `Invoice` | 1 | update |
-| TxDownloader_22_8 | Dynamic CRM Sales Order to QuickBooks Online Estimate - Update Estimate | `Sales Order` → `Estimate` | 1 | update |
-| TxDownloader_22_9 | Dynamic CRM Sales Order to QuickBooks Online Purchase Order - Update Purchase Order | `Sales Order` → `Purchase Order` | 1 | update |
-| Update Invoice | Dynamic CRM Sales Order to QuickBooks Online Invoice - Update Invoice | `Sales Order` → `Invoice` | 1 | update |
+| Create New Purchase | — | `Sales Order` → `Purchase` | 1 | create |
+| Create New Purchase Order | Dynamic CRM Sales Order to QuickBooks Online Purchase Order | `Sales Order` → `Purchase Order` | 1 | create |
+| Create New Sales Receipt | Dynamic CRM Sales Order to QuickBooks Online Sales Receipt | `Sales Order` → `SalesReceipt` | 1 | create |
+| Update Bill | Dynamic CRM Sales Order to QuickBooks Online Bill - Update Bill | `Sales Order` → `Bill` | 1 | update |
+| Update Estimate | Dynamic CRM Sales Order to QuickBooks Online Estimate - Update Estimate | `Sales Order` → `Estimate` | 1 | update |
 | Update Product | Dynamic CRM Product to QuickBooks Online Item - Update Item | `Product` → `Item` | 1 | update |
+| Update Purchase | — | `Sales Order` → `Purchase` | 1 | update |
+| Update Purchase Order | Dynamic CRM Sales Order to QuickBooks Online Purchase Order - Update Purchase Order | `Sales Order` → `Purchase Order` | 1 | update |
 
 Across the 16 default templates: 9 carry `IsInsert`, 7 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
@@ -98,11 +97,11 @@ that never matches a run.
 | `IsInsert` / `IsUpdate` / `IsDelete` | the template’s own flags — section 1 |
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
-The field-process versions this pair’s default templates belong to: `TxDownloader_22_3`,
-`TxDownloader_22_5`, `TxDownloader_22_7`, `TxDownloader_22_8`, `TxDownloader_22_9`,
-`TxDownloader_22_10`, `TxDownloader_22_11`, `TxDownloader_22_12`, `TxDownloader_22_13`,
-`TxDownloader_22_15`, `TxDownloader_22_1`, `TxDownloader_22_4`, `TxDownloader_22_17`,
-`TxDownloader_22_20`, `TxDownloader_22_18`, `TxDownloader_22_19`.
+The field-process versions this pair’s default templates belong to: `TxDownloader_22_12`,
+`TxDownloader_22_1`, `TxDownloader_22_4`, `TxDownloader_22_3`, `TxDownloader_22_17`,
+`TxDownloader_22_20`, `TxDownloader_22_10`, `TxDownloader_22_5`, `TxDownloader_22_15`,
+`TxDownloader_22_13`, `TxDownloader_22_8`, `TxDownloader_22_7`, `TxDownloader_22_18`,
+`TxDownloader_22_19`, `TxDownloader_22_11`, `TxDownloader_22_9`.
 
 1 of these template rows carry a licence-group id, so what a given tenant is offered in the
 picker is narrower than what the catalogue holds.
@@ -152,10 +151,9 @@ parseable `DefaultResultStructure`, 9 carry none.
 - **CRM fields `Part1` writes to:** `comrcint_externalkey`. These are the fields on the flagged
   record that carry the source system’s key or outcome once the write has happened — the names
   only; what lands in them is the response, per record.
-- **Response fields it reads them from:** `Id`, `NewInvoiceCode`, `NewPOCode`,
-  `NewPurchaseCode`, `NewSalesReceiptCode`. The map is written **source-path first, CRM-field
-  second** (parent §11); the wrong way round resolves to the same silent empty string as a
-  mistyped path.
+- **Response fields it reads them from:** `Id`, `NewInvoiceCode`, `NewPurchaseCode`,
+  `NewPOCode`, `NewSalesReceiptCode`. The map is written **source-path first, CRM-field second**
+  (parent §11); the wrong way round resolves to the same silent empty string as a mistyped path.
 
 ## 6. Community templates
 
@@ -180,8 +178,8 @@ of every shape above is empty.
 
 - **Template names the catalogue carries:** `Create Customer` (1), `Create Estimate` (1),
   `Create Invoice` (1).
-- **Field-process versions they belong to:** `TxDownloader_22_3`, `TxDownloader_22_1`,
-  `TxDownloader_22_4`.
+- **Field-process versions they belong to:** `TxDownloader_22_1`, `TxDownloader_22_4`,
+  `TxDownloader_22_3`.
 
 Importing one of these writes the same `TxDownloaderPro` row that importing a default template
 writes (parent §9); what differs is where the template came from, not how it is stored. What any
