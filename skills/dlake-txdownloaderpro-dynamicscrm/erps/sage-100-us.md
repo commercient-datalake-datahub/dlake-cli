@@ -2,8 +2,8 @@
 name: dlake-txdownloaderpro-dynamicscrm/erps/sage-100-us
 description: >-
   What the shipped default TxDownloaderPro templates set up when Dynamics CRM is the writeback
-  destination and Sage 100 (US) is the source: the 12 default templates the catalogue ships for
-  this pair, the 6 field-process versions they are identified by, what each template family
+  destination and Sage 100 (US) is the source: the 15 default templates the catalogue ships for
+  this pair, the 9 field-process versions they are identified by, what each template family
   delivers, the shape of the query that finds flagged records and the objects and marker columns
   it reads, the structure of the inbound mapping document, and which `ResultStructure` parts the
   templates fill for the write back to the CRM.
@@ -59,8 +59,11 @@ destination objects are and what the operation flags allow. Operations are the u
 | Create and Update Contact | Create SAGE100 Contact From Dynamic CRM Contact | `Contact` → `Contact` | 1 | create |
 | Delete Contact | Salesforce Contact to Sage 100 Contact | — → — | 1 | delete |
 | Delete Customer | Salesforce Account to Sage Customers | — → — | 1 | delete |
+| Delete Product | MS Dynamic Product to Sage 100 Item - Delete Item | `product` → `Item` | 1 | delete |
+| Delete Ship To Address | MS Dynamic Account to Sage 100 Ship To Address - Delete Ship To Address | `account` → `ShipToAddress` | 1 | delete |
+| Update Ship To Address | MS Dynamic Account to Sage 100 Ship To Address - Update Ship To Address | `account` → `ShipToAddress` | 1 | update |
 
-Across the 12 default templates: 9 carry `IsInsert`, 2 carry `IsUpdate`, 2 carry `IsDelete`. A
+Across the 15 default templates: 9 carry `IsInsert`, 3 carry `IsUpdate`, 4 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
 given record.
 
@@ -87,19 +90,19 @@ that never matches a run.
 
 The field-process versions this pair’s default templates belong to: `TxDownloader_2_4`,
 `TxDownloader_2_1`, `TxDownloader_2_3`, `TxDownloader_2_2`, `TxDownloader_2_5`,
-`TxDownloader_2_9`.
+`TxDownloader_2_9`, `TxDownloader_2_12`, `TxDownloader_2_21`, `TxDownloader_2_20`.
 
 7 of these template rows carry a licence-group id, so what a given tenant is offered in the
 picker is narrower than what the catalogue holds.
 
 ## 3. What the query retrieves
 
-`Query` does not have one shape across the product (parent §9). For this pair, 10 carry a
+`Query` does not have one shape across the product (parent §9). For this pair, 13 carry a
 FetchXML document, 2 carry a `SELECT` statement in the CRM's own query language. **No query text
 is reproduced here**; what follows is what those queries read and filter on.
 
 - **Objects read:** `contact`, `account`, `opportunity`, `opportunitydetail`, `quote`,
-  `quotedetail`, `order`, `orderdetail`, `Contact`, `Account`.
+  `quotedetail`, `order`, `orderdetail`, `Contact`, `Account`, `product`.
 - **Child collections pulled in the same query:** `account`, `contact`, `opportunitydetail`,
   `quotedetail`, `orderdetail`. A header retrieved without its lines is a query that does not
   name the child collection.
@@ -117,13 +120,13 @@ is reproduced here**; what follows is what those queries read and filter on.
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 12 default templates, 12 carry a `DefaultProcessStructure`. A parseable document carries
-about 19 members.
+pair’s 15 default templates, 15 carry a `DefaultProcessStructure`. A parseable document carries
+about 16 members.
 
-- **Template path roots used:** `quote`, `opportunity`, `order`, `account`, `invoice`,
+- **Template path roots used:** `account`, `quote`, `opportunity`, `order`, `invoice`,
   `orderdetail`, `quotedetail`, `opportunitydetail`, `contact`, `invoicedetail`, `Account`,
-  `Contact`. A path’s first segment has to match the element the engine emits, and the document
-  root itself is never part of the path.
+  `Contact`, `product`. A path’s first segment has to match the element the engine emits, and
+  the document root itself is never part of the path.
 - **`Line.` section members present:** `Line.mainXml`, `Line.ItemCode`, `Line.UnitPrice`,
   `Line.Discount`, `Line.QuantityShipped`, `Line.LineDiscountPercent`, `Line.CommentText`,
   `Line.ItemCodeDesc`, `Line.LineNo`, `Line.QuantityOrdered`, `Line.Quantityquoteed`,
@@ -138,8 +141,8 @@ about 19 members.
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 12 default templates, 6 carry a
-parseable `DefaultResultStructure`, 6 carry none.
+system’s response after the write (parent §11). Of this pair’s 15 default templates, 6 carry a
+parseable `DefaultResultStructure`, 9 carry none.
 
 | Part | Filled by | What it addresses | Members present |
 |---|---|---|---|
