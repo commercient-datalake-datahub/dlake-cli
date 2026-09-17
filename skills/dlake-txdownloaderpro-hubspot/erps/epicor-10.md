@@ -56,11 +56,11 @@ destination objects are and what the operation flags allow. Operations are the u
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
 | Create/Update Customer | HubSpot companies to Epicor 10 Customer | `companies` → `Customer` | 2 | create / update |
+| Create or Update Contact | HubSpot contacts to Epicor 10 Contact record | `contacts` → `Contact` | 1 | create / update |
 | Create ShipTo Address | HubSpot companies to Epicor 10 ShipTo | `companies` → `ShipTo` | 1 | create |
 | Create/Update Contact | HubSpot contacts to Epicor 10 Contact | `contacts` → `Contact` | 1 | create / update |
 | Create/Update SalesOrder | HubSpot deals to Epicor 10 Sales Order | `deals` → `SalesOrder` | 1 | create |
 | Product sync | HubSpot products to Epicor 10 Product | `products` → `Product` | 1 | create |
-| TxDownloader_19_3 | HubSpot contacts to Epicor 10 Contact record | `contacts` → `Contact` | 1 | create / update |
 | TxDownloaderPro_19_7_1 | HubSpot deals to Epicor 10 Quote | `deals` → `Quote` | 1 | create / update |
 
 Across the 8 default templates: 7 carry `IsInsert`, 4 carry `IsUpdate`, 0 carry `IsDelete`. A
