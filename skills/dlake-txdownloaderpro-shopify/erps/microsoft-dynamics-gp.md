@@ -57,7 +57,7 @@ destination objects are and what the operation flags allow. Operations are the u
 | Create a Payment | Shopify Order to Microsoft GP Payment | `Order` → `Payment` | 1 | create |
 | Create a Product | Shopify Product to MSDynamicGP Product | `Product` → `Product` | 1 | create |
 | Create New Customer | Shopify Customer to MSDynamicGP Customer | `Customer` → `Customer` | 1 | create |
-| TxDownloader_13_2 | Shopify Order to MSDynamicGP SalesOrder | `Order` → `SalesOrder` | 1 | create |
+| Create New Sales Order | Shopify Order to MSDynamicGP SalesOrder | `Order` → `SalesOrder` | 1 | create |
 
 Across the 5 default templates: 5 carry `IsInsert`, 0 carry `IsUpdate`, 0 carry `IsDelete`, and
 3 carry `IsCustomization`. A flag decides which operation the process is allowed to perform, not
@@ -84,8 +84,8 @@ that never matches a run.
 | `IsInsert` / `IsUpdate` / `IsDelete` | the template’s own flags — section 1 |
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
-The field-process versions this pair’s default templates belong to: `TxDownloader_13_2`,
-`TxDownloaderPro_13_5`, `TxDownloaderPro_13_4`, `TxDownloaderPro_13_3`, `TxDownloader_13_1`.
+The field-process versions this pair’s default templates belong to: `TxDownloaderPro_13_5`,
+`TxDownloaderPro_13_4`, `TxDownloaderPro_13_3`, `TxDownloader_13_1`, `TxDownloader_13_2`.
 
 1 of these template rows carry a licence-group id, so what a given tenant is offered in the
 picker is narrower than what the catalogue holds.
@@ -109,7 +109,7 @@ value is a template resolved against the retrieved record’s XML document (pare
 pair’s 5 default templates, 5 carry a `DefaultProcessStructure`. A parseable document carries
 about 11 members.
 
-- **Template path roots used:** `Order`, `Customer`, `line_items`, `Product`. A path’s first
+- **Template path roots used:** `Order`, `Customer`, `Product`, `line_items`. A path’s first
   segment has to match the element the engine emits, and the document root itself is never part
   of the path.
 - **`Line.` section members present:** `Line.ITEMDESC`, `Line.ITEMNMBR`, `Line.QUANTITY`,
