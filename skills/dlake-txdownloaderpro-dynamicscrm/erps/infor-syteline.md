@@ -55,27 +55,24 @@ destination objects are and what the operation flags allow. Operations are the u
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
+| Create New Contact | Dynamics 365 Contact to Infor LN Contact_v3 (insert) | `Contact` → `SLContacts`, `Contact_v3` | 2 | create |
+| Create New Customer | Dynamics 365 Account to Infor LN Customer360_WT (insert) | `Account` → `SLCustomers`, `Customer360_WT` | 2 | create |
+| Create or Update Blanket Order Item | Dynamics 365 Order Product to Infor SyteLine SLCoitems blanket release (insert) | `Order Product` → `SLCoitems` | 2 | create / update |
+| Create or Update Blanket Order Line | Dynamics 365 Order Product to Infor SyteLine SLCoBlns blanket release (insert) | `Order Product` → `SLCoBlns` | 2 | create / update |
 | Create/Update Customer Item Prices | Dynamics 365 Price List Item to Infor SyteLine SLItemCusts customer price (insert) | `Price List Item` → `SLItemCusts` | 2 | create / update |
 | Create/update New Estimate/Quote With Blanket Lines | Dynamics 365 Sales Order to Infor SyteLine SLCos blanket estimate (insert) | `Sales Order` → `SLCos` | 2 | create / update |
 | Create/Update/Delete Opportunity | Dynamics 365 Opportunity to Infor SyteLine SLOpportunities (insert) | `Opportunity` → `SLOpportunities` | 2 | create / update |
 | Create/Update/Delete Product Item | Dynamics 365 Product to Infor SyteLine SLProdMixItems (insert) | `Product` → `SLProdMixItems` | 2 | create / update |
-| TxDownloader_32_14 | Dynamics 365 Order Product to Infor SyteLine SLCoBlns blanket release (insert) | `Order Product` → `SLCoBlns` | 2 | create / update |
-| TxDownloader_32_15 | Dynamics 365 Order Product to Infor SyteLine SLCoitems blanket release (insert) | `Order Product` → `SLCoitems` | 2 | create / update |
+| Update Customer | Dynamics 365 Account to Infor SyteLine SLCustomers (update) | `Account` → `SLCustomers`, `Customer360_WT` | 2 | update |
+| Create New Customer Order | — | `Sales Order` → `SLCos` | 1 | create |
+| Create New Estimate | Create New Estimate/Quote from DynamicsCRM | `Quotes` → `Quotes` | 1 | create |
 | Create New Prospects | — | `Account` → `Prospect` | 1 | create |
+| Create New Sales Order | Dynamics 365 Sales Order to Infor LN SalesOrderDetails (insert) | `Sales Order` → `SalesOrderDetails` | 1 | create |
 | Create New Ship To Address | Dynamics 365 account address to Infor SyteLine SLCustomers ship-to (insert) | `Account Address` → `SLCustomers` | 1 | create |
 | Create/Update/Delete Ship To Address | Dynamics 365 account address to Infor SyteLine SLShipTos (update) | `Account Address` → `SLShipTos` | 1 | update |
-| TxDownloader_32_13 | Dynamics 365 account address to Infor SyteLine SLCustomers ship-to (update) | `Account Address` → `SLCustomers` | 1 | update |
-| TxDownloader_32_18 | — | `Account` → `SLCustomers` | 1 | create |
-| TxDownloader_32_19 | — | `Contact` → `SLContacts` | 1 | create |
-| TxDownloader_32_20 | — | `Sales Order` → `SLCos` | 1 | create |
-| TxDownloader_32_23 | Dynamics 365 Account to Infor LN Customer360_WT (insert) | `Account` → `Customer360_WT` | 1 | create |
-| TxDownloader_32_24 | Dynamics 365 Account to Infor LN Customer360_WT (update) | `Account` → `Customer360_WT` | 1 | update |
-| TxDownloader_32_25 | Dynamics 365 Contact to Infor LN Contact_v3 (insert) | `Contact` → `Contact_v3` | 1 | create |
-| TxDownloader_32_26 | Dynamics 365 Contact to Infor LN Contact_v3 (update) | `Contact` → `Contact_v3` | 1 | update |
-| TxDownloader_32_27 | Dynamics 365 Sales Order to Infor LN SalesOrderDetails (insert) | `Sales Order` → `SalesOrderDetails` | 1 | create |
-| TxDownloader_32_3 | Create New Estimate/Quote from DynamicsCRM | `Quotes` → `Quotes` | 1 | create |
-| Update Customer | Dynamics 365 Account to Infor SyteLine SLCustomers (update) | `Account` → `SLCustomers` | 1 | update |
+| Update Contact | Dynamics 365 Contact to Infor LN Contact_v3 (update) | `Contact` → `Contact_v3` | 1 | update |
 | Update Estimate/Quote | Dynamics 365 Quote to Infor SyteLine SLCos estimate (update) | `Quote` → `SLCos` | 1 | update |
+| Update Ship To Address | Dynamics 365 account address to Infor SyteLine SLCustomers ship-to (update) | `Account Address` → `SLCustomers` | 1 | update |
 
 Across the 27 default templates: 15 carry `IsInsert`, 12 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
@@ -104,10 +101,10 @@ that never matches a run.
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
 The field-process versions this pair’s default templates belong to: `TxDownloader_32_19`,
-`TxDownloader_32_20`, `TxDownloader_32_25`, `TxDownloader_32_18`, `TxDownloader_32_3`,
-`TxDownloader_32_2`, `TxDownloader_32_27`, `TxDownloader_32_8`, `TxDownloader_32_14`,
-`TxDownloader_32_15`, `TxDownloader_32_16`, `TxDownloader_32_11`, `TxDownloader_32_5`,
-`TxDownloader_32_6`, `TxDownloader_32_7`, `TxDownloader_32_23`, `TxDownloader_32_26`,
+`TxDownloader_32_25`, `TxDownloader_32_18`, `TxDownloader_32_23`, `TxDownloader_32_20`,
+`TxDownloader_32_3`, `TxDownloader_32_2`, `TxDownloader_32_27`, `TxDownloader_32_8`,
+`TxDownloader_32_15`, `TxDownloader_32_14`, `TxDownloader_32_16`, `TxDownloader_32_11`,
+`TxDownloader_32_5`, `TxDownloader_32_6`, `TxDownloader_32_7`, `TxDownloader_32_26`,
 `TxDownloader_32_12`, `TxDownloader_32_24`, `TxDownloader_32_10`, `TxDownloader_32_13`.
 
 ## 3. What the query retrieves
@@ -169,8 +166,8 @@ parseable `DefaultResultStructure`, 12 carry none.
   carry the source system’s key or outcome once the write has happened — the names only; what
   lands in them is the response, per record.
 - **Response fields it reads them from:** `CoNum`, `RowPointer`, `ContactID`, `contactCode`,
-  `CustNum`, `ProspectGuid`, `ProspectID`, `salesOrder`, `CustSeq`, `OpportunityID`, `Item`,
-  `Customer_CustomerID`. The map is written **source-path first, CRM-field second** (parent
+  `CustNum`, `Customer_CustomerID`, `ProspectGuid`, `ProspectID`, `salesOrder`, `CustSeq`,
+  `OpportunityID`, `Item`. The map is written **source-path first, CRM-field second** (parent
   §11); the wrong way round resolves to the same silent empty string as a mistyped path.
 
 ## 6. Community templates
