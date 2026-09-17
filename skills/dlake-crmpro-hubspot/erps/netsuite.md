@@ -152,7 +152,28 @@ process before activating it.
 | create opportunity | `deal` | 7 | `projectedTotal` → `amount`, `closeDate` → `closedate`, `createdDate` → `createdate`, `entityexternalId, tranId` → `dealname`, `SFDCID` → `associate_company` |
 | create opportunitydetail | `line_item` | 6 | `rate` → `price`, `quantity` → `quantity`, `itemexternalId` → `hs_product_id`, `itemexternalId` → `name`, `internalId` → `DealId` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 29 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 29
+- Default operations: insert on 29, update on 29, delete on 29
+- Marked circular-sync: 0
+- Licence groups they span: 4
+- Destination objects: `company`, `deal`, `contact`, `products`, `line_item`, `commercientnetsuite_NETSUITE_CUSTOMER`, `CommercientSF13__CONTACTMATCHING__c`, `Owner` and 2 custom objects
+- Object display names: create customer, create item, upsert contact, SYNC CONTACTMATCHING, upsert customer, upsert opportunity, create contact, create invoice, create invoicedetail, create opportunitydetail, lookup company, Sync CUSTOMER, 4 more and 3 further templates
+- Template groups: Account, CRM Opportunity and Line, Product
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -170,7 +191,7 @@ The prefixes these templates set:
 - `HUBSPOT_NEW_ITEM`
 - `HUBSPOT_NEW_CONTACT`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
