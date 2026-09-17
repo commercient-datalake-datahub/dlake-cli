@@ -58,8 +58,8 @@ destination objects are and what the operation flags allow. Operations are the u
 | Create New Contact | Zoho Contact To NetSuite Contact | `Contacts` → `Contact` | 2 | create / update |
 | Create New Customer | Zoho Account To Netsuite Customer | `Accounts`, `Account` → `Customer` | 2 | create / update |
 | Create New Estimate | Zoho Quotes to NetSuite Estimate | `Quotes` → `Estimate` | 2 | create / update |
+| Create New Opportunity | Zoho Quotes to NetSuite Opportunity | `Quotes` → `Opportunity` | 2 | create / update |
 | Create New ReturnAuthorization | Zoho SalesOrder to NetSuite Return Authorization | `Sales_Orders` → `ReturnAuthorization` | 2 | create / update |
-| TxDownloader_9_6 | Zoho Quotes to NetSuite Opportunity | `Quotes` → `Opportunity` | 2 | create / update |
 
 Across the 18 default templates: 9 carry `IsInsert`, 9 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
