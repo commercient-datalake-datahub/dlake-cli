@@ -2,8 +2,8 @@
 name: dlake-txdownloaderpro-salesforce/erps/microsoft-dynamics-nav
 description: >-
   What the shipped default TxDownloaderPro templates set up when Salesforce is the writeback
-  destination and Microsoft Dynamics NAV is the source: the 6 default templates the catalogue
-  ships for this pair, the 4 field-process versions they are identified by, what each template
+  destination and Microsoft Dynamics NAV is the source: the 16 default templates the catalogue
+  ships for this pair, the 9 field-process versions they are identified by, what each template
   family delivers, the shape of the query that finds flagged records and the objects and marker
   columns it reads, the structure of the inbound mapping document, and which `ResultStructure`
   parts the templates fill for the write back to the CRM.
@@ -53,12 +53,17 @@ destination objects are and what the operation flags allow. Operations are the u
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
+| Create Blanket Order | Salesforce NAV order header to MSDynamicNAV Blanket Sales Order | `MSDYNAMICNAV Order Header` → `BlanketSalesOrder` | 2 | create / update |
 | Create Contact | Salesforce Contact To Contact MSDynamicNAV | `Contact` → `contact` | 2 | create / update |
 | Create Customer | Salesforce Account To Customer MSDynamicNAV | `Account` → `Customer` | 2 | create / update |
+| Create Customer Address | Salesforce NAV address to MSDynamicNAV Ship-to Address | `MSDYNAMICNAV Address` → `ShipToAddress` | 2 | create / update |
+| Create Opportunity | Salesforce Opportunity to MSDynamicNAV Opportunity | `Opportunity` → `Opportunity` | 2 | create / update |
+| Create Quote | Salesforce Quote to MSDynamicNAV Sales Quote | `Quote` → `Sales_Quote` | 2 | create / update |
+| Create SalesOrder Return | Salesforce NAV order header to MSDynamicNAV Sales Return Order | `MSDYNAMICNAV Order Header` → `SalesOrdeReturn` | 2 | create / update |
 | Create CustomerComment | — | — → — | 1 | create |
 | Create OrderComment | — | `Ordercomment` → `Ordercomment` | 1 | create |
 
-Across the 6 default templates: 4 carry `IsInsert`, 2 carry `IsUpdate`, 0 carry `IsDelete`. A
+Across the 16 default templates: 9 carry `IsInsert`, 7 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
 given record. 2 catalogue descriptions were not printed because they are placeholders or carry
 text that is not ours to publish.
@@ -84,25 +89,40 @@ that never matches a run.
 | `IsInsert` / `IsUpdate` / `IsDelete` | the template’s own flags — section 1 |
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
-The field-process versions this pair’s default templates belong to: `TxDownloaderPro_35_1`,
-`TxDownloaderPro_35_3`, `TxDownloaderPro_35_9`, `TxDownloaderPro_35_8`.
+The field-process versions this pair’s default templates belong to: `TxDownloaderPro_35_11`,
+`TxDownloaderPro_35_1`, `TxDownloaderPro_35_3`, `TxDownloaderPro_35_7`, `TxDownloaderPro_35_9`,
+`TxDownloaderPro_35_5`, `TxDownloaderPro_35_8`, `TxDownloaderPro_35_6`, `TxDownloaderPro_35_4`.
 
 1 of these template rows carry a licence-group id, so what a given tenant is offered in the
 picker is narrower than what the catalogue holds.
 
 ## 3. What the query retrieves
 
-`Query` does not have one shape across the product (parent §9). For this pair, 6 carry a
+`Query` does not have one shape across the product (parent §9). For this pair, 16 carry a
 `SELECT` statement in the CRM's own query language. **No query text is reproduced here**; what
 follows is what those queries read and filter on.
 
-- **Objects read:** `contact`, `Account`, `Commentaire__c`.
-- **Marker and key columns the queries name:** `ExternalKey__c`,
-  `CommercientSF__Commercient_ArCustomerCode__c`, `CommercientSF9__ExternalKey__c`. These are
-  the columns a user’s flag lands in and the columns the run writes an outcome back to; which
-  ones are in the `WHERE` is what decides whether a record is in scope at all.
-- **Operators present:** `=`, an empty-string test, `!=`, `AND`, a null test. The parent’s §12
-  is the authority on the vocabulary; the point here is only which of it these templates use.
+- **Objects read:** `CommercientSF9__MSDYNAMICSNAV_Order_Headers__r`, `contact`, `Account`,
+  `CommercientSF9__MSDYNAMICNAV_ADDRESS__c`, `Commentaire__c`, `Opportunity`, `QuoteLineItems`.
+- **Child collections pulled in the same query:**
+  `CommercientSF9__MSDYNAMICSNAV_Order_Headers__r`, `QuoteLineItems`. A header retrieved without
+  its lines is a query that does not name the child collection.
+- **Marker and key columns the queries name:** `CommercientSF9__DocumentType__c`,
+  `CommercientSF9__ExternalKey__c`, `CommercientSF9__No__c`,
+  `CommercientSF9__SelltoCustomerNo__c`, `CommercientSF9__SelltoCustomerName__c`,
+  `CommercientSF9__SelltoAddress__c`, `CommercientSF9__SelltoCity__c`,
+  `CommercientSF9__SelltoCounty__c`, `CommercientSF9__SelltoPostCode__c`,
+  `CommercientSF9__SelltoCountryRegionCode__c`, `CommercientSF9__YourReference__c`,
+  `CommercientSF9__OrderDate__c`, `CommercientSF9__DueDate__c`,
+  `CommercientSF9__CurrencyCode__c`, `CommercientSF9__SalespersonCode__c`,
+  `CommercientSF9__LocationCode__c`, `CommercientSF9__PaymentTermsCode__c`,
+  `CommercientSF9__BilltoName__c`, `CommercientSF9__BilltoAddress__c`,
+  `CommercientSF9__BilltoCity__c`, and 27 more. These are the columns a user’s flag lands in and
+  the columns the run writes an outcome back to; which ones are in the `WHERE` is what decides
+  whether a record is in scope at all.
+- **Operators present:** `=`, `AND`, an empty-string test, `!=`, a null test, `>`. The parent’s
+  §12 is the authority on the vocabulary; the point here is only which of it these templates
+  use.
 - **Where the filtering happens:** in the query, on the CRM side, before anything reaches the
   source system. Narrowing a template means editing its query — not its mapping.
 
@@ -110,39 +130,43 @@ follows is what those queries read and filter on.
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 6 default templates, 6 carry a `DefaultProcessStructure`. A parseable document carries
-about 9 members.
+pair’s 16 default templates, 16 carry a `DefaultProcessStructure`. A parseable document carries
+about 14 members.
 
-- **Template path roots used:** `Contact`, `Account`, `Commentaire__c`. A path’s first segment
-  has to match the element the engine emits, and the document root itself is never part of the
-  path.
-- **No `Line.` section.** These templates map a single record, with no repeating child
-  collection.
-- **`$FUN_` value tokens the documents carry:** `$FUN_UNESCAPEXML`. The names are what the
-  templates carry; **no semantics are claimed for them here** — the parent’s §12 is explicit
-  that the platform-side resolver is dotted path substitution only, and these tokens are
-  evaluated on the customer’s own host.
+- **Template path roots used:** `CommercientSF9__MSDYNAMICNAV_ORDERHEADER__c`, `Quote`,
+  `CommercientSF9__MSDYNAMICNAV_ADDRESS__c`, `Contact`, `Account`,
+  `CommercientSF9__MSDYNAMICSNAV_Order_Headers__r`, `Commentaire__c`, `QuoteLineItems`,
+  `Opportunity`. A path’s first segment has to match the element the engine emits, and the
+  document root itself is never part of the path.
+- **`Line.` section members present:** `Line.mainXml`, `Line.Type`, `Line.No`,
+  `Line.Description`, `Line.Quantity`, `Line.Unit_Price`. 6 templates name the collection
+  through `Line.mainXml`; the members beside it are resolved against that collection’s own root
+  rather than through the header.
+- **`$FUN_` value tokens the documents carry:** `$FUN_UNESCAPEXML`, `$FUN_DATEFORMAT`,
+  `$FUN_SUBSTR`. The names are what the templates carry; **no semantics are claimed for them
+  here** — the parent’s §12 is explicit that the platform-side resolver is dotted path
+  substitution only, and these tokens are evaluated on the customer’s own host.
 
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 6 default templates, 4 carry a
-parseable `DefaultResultStructure`, 2 carry none.
+system’s response after the write (parent §11). Of this pair’s 16 default templates, 9 carry a
+parseable `DefaultResultStructure`, 7 carry none.
 
 | Part | Filled by | What it addresses | Members present |
 |---|---|---|---|
-| `Part1` | 4 templates | the record the run is already working with | a source-path-to-CRM-field map |
-| `Part2` | 0 templates (4 explicitly null) | the child/line records under it | — |
-| `Part3` | 0 templates (4 explicitly null) | a **new** record, matched on an external id field | — |
-| `Part4` | 0 templates (4 explicitly null) | a **different** record, addressed by an id field | — |
+| `Part1` | 9 templates | the record the run is already working with | a source-path-to-CRM-field map |
+| `Part2` | 0 templates (9 explicitly null) | the child/line records under it | — |
+| `Part3` | 0 templates (9 explicitly null) | a **new** record, matched on an external id field | — |
+| `Part4` | 0 templates (9 explicitly null) | a **different** record, addressed by an id field | — |
 
-- **CRM fields `Part1` writes to:** `MSDynamic_Key__c`, `ExternalKey__c`,
-  `CommercientSF__Commercient_ArCustomerCode__c`. These are the fields on the flagged record
-  that carry the source system’s key or outcome once the write has happened — the names only;
-  what lands in them is the response, per record.
-- **Response fields it reads them from:** `No`, `Key`. The map is written **source-path first,
-  CRM-field second** (parent §11); the wrong way round resolves to the same silent empty string
-  as a mistyped path.
+- **CRM fields `Part1` writes to:** `CommercientSF9__ExternalKey__c`, `ExternalKey__c`,
+  `MSDynamic_Key__c`, `CommercientSF__Commercient_ArCustomerCode__c`. These are the fields on
+  the flagged record that carry the source system’s key or outcome once the write has happened —
+  the names only; what lands in them is the response, per record.
+- **Response fields it reads them from:** `No`, `Key`, `Customer_No`, `Code`. The map is written
+  **source-path first, CRM-field second** (parent §11); the wrong way round resolves to the same
+  silent empty string as a mistyped path.
 
 ## 6. Verifying
 
