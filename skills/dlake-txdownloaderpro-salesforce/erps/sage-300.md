@@ -2,8 +2,8 @@
 name: dlake-txdownloaderpro-salesforce/erps/sage-300
 description: >-
   What the shipped default TxDownloaderPro templates set up when Salesforce is the writeback
-  destination and Sage 300 is the source: the 8 default templates the catalogue ships for this
-  pair, the 4 field-process versions they are identified by, what each template family delivers,
+  destination and Sage 300 is the source: the 11 default templates the catalogue ships for this
+  pair, the 7 field-process versions they are identified by, what each template family delivers,
   the shape of the query that finds flagged records and the objects and marker columns it reads,
   the structure of the inbound mapping document, and which `ResultStructure` parts the templates
   fill for the write back to the CRM.
@@ -55,10 +55,13 @@ destination objects are and what the operation flags allow. Operations are the u
 |---|---|---|---|---|
 | Sales Order | Salesforce Order to Sage 300 Sales Order | `Order`, `Quote`, `Opprtunity` → `Sales Order` | 3 | create |
 | TxDownloader_15_2 | Salesforce Order to Sage 300 ARInvoice | `Order`, `Quote`, `Opprtunity` → `ARInvoice` | 3 | create |
-| TxDownloader_15_1 | Salesforce Account to Sage 300 Customer | `Account` → `Customer` | 1 | create |
+| Create New Customer | Salesforce Account to Sage 300 Customer | `Account` → `Customer` | 1 | create |
+| Create or Update M/T Contact | Salesforce Contacts to Sage 300 M/T Contact | `Contact` → `M/T Contact` | 1 | create |
+| Create or Update PJC Contract Maintenance | Salesforce Opportunity to Sage 300 PJC Contract Maintenance | `Opportunity` → `PJC Contract Maintenance` | 1 | create |
+| Create or Update PJC Project | Salesforce Opportunity to Sage 300 PJC Project | `Opportunity` → `PJC Project` | 1 | create |
 | TxDownloader_15_4 | — | — → — | 1 | create |
 
-Across the 8 default templates: 8 carry `IsInsert`, 0 carry `IsUpdate`, 0 carry `IsDelete`. A
+Across the 11 default templates: 11 carry `IsInsert`, 0 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
 given record. 1 catalogue description was not printed because they are placeholders or carry
 text that is not ours to publish.
@@ -85,29 +88,30 @@ that never matches a run.
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
 The field-process versions this pair’s default templates belong to: `TxDownloader_15_4`,
-`TxDownloader_15_1`, `TxDownloader_15_2`, `TxDownloader_15_5`.
+`TxDownloader_15_2`, `TxDownloader_15_1`, `TxDownloaderPro_15_7`, `TxDownloaderPro_15_9`,
+`TxDownloaderPro_15_8`, `TxDownloader_15_5`.
 
 1 of these template rows carry a licence-group id, so what a given tenant is offered in the
 picker is narrower than what the catalogue holds.
 
 ## 3. What the query retrieves
 
-`Query` does not have one shape across the product (parent §9). For this pair, 8 carry a
+`Query` does not have one shape across the product (parent §9). For this pair, 11 carry a
 `SELECT` statement in the CRM's own query language. **No query text is reproduced here**; what
 follows is what those queries read and filter on.
 
-- **Objects read:** `Transaction_Lines__r`, `Account`, `OrderItems`, `QuoteLineItems`,
-  `OpportunityLineItems`.
+- **Objects read:** `Transaction_Lines__r`, `OrderItems`, `QuoteLineItems`,
+  `OpportunityLineItems`, `Account`, `Contact`, `Opportunity`.
 - **Child collections pulled in the same query:** `Transaction_Lines__r`, `OrderItems`,
   `QuoteLineItems`, `OpportunityLineItems`. A header retrieved without its lines is a query that
   does not name the child collection.
 - **Marker and key columns the queries name:** `Commercient_Import__c`,
-  `Commercient_bCompleted__c`, `Commercient_Message__c`, `Commercient_ArCustomerCode__c`,
-  `CommercientSF__Commercient_ArCustomerCode__c`. These are the columns a user’s flag lands in
-  and the columns the run writes an outcome back to; which ones are in the `WHERE` is what
-  decides whether a record is in scope at all.
-- **Operators present:** `=`, `AND`, a null test. The parent’s §12 is the authority on the
-  vocabulary; the point here is only which of it these templates use.
+  `Commercient_ArCustomerCode__c`, `CommercientSF__Commercient_ArCustomerCode__c`,
+  `Commercient_bCompleted__c`, `Commercient_Message__c`, `ExternalKey__c`. These are the columns
+  a user’s flag lands in and the columns the run writes an outcome back to; which ones are in
+  the `WHERE` is what decides whether a record is in scope at all.
+- **Operators present:** `=`, `AND`, a null test, `!=`, an empty-string test. The parent’s §12
+  is the authority on the vocabulary; the point here is only which of it these templates use.
 - **Where the filtering happens:** in the query, on the CRM side, before anything reaches the
   source system. Narrowing a template means editing its query — not its mapping.
 
@@ -115,20 +119,20 @@ follows is what those queries read and filter on.
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 8 default templates, 7 carry a `DefaultProcessStructure` and 1 carries none. A parseable
-document carries about 14 members.
+pair’s 11 default templates, 10 carry a `DefaultProcessStructure` and 1 carries none. A
+parseable document carries about 12 members.
 
-- **Template path roots used:** `Order`, `Opportunity`, `Quote`, `Account`, `OrderItems`,
-  `QuoteLineItems`, `OpportunityLineItems`. A path’s first segment has to match the element the
-  engine emits, and the document root itself is never part of the path.
+- **Template path roots used:** `Opportunity`, `Order`, `Quote`, `Contact`, `Account`,
+  `OrderItems`, `QuoteLineItems`, `OpportunityLineItems`. A path’s first segment has to match
+  the element the engine emits, and the document root itself is never part of the path.
 - **`Line.` section members present:** `Line.IDITEM`, `Line.QTYINVC`, `Line.AMTPRIC`,
   `Line.mainXML`, `Line.CNTLINE`, `Line.TEXTDESC`.
 
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 8 default templates, 0 carry a
-parseable `DefaultResultStructure`, 8 carry none.
+system’s response after the write (parent §11). Of this pair’s 11 default templates, 0 carry a
+parseable `DefaultResultStructure`, 11 carry none.
 
 **No default template for this pair fills a part.** Nothing is written back to Salesforce by
 these templates: the source system’s key stays in `TxDownloaderProTrans` and the CRM record is
