@@ -78,7 +78,7 @@ of every shape above is empty.
 - **Names not reproduced:** 5 of these templates carry a name that is not a product artefact
   name, and it is not printed here.
 - **Field-process versions they belong to:** `TxDownloader_32_1`, `TxDownloader_32_9`,
-  `TxDownloader_32_8`, `TxDownloader_32_14`, `TxDownloader_32_15`, `TxDownloader_32_16`,
+  `TxDownloader_32_8`, `TxDownloader_32_15`, `TxDownloader_32_14`, `TxDownloader_32_16`,
   `TxDownloader_32_11`, `TxDownloader_32_4`, `TxDownloader_32_5`, `TxDownloader_32_7`,
   `TxDownloader_32_12`, `TxDownloader_32_10`, `TxDownloader_32_13`.
 
