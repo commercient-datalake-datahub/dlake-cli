@@ -147,7 +147,28 @@ process before activating it.
 | EPICOR10 Invoice | `comrcint_epicor10_invoice` | 3 | `Company,InvoiceNum` → `comrcint_externalkey`, `Company,InvoiceNum` → `Name`, `SFDCID` → `pricelevel__pricelevelid__lookup` |
 | EPICOR10 Invoice Detail | `comrcint_epicor10_invoicedetail` | 3 | `Company,InvoiceLine,InvoiceNum` → `comrcint_externalkey`, `Company,InvoiceLine,InvoiceNum` → `name`, `SFDCID` → `comrcint_epicor10_invoice__epicor10_invoice_r__lookup` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 23 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 23
+- Default operations: insert on 23, update on 23, delete on 23
+- Marked circular-sync: 0
+- Licence groups they span: 5
+- Destination objects: `account`, `contact`, `epicor10_customer`, `epicor10_invoicedetail`, `epicor10_invoiceheader`, `epicor10_itemmaster`, `epicor10_itemwarehouse`, `epicor10_quotedetail`, `epicor10_quoteheader`, `epicor10_salesorderdetail`, `epicor10_salesorderheader`, `epicor10_salesperson`, `epicor10_shiptoaddress`, `invoice`, `invoicedetail`, `product`, `quote`, `quotedetail`, `salesorder`, `salesorderdetail` and 2 more
+- Object display names: CRM Account, CRM Contact, CRM Product, CRM UOM, EPICOR10 Customer, EPICOR10 InvoiceDetail, EPICOR10 InvoiceHeader, EPICOR10 ItemMaster, EPICOR10 ItemWarehouse, EPICOR10 QuoteDetail, EPICOR10 QuoteHeader, EPICOR10 SalesOrderDetail, 9 more and a further template
+- Template groups: CRM Order and Line, CRM Quote and Line, Account
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -170,7 +191,7 @@ The prefixes these templates set:
 - `vw_EPICOR10_InvoiceDetail:`
 - `vw_EPICOR10_STD_Quote:`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
