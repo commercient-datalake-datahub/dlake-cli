@@ -2,8 +2,8 @@
 name: dlake-txdownloaderpro-shopify/erps/microsoft-business-central
 description: >-
   What the shipped default TxDownloaderPro templates set up when Shopify is the writeback
-  destination and Microsoft Business Central is the source: the 8 default templates the
-  catalogue ships for this pair, the 5 field-process versions they are identified by, what each
+  destination and Microsoft Business Central is the source: the 9 default templates the
+  catalogue ships for this pair, the 6 field-process versions they are identified by, what each
   template family delivers, the shape of the query that finds flagged records and the objects
   and marker columns it reads, the structure of the inbound mapping document, and which
   `ResultStructure` parts the templates fill for the write back to the CRM.
@@ -58,10 +58,12 @@ destination objects are and what the operation flags allow. Operations are the u
 | Create Sales Invoice | Shopify Order to DYNAMICSBUSINESSCENTRAL Invoice | `Order` → `SalesInvoice` | 2 | create |
 | Create Sales Order | Shopify Order to DYNAMICSBUSINESSCENTRAL Order | `Order` → `SalesOrder` | 1 | create |
 | Custom Sales Order | Shopify Order to MICROSOFTBUSINESSCENTRAL Order | `Order` → `SalesOrder` | 1 | create |
+| TxDownloaderPro_121_11 | — | `Customer` → `Customers` | 1 | create |
 
-Across the 8 default templates: 8 carry `IsInsert`, 0 carry `IsUpdate`, 0 carry `IsDelete`, and
+Across the 9 default templates: 9 carry `IsInsert`, 0 carry `IsUpdate`, 0 carry `IsDelete`, and
 8 carry `IsCustomization`. A flag decides which operation the process is allowed to perform, not
-which one it performs on a given record.
+which one it performs on a given record. 1 catalogue description was not printed because they
+are placeholders or carry text that is not ours to publish.
 
 ## 2. The process rows the import creates
 
@@ -86,19 +88,19 @@ that never matches a run.
 
 The field-process versions this pair’s default templates belong to: `TxDownloaderPro_121_1`,
 `TxDownloaderPro_121_7`, `TxDownloaderPro_121_6`, `TxDownloaderPro_121_5`,
-`TxDownloaderPro_121_4`.
+`TxDownloaderPro_121_11`, `TxDownloaderPro_121_4`.
 
 2 of these template rows carry a licence-group id, so what a given tenant is offered in the
 picker is narrower than what the catalogue holds.
 
 ## 3. What the query retrieves
 
-`Query` does not have one shape across the product (parent §9). For this pair, 8 carry a JSON
+`Query` does not have one shape across the product (parent §9). For this pair, 9 carry a JSON
 object naming the module to retrieve. **No query text is reproduced here**; what follows is what
 those queries read and filter on.
 
 - **Objects read:** `customer`, `product`, `order`.
-- **Members present in the JSON query object:** `ModuleName` (8). Where a `Where` member is
+- **Members present in the JSON query object:** `ModuleName` (9). Where a `Where` member is
   present it is empty.
 - **Where the filtering happens:** the query names a module rather than a condition, so the
   selection the parent’s §12 describes is applied after retrieval, not by the query.
@@ -107,8 +109,8 @@ those queries read and filter on.
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 8 default templates, 8 carry a `DefaultProcessStructure`. A parseable document carries
-about 14 members.
+pair’s 9 default templates, 9 carry a `DefaultProcessStructure`. A parseable document carries
+about 13 members.
 
 - **Template path roots used:** `Order`, `Customer`, `line_items`, `Product`. A path’s first
   segment has to match the element the engine emits, and the document root itself is never part
@@ -121,8 +123,8 @@ about 14 members.
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 8 default templates, 0 carry a
-parseable `DefaultResultStructure`, 8 carry none.
+system’s response after the write (parent §11). Of this pair’s 9 default templates, 0 carry a
+parseable `DefaultResultStructure`, 9 carry none.
 
 **No default template for this pair fills a part.** Nothing is written back to Shopify by these
 templates: the source system’s key stays in `TxDownloaderProTrans` and the CRM record is left as
