@@ -56,9 +56,9 @@ destination objects are and what the operation flags allow. Operations are the u
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
 | Create/Update Customer | Update Account from Salesforce to AcumaticaCloude | `Account` → `Customer` | 2 | create / update |
+| Create New Contact | Salesforce Contact to Acumatica Contact | `Contact` → `Contact` | 1 | create |
+| Create New Opportunity | Salesforce Opportunity to Acumatica Opportunity | `Opportunity` → `Opportunity` | 1 | create |
 | Create New SalesOrder | Create Salesorder for Salesforce to AcumaticaClude | `SalesOrder` → `SalesOrder` | 1 | create |
-| TxDownloader_8_4 | Salesforce Contact to Acumatica Contact | `Contact` → `Contact` | 1 | create |
-| TxDownloader_8_5 | Salesforce Opportunity to Acumatica Opportunity | `Opportunity` → `Opportunity` | 1 | create |
 
 Across the 5 default templates: 4 carry `IsInsert`, 1 carries `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
