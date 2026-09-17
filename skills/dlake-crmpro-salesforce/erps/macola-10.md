@@ -131,7 +131,28 @@ process before activating it.
 | MACOLA10_SalesOrderHistoryHeader | `CommercientSF19_MACOLA10_SO_HST_HEADER__c` | 96 | `ord_type` → `ord_type__c`, `ship_to_name` → `ship_to_name__c`, `ord_no` → `ord_no__c`, `status` → `status__c`, `entered_dt` → `entered_dt__c` |
 | MACOLA10_SalesOrderHistoryDetail | `CommercientSF19_MACOLA10_SO_HST_DETAIL__c` | 81 | `erp_id` → `erp_id__c`, `ord_type` → `ord_type__c`, `ord_no` → `ord_no__c`, `line_seq_no` → `line_seq_no__c`, `item_no` → `item_no__c` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 110 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 110
+- Default operations: insert on 110, update on 110, delete on 110
+- Marked circular-sync: 0
+- Licence groups they span: 10
+- Destination objects: `ContentDocument`, `Account`, `MACOLA10_Quote_Detail__c`, `MACOLA10_Quote_Header__c`, `MACOLA10_Sales_Order_Detail__c`, `MACOLA10_Sales_Order_Header__c`, `MACOLA10_Sales_Order_History_Detail__c`, `MACOLA10_Sales_Order_History_Header__c`, `MACOLA10_Transaction__c`, `Opportunity`, `CommercientSF19_MACOLA10_SO_DETAIL__c`, `CommercientSF19_MACOLA10_Address__c`, `CommercientSF19_MACOLA10_Item__c`, `CommercientSF19_MACOLA10_SO_HEADER__c`, `CommercientSF19__MACOLA10_Addresses__c`, `CommercientSF19__MACOLA10_Customer__c`, `CommercientSF19__MACOLA10_InvoiceHeader__c`, `CommercientSF19__MACOLA10_InvoiceLines__c`, `CommercientSF19__MACOLA10_salesOrderHeader__c`, `CommercientSF19__MACOLA10_SalesOrderLines__c`, 8 more and 6 custom objects
+- Object display names: DOCUMENT SYNC - MACOLA10 QUOTE, DOCUMENT SYNC - MACOLA10 SALES ORDER, DOCUMENT SYNC - MACOLA10 SALES ORDER HISTORY, GET ACCOUNT, SYNC MACOLA10 QUOTE DETAIL, SYNC MACOLA10 QUOTE HEADER, SYNC MACOLA10 SALES ORDER DETAIL, SYNC MACOLA10 SALES ORDER HEADER, SYNC MACOLA10 SALES ORDER HISTORY DETAIL, SYNC MACOLA10 SALES ORDER HISTORY HEADER, SYNC MACOLA10 TRANSACTIONS, SYNC OPPORTUNITY, 18 more and 5 further templates
+- Template groups: Salesorder, Account, Opportunity, CRM Opportunity and Line, Invoice, Customer Multi Ship Addresses, Product
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -152,7 +173,7 @@ The prefixes these templates set:
 - `vw_MACOLA10_SalesOrderHistoryHeader`
 - `vw_MACOLA10_SalesOrderHistoryDetail`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
