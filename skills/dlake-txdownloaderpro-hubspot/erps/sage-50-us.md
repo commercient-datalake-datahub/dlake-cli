@@ -2,11 +2,11 @@
 name: dlake-txdownloaderpro-hubspot/erps/sage-50-us
 description: >-
   What the shipped default TxDownloaderPro templates set up when HubSpot is the writeback
-  destination and Sage 50 US is the source: the 6 default templates the catalogue ships for this
-  pair, the 6 field-process versions they are identified by, what each template family delivers,
-  the shape of the query that finds flagged records and the objects and marker columns it reads,
-  the structure of the inbound mapping document, and which `ResultStructure` parts the templates
-  fill for the write back to the CRM.
+  destination and Sage 50 US is the source: the 10 default templates the catalogue ships for
+  this pair, the 10 field-process versions they are identified by, what each template family
+  delivers, the shape of the query that finds flagged records and the objects and marker columns
+  it reads, the structure of the inbound mapping document, and which `ResultStructure` parts the
+  templates fill for the write back to the CRM.
   Use it when importing or reading this pair's template set, when deciding which templates to
   import and activate, or when a process runs and writes nothing and the answer is in the query
   or in the mapping document.
@@ -54,13 +54,17 @@ destination objects are and what the operation flags allow. Operations are the u
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
 | Create New Customer | HubSpot Companies to Sage 50 US Customer | `Companies` → `Customer` | 1 | create |
+| Create New Quote | HubSpot Deals to Sage 50 US Quote | `deals` → `Quote` | 1 | create |
 | Create New Vendor | HubSpot Companies to Sage 50 US Vendor | `Companies` → `Vendor` | 1 | create |
 | Delete Customer | Delete HubSpot Companies to Delete Sage 50 US Customer | `Companies` → `Customer` | 1 | delete |
 | Delete Vendor | Delete HubSpot Companies to Delete Sage 50 US Vendor | `Companies` → `Vendor` | 1 | delete |
+| TxDownloader_1_33 | HubSpot Companies to Sage 50 US Vendor | `companies` → `Vendor` | 1 | create |
+| TxDownloader_1_34 | HubSpot Update Companies to Sage 50 US Update Vendor | `companies` → `Vendor` | 1 | update |
 | Update Customer | Update HubSpot Companies to Update Sage 50 US Customer | `Companies` → `Customer` | 1 | update |
+| Update Quote | HubSpot Update Deals to Sage 50 US Update Quote | `deals` → `Quote` | 1 | update |
 | Update Vendor | Update HubSpot Companies to Update Sage 50 US Vendor | `Companies` → `Vendor` | 1 | update |
 
-Across the 6 default templates: 2 carry `IsInsert`, 2 carry `IsUpdate`, 2 carry `IsDelete`. A
+Across the 10 default templates: 4 carry `IsInsert`, 4 carry `IsUpdate`, 2 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
 given record.
 
@@ -85,21 +89,22 @@ that never matches a run.
 | `IsInsert` / `IsUpdate` / `IsDelete` | the template’s own flags — section 1 |
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
-The field-process versions this pair’s default templates belong to: `TxDownloader_1_1`,
-`TxDownloader_1_20`, `TxDownloader_1_6`, `TxDownloader_1_10`, `TxDownloader_1_12`,
+The field-process versions this pair’s default templates belong to: `TxDownloader_1_33`,
+`TxDownloader_1_1`, `TxDownloader_1_22`, `TxDownloader_1_20`, `TxDownloader_1_6`,
+`TxDownloader_1_10`, `TxDownloader_1_12`, `TxDownloader_1_34`, `TxDownloader_1_23`,
 `TxDownloader_1_14`.
 
 ## 3. What the query retrieves
 
-`Query` does not have one shape across the product (parent §9). For this pair, 6 carry a JSON
+`Query` does not have one shape across the product (parent §9). For this pair, 10 carry a JSON
 object naming the module to retrieve. **No query text is reproduced here**; what follows is what
 those queries read and filter on.
 
-- **Objects read:** `companies`.
-- **Members present in the JSON query object:** `selectedFields` (6), `ModuleName` (6), `Where`
-  (6). 6 of them carry a non-empty `Where`. Its content is not reproduced, and a stored `Where`
-  is not necessarily a condition on this destination — read the destination page before treating
-  it as one. 6 carry a non-empty `selectedFields` list.
+- **Objects read:** `companies`, `deals`.
+- **Members present in the JSON query object:** `selectedFields` (10), `ModuleName` (10),
+  `Where` (10). 6 of them carry a non-empty `Where`. Its content is not reproduced, and a stored
+  `Where` is not necessarily a condition on this destination — read the destination page before
+  treating it as one. 10 carry a non-empty `selectedFields` list.
 - **Where the filtering happens:** the query names a module rather than a condition, so the
   selection the parent’s §12 describes is applied after retrieval, not by the query.
 
@@ -107,33 +112,35 @@ those queries read and filter on.
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 6 default templates, 6 carry a `DefaultProcessStructure`. A parseable document carries
-about 8 members.
+pair’s 10 default templates, 10 carry a `DefaultProcessStructure`. A parseable document carries
+about 9 members.
 
-- **Template path roots used:** `companies`. A path’s first segment has to match the element the
-  engine emits, and the document root itself is never part of the path.
-- **No `Line.` section.** These templates map a single record, with no repeating child
-  collection.
+- **Template path roots used:** `companies`, `LineItem`, `deals`. A path’s first segment has to
+  match the element the engine emits, and the document root itself is never part of the path.
+- **`Line.` section members present:** `Line.Quantity`, `Line.Item_ID`, `Line.Description`,
+  `Line.Unit_Price`, `Line.mainXml`. 2 templates name the collection through `Line.mainXml`; the
+  members beside it are resolved against that collection’s own root rather than through the
+  header.
 
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 6 default templates, 6 carry a
+system’s response after the write (parent §11). Of this pair’s 10 default templates, 10 carry a
 parseable `DefaultResultStructure`, 0 carry none.
 
 | Part | Filled by | What it addresses | Members present |
 |---|---|---|---|
-| `Part1` | 6 templates | the record the run is already working with | a source-path-to-CRM-field map |
-| `Part2` | 0 templates (6 explicitly null) | the child/line records under it | — |
-| `Part3` | 0 templates (6 explicitly null) | a **new** record, matched on an external id field | — |
-| `Part4` | 0 templates (6 explicitly null) | a **different** record, addressed by an id field | — |
+| `Part1` | 10 templates | the record the run is already working with | a source-path-to-CRM-field map |
+| `Part2` | 0 templates (10 explicitly null) | the child/line records under it | — |
+| `Part3` | 0 templates (10 explicitly null) | a **new** record, matched on an external id field | — |
+| `Part4` | 0 templates (10 explicitly null) | a **different** record, addressed by an id field | — |
 
-- **CRM fields `Part1` writes to:** `arcustomercode`. These are the fields on the flagged record
-  that carry the source system’s key or outcome once the write has happened — the names only;
-  what lands in them is the response, per record.
-- **Response fields it reads them from:** `CustomerID`, `VendorId`. The map is written
-  **source-path first, CRM-field second** (parent §11); the wrong way round resolves to the same
-  silent empty string as a mistyped path.
+- **CRM fields `Part1` writes to:** `arcustomercode`, `externalkey`. These are the fields on the
+  flagged record that carry the source system’s key or outcome once the write has happened — the
+  names only; what lands in them is the response, per record.
+- **Response fields it reads them from:** `VendorId`, `CustomerID`, `Quote_Number`. The map is
+  written **source-path first, CRM-field second** (parent §11); the wrong way round resolves to
+  the same silent empty string as a mistyped path.
 
 ## 6. Verifying
 
