@@ -2,8 +2,8 @@
 name: dlake-txdownloaderpro-zohocrm/erps/infor-syteline
 description: >-
   What the shipped default TxDownloaderPro templates set up when Zoho CRM is the writeback
-  destination and Infor SyteLine is the source: the 3 default templates the catalogue ships for
-  this pair, the 3 field-process versions they are identified by, what each template family
+  destination and Infor SyteLine is the source: the 20 default templates the catalogue ships for
+  this pair, the 18 field-process versions they are identified by, what each template family
   delivers, the shape of the query that finds flagged records and the objects and marker columns
   it reads, the structure of the inbound mapping document, and which `ResultStructure` parts the
   templates fill for the write back to the CRM.
@@ -53,13 +53,29 @@ destination objects are and what the operation flags allow. Operations are the u
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
+| Create/update New Estimate/Quote With Blanket Lines | Zoho CRM Sales Orders to Infor SyteLine SLCos blanket estimate (insert) | `Sales_Orders` → `SLCos` | 2 | create / update |
+| Create/Update/Delete Product Item | Zoho CRM Products to Infor SyteLine SLProdMixItems (insert) | `Products` → `SLProdMixItems` | 2 | create / update |
 | Create New Customer | Create Customer | `Accounts` → `SLCustomers` | 1 | create / update |
 | Create New Estimate/Quote | Create Estimate | `Quotes` → `SLCos` | 1 | create |
+| Create New Ship To Address | Zoho CRM Accounts shipping address to Infor SyteLine SLCustomers ship-to (insert) | `Accounts` → `SLCustomers` | 1 | create |
 | Create/Update/Delete Contact | Create Contact | `Contacts` → `SLContacts` | 1 | create |
+| Create/Update/Delete Ship To Address | Zoho CRM Accounts shipping address to Infor SyteLine SLShipTos (update) | `Accounts` → `SLShipTos` | 1 | update |
+| TxDownloader_32_13 | Zoho CRM Accounts shipping address to Infor SyteLine SLCustomers ship-to (update) | `Accounts` → `SLCustomers` | 1 | update |
+| TxDownloader_32_18 | — | `Accounts` → `SLCustomers` | 1 | create |
+| TxDownloader_32_19 | — | `Contacts` → `SLContacts` | 1 | create |
+| TxDownloader_32_20 | — | `Sales_Orders` → `SLCos` | 1 | create |
+| TxDownloader_32_23 | Zoho CRM Accounts to Infor LN Customer360_WT (insert) | `Accounts` → `Customer360_WT` | 1 | create |
+| TxDownloader_32_24 | Zoho CRM Accounts to Infor LN Customer360_WT (update) | `Accounts` → `Customer360_WT` | 1 | update |
+| TxDownloader_32_25 | Zoho CRM Contacts to Infor LN Contact_v3 (insert) | `Contacts` → `Contact_v3` | 1 | create |
+| TxDownloader_32_26 | Zoho CRM Contacts to Infor LN Contact_v3 (update) | `Contacts` → `Contact_v3` | 1 | update |
+| TxDownloader_32_27 | Zoho CRM Sales Orders to Infor LN SalesOrderDetails (insert) | `Sales_Orders` → `SalesOrderDetails` | 1 | create |
+| Update Customer | Zoho CRM Accounts to Infor SyteLine SLCustomers (update) | `Accounts` → `SLCustomers` | 1 | update |
+| Update Estimate/Quote | Zoho CRM Quotes to Infor SyteLine SLCos estimate (update) | `Quotes` → `SLCos` | 1 | update |
 
-Across the 3 default templates: 3 carry `IsInsert`, 1 carries `IsUpdate`, 0 carry `IsDelete`,
+Across the 20 default templates: 12 carry `IsInsert`, 9 carry `IsUpdate`, 0 carry `IsDelete`,
 and 2 carry `IsCustomization`. A flag decides which operation the process is allowed to perform,
-not which one it performs on a given record.
+not which one it performs on a given record. 3 catalogue descriptions were not printed because
+they are placeholders or carry text that is not ours to publish.
 
 ## 2. The process rows the import creates
 
@@ -82,20 +98,24 @@ that never matches a run.
 | `IsInsert` / `IsUpdate` / `IsDelete` | the template’s own flags — section 1 |
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
-The field-process versions this pair’s default templates belong to: `TxDownloader_32_1`,
-`TxDownloader_32_9`, `TxDownloader_32_4`.
+The field-process versions this pair’s default templates belong to: `TxDownloader_32_19`,
+`TxDownloader_32_20`, `TxDownloader_32_25`, `TxDownloader_32_1`, `TxDownloader_32_18`,
+`TxDownloader_32_9`, `TxDownloader_32_27`, `TxDownloader_32_8`, `TxDownloader_32_11`,
+`TxDownloader_32_4`, `TxDownloader_32_6`, `TxDownloader_32_7`, `TxDownloader_32_23`,
+`TxDownloader_32_26`, `TxDownloader_32_12`, `TxDownloader_32_24`, `TxDownloader_32_10`,
+`TxDownloader_32_13`.
 
 ## 3. What the query retrieves
 
-`Query` does not have one shape across the product (parent §9). For this pair, 3 carry a
+`Query` does not have one shape across the product (parent §9). For this pair, 20 carry a
 `SELECT` statement in the CRM's own query language. **No query text is reproduced here**; what
 follows is what those queries read and filter on.
 
-- **Objects read:** `Accounts`, `Quotes`, `Contacts`.
-- **Marker and key columns the queries name:** `Commercient_ArCustomer_Code`,
-  `Commercient_ExternalKey`. These are the columns a user’s flag lands in and the columns the
-  run writes an outcome back to; which ones are in the `WHERE` is what decides whether a record
-  is in scope at all.
+- **Objects read:** `Contacts`, `Sales_Orders`, `Accounts`, `Quotes`, `Products`.
+- **Marker and key columns the queries name:** `Commercient_ExternalKey`,
+  `Commercient_ArCustomer_Code`. These are the columns a user’s flag lands in and the columns
+  the run writes an outcome back to; which ones are in the `WHERE` is what decides whether a
+  record is in scope at all.
 - **Operators present:** a null test, `AND`. The parent’s §12 is the authority on the
   vocabulary; the point here is only which of it these templates use.
 - **Where the filtering happens:** in the query, on the CRM side, before anything reaches the
@@ -105,36 +125,40 @@ follows is what those queries read and filter on.
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 3 default templates, 3 carry a `DefaultProcessStructure`. A parseable document carries
-about 21 members.
+pair’s 20 default templates, 20 carry a `DefaultProcessStructure`. A parseable document carries
+about 15 members.
 
-- **Template path roots used:** `Quotes`, `Contacts`, `Accounts`, `Product_Details`. A path’s
-  first segment has to match the element the engine emits, and the document root itself is never
-  part of the path.
-- **`Line.` section members present:** `Line.mainXml`, `Line.CoNum`, `Line.DerNetPrice`,
-  `Line.Disc`, `Line.Item`, `Line.Price`, `Line.QtyOrdered`, `Line.TaxCode1`, `Line.UM`. 1
-  template name the collection through `Line.mainXml`; the members beside it are resolved
-  against that collection’s own root rather than through the header.
+- **Template path roots used:** `Accounts`, `Sales_Orders`, `Contacts`, `Quotes`,
+  `Product_Details`, `Products`. A path’s first segment has to match the element the engine
+  emits, and the document root itself is never part of the path.
+- **`Line.` section members present:** `Line.mainXml`, `Line.Item`, `Line.UM`, `Line.CoNum`,
+  `Line.QtyOrdered`, `Line.Price`, `Line.DerNetPrice`, `Line.Disc`, `Line.QtyOrderedConv`,
+  `Line.PriceConv`, `Line.TaxCode1`, `Line.item`, `Line.orderLineCustomerOrder`,
+  `Line.orderLineOrderQuantityInOrderUOMValue`, `Line.priceInOrderCurInPriceUOMValue`,
+  `Line.priceInOrderCurInPriceUOMCur`. 6 templates name the collection through `Line.mainXml`;
+  the members beside it are resolved against that collection’s own root rather than through the
+  header.
 
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 3 default templates, 3 carry a
-parseable `DefaultResultStructure`, 0 carry none.
+system’s response after the write (parent §11). Of this pair’s 20 default templates, 12 carry a
+parseable `DefaultResultStructure`, 8 carry none.
 
 | Part | Filled by | What it addresses | Members present |
 |---|---|---|---|
-| `Part1` | 3 templates | the record the run is already working with | a source-path-to-CRM-field map |
-| `Part2` | 0 templates (3 explicitly null) | the child/line records under it | — |
-| `Part3` | 0 templates (3 explicitly null) | a **new** record, matched on an external id field | — |
-| `Part4` | 0 templates (3 explicitly null) | a **different** record, addressed by an id field | — |
+| `Part1` | 12 templates | the record the run is already working with | a source-path-to-CRM-field map |
+| `Part2` | 0 templates (12 explicitly null) | the child/line records under it | — |
+| `Part3` | 0 templates (12 explicitly null) | a **new** record, matched on an external id field | — |
+| `Part4` | 0 templates (12 explicitly null) | a **different** record, addressed by an id field | — |
 
 - **CRM fields `Part1` writes to:** `Commercient_ExternalKey`, `Commercient_ArCustomer_Code`.
   These are the fields on the flagged record that carry the source system’s key or outcome once
   the write has happened — the names only; what lands in them is the response, per record.
-- **Response fields it reads them from:** `CustNum`, `EstimateGuid`, `ContactID`. The map is
-  written **source-path first, CRM-field second** (parent §11); the wrong way round resolves to
-  the same silent empty string as a mistyped path.
+- **Response fields it reads them from:** `ContactID`, `CoNum`, `CustNum`, `contactCode`,
+  `EstimateGuid`, `salesOrder`, `CustSeq`, `Item`, `Customer_CustomerID`. The map is written
+  **source-path first, CRM-field second** (parent §11); the wrong way round resolves to the same
+  silent empty string as a mistyped path.
 
 ## 6. Verifying
 
