@@ -187,7 +187,28 @@ process before activating it.
 | Sage200UK InvoiceHeader | `commercientsage200uk__Sage200UK_InvoiceHeader` | 52 | `CustomerID` → `Sage200UK_Customer`, `CustomerID` → `Account`, `DocumentStatusID` → `DocumentStatus__c`, `SOPInvoiceCreditTypeID` → `InvoiceCreditTypeName__c`, `SOPInvoiceCreditID` → `Name` |
 | Sage200UK InvoiceDetail | `commercientsage200uk__Sage200UK_InvoiceDetail` | 25 | `PrintSequenceNumber, SOPInvoiceCreditLineID` → `Name`, `SOPInvoiceCreditID` → `Invoice_Header`, `PrintSequenceNumber, SOPInvoiceCreditLineID` → `Commercient_ExternalKey__c`, `DespatchReceiptNos` → `Despatch_Receipt_Nos`, `UserName` → `User_Name` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 11 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 11
+- Default operations: insert on 11, update on 11, delete on 11
+- Marked circular-sync: 0
+- Licence groups they span: 4
+- Destination objects: `Accounts`, `commercientsage200uk__Sage200UK_Address`, `commercientsage200uk__Sage200UK_Customers`, `commercientsage200uk__Sage200UK_InvoiceDetail`, `commercientsage200uk__Sage200UK_InvoiceHeader`, `commercientsage200uk__Sage200UK_Item`, `commercientsage200uk__Sage200UK_SalesOrderHeadr`, `commercientsage200uk__Sage200UK_SalesOrdrDetail`, `commercientsage200uk__Sage200UK_Warehouse`, `commercientsage200uk__Sage200UK_Warehouse_Item`, `Contacts`
+- Object display names: Accounts, Contacts, Sage200UK Address, Sage200UK Customers, Sage200UK InvoiceDetail, Sage200UK InvoiceHeader, Sage200UK Item, Sage200UK Sales Order Header, Sage200UK SalesOrderDetail, Sage200UK Warehouse, Sage200UK Warehouse Item
+- Template groups: Account, CRM Order and Line
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -216,7 +237,7 @@ The prefixes these templates set:
 - `vw_SAGE200UK_InvoiceHeader:`
 - `vw_SAGE200UK_InvoiceDetail:`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
