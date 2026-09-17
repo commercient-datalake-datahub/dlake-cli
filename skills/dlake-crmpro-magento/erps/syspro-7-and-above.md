@@ -54,7 +54,28 @@ operator activates it. Across the set they insert `Is_Create_Entity` `0`, `Is_Cr
 `Sync_Batch_Size` `200`. Text columns a template does not use are inserted as `''` rather than
 left NULL.
 
-## 3. Verifying
+## 3. Community templates
+
+The catalogue carries 8 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 8
+- Default operations: insert on 8, update on 8, delete on 8
+- Marked circular-sync: 0
+- Licence groups they span: 2
+- Destination objects: `products`, `customers`, `orders`, `updateprice`
+- Object display names: MAGENTO_Customer, MAGENTO_GetProduct, MAGENTO_OrderTracking, MAGENTO_Product, MAGENTO_updateprice and 2 further templates
+- Template groups: CRM Order and Line
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 4. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -68,7 +89,7 @@ The prefixes these templates set:
 
 - `vw_GetProduct`
 
-## 4. Where this sits
+## 5. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
