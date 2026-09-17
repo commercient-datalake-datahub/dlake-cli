@@ -142,7 +142,28 @@ process before activating it.
 | Invoice History Header | `CommercientSF11__Quickbook_Online_INVOICE__c` | 119 | `Deposit` → `CommercientSF11__Deposit__c`, `AllowIPNPayment` → `CommercientSF11__AllowIPNPayment__c`, `AllowOnlinePayment` → `CommercientSF11__AllowOnlinePayment__c`, `AllowOnlineCreditCardPayment` → `AllowOnlineCreditCardPayment`, `AllowOnlineACHPayment` → `AllowOnlineACHPayment` |
 | Invoice History Detail | `CommercientSF11__Quickbook_Online_INVOICELINE__c` | 38 | `ExternalKey1` → `CommercientSF11__ExternalKey1__c`, `InvoiceId` → `InvoiceId`, `DiscountAmt` → `DiscountAmt`, `DiscountRate` → `DiscountRate`, `ServiceDate` → `ServiceDate` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 56 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 56
+- Default operations: insert on 56, update on 56, delete on 56
+- Marked circular-sync: 0
+- Licence groups they span: 11
+- Destination objects: `Account`, `CommercientSF11__Quickbook_Online_INVOICELINE__c`, `CommercientSF11__Quickbook_Online_INVOICE__c`, `CommercientSF11__Quickbook_Online_CUSTOMER__c`, `CommercientSF11__Quickbook_Online_Payment__c`, `CommercientSF11__Quickbook_Online_PaymentLine__c`, `Contact`, `QuickBooks_Online_ARInvoicePayment__c`, `account`, `CommercientSF11__ACCOUNTMATCHING__c`, `Invoice__c`, `Product2`, `QuickBooks_Online_OpenARInvoiceDetail__c`, `CommercientSF11__PRODUCTMATCHING__c`, `CommercientSF11__Quickbook_Online_TERMS__c`, `CommercientSF11_Quickbook_Online_ITEM__c`, `Invoice_Line_Items__c`, `Payment__c`, `QuickBook_Online_OpenARInvoiceDetail__c`, `QuickBook_Online_OpenARInvoiceHeader__c`, 2 more and a custom object
+- Object display names: QuickBook Online Customer, Quickbook Online Invoice, Quickbook Online InvoiceLine, Quickbook Online Payment, SYNC OPEN AR INVOICE DETAIL, Account, Quickbook Online Account Reverse Lookup, Quickbook Online PaymentLine, SYNC ACCOUNTMATCHING, SYNC AR INVOICE PAYMENTS, SYNC CONTACT, SYNC INVOICE HISTORY DETAIL, 24 more and 2 further templates
+- Template groups: Account, Invoice, Open AR Invoice Header, Invoice History Headers, Product, AR Invoice Payments
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -164,7 +185,7 @@ The prefixes these templates set:
 - `vw_QUICKBOOKONLINE_InvoiceHistoryHeader`
 - `vw_QUICKBOOKONLINE_InvoiceHistoryDetail`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
