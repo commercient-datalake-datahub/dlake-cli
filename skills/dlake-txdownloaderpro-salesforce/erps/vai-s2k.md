@@ -2,8 +2,8 @@
 name: dlake-txdownloaderpro-salesforce/erps/vai-s2k
 description: >-
   What the shipped default TxDownloaderPro templates set up when Salesforce is the writeback
-  destination and VAI S2K is the source: the 7 default templates the catalogue ships for this
-  pair, the 4 field-process versions they are identified by, what each template family delivers,
+  destination and VAI S2K is the source: the 8 default templates the catalogue ships for this
+  pair, the 5 field-process versions they are identified by, what each template family delivers,
   the shape of the query that finds flagged records and the objects and marker columns it reads,
   the structure of the inbound mapping document, and which `ResultStructure` parts the templates
   fill for the write back to the CRM.
@@ -56,9 +56,10 @@ destination objects are and what the operation flags allow. Operations are the u
 | TxDownloaderPro_111_1_1 | Salesforce Account to VAIS2K Customer | `Account` → `Customer` | 2 | create / update |
 | TxDownloaderPro_111_2_1 | Salesforce Contact to VAIS2K Contact | `Contact` → `Contact` | 2 | create / update |
 | TxDownloaderPro_111_4_1 | Salesforce Order to VAIS2K SalesOrder | `Order` → `SalesOrder` | 2 | create / update |
+| TxDownloaderPro_111_3_1 | Salesforce Account to VAI S2K Ship To Master | `Account` → `Ship To Master` | 1 | create |
 | TxDownloaderPro_111_5_1 | — | `Contact Role` → `Contact Role` | 1 | create |
 
-Across the 7 default templates: 4 carry `IsInsert`, 3 carry `IsUpdate`, 0 carry `IsDelete`. A
+Across the 8 default templates: 5 carry `IsInsert`, 3 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
 given record. 1 catalogue description was not printed because they are placeholders or carry
 text that is not ours to publish.
@@ -85,14 +86,15 @@ that never matches a run.
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
 The field-process versions this pair’s default templates belong to: `TxDownloaderPro_111_1`,
-`TxDownloaderPro_111_2`, `TxDownloaderPro_111_4`, `TxDownloaderPro_111_5`.
+`TxDownloaderPro_111_2`, `TxDownloaderPro_111_3`, `TxDownloaderPro_111_4`,
+`TxDownloaderPro_111_5`.
 
 1 of these template rows carry a licence-group id, so what a given tenant is offered in the
 picker is narrower than what the catalogue holds.
 
 ## 3. What the query retrieves
 
-`Query` does not have one shape across the product (parent §9). For this pair, 7 carry a
+`Query` does not have one shape across the product (parent §9). For this pair, 8 carry a
 `SELECT` statement in the CRM's own query language. **No query text is reproduced here**; what
 follows is what those queries read and filter on.
 
@@ -112,10 +114,10 @@ follows is what those queries read and filter on.
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 7 default templates, 7 carry a `DefaultProcessStructure`. A parseable document carries
+pair’s 8 default templates, 8 carry a `DefaultProcessStructure`. A parseable document carries
 about 12 members.
 
-- **Template path roots used:** `Contact`, `Account`, `Contact_Role__c`, `OrderItems`, `Order`.
+- **Template path roots used:** `Account`, `Contact`, `Contact_Role__c`, `OrderItems`, `Order`.
   A path’s first segment has to match the element the engine emits, and the document root itself
   is never part of the path.
 - **`Line.` section members present:** `Line.SDSEQ`, `Line.SDDES1`, `Line.SDQTY`, `Line.SDPRIC`.
@@ -127,8 +129,8 @@ about 12 members.
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 7 default templates, 3 carry a
-parseable `DefaultResultStructure`, 4 carry none.
+system’s response after the write (parent §11). Of this pair’s 8 default templates, 3 carry a
+parseable `DefaultResultStructure`, 5 carry none.
 
 | Part | Filled by | What it addresses | Members present |
 |---|---|---|---|
