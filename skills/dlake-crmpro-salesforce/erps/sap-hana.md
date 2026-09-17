@@ -152,7 +152,28 @@ process before activating it.
 | SYNC InvoiceHistoryLine | `CommercientSF16__VBRP__c` | 279 | `VBRK` → `CommercientSF16__vbrk__c`, `KOWRR` → `CommercientSF16__kowrr__c`, `PRSFD` → `CommercientSF16__prsfd__c`, `SKTOF` → `CommercientSF16__sktof__c`, `SKFBP` → `CommercientSF16__skfbp__c` |
 | SYNC InvoicePayment | `CommercientSF16__ACDOCA__c` | 415 | `VBRK` → `vbrk__c`, `AccountID` → `accountid__c`, `KNA1` → `kna1__c`, `BELNR` → `CommercientSF16__belnr__c`, `DOCLN` → `CommercientSF16__docln__c` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 50 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 50
+- Default operations: insert on 50, update on 50, delete on 50
+- Marked circular-sync: 0
+- Licence groups they span: 12
+- Destination objects: `Account`, `Product2`, `CommercientSF16__KNA1__c`, `CommercientSF16__VBAP__c`, `Contact`, `CommercientSF16__BKPF__c`, `CommercientSF16__VBAK__c`, `CommercientSF16__VBPA__c`, `CommercientSF16__VBRK__c`, `CommercientSF16__VBRP__c`, `CommercientSF16_SAPHANA_ADDRESS__c`, `CommercientSF16__ACDOCA__c` and 11 custom objects
+- Object display names: SYNC ACCOUNT, SYNC CONTACTS, SYNC CUSTOMER, SYNC CUSTOMERTOACCOUNTLOOKUP, SAP HANA SerialNumber, SAPHANA Customer Address, SYNC ArTerms, SYNC InvoiceHistoryHeader, SYNC InvoiceHistoryLine, SYNC ITEMS, SYNC ITEMTOPRODUCTLOOKUP, SYNC OpenInvoice, 17 more and a further template
+- Template groups: Account, Product, Salesorder, Invoice, Invoice History Headers, Customer Multi Ship Addresses
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -177,7 +198,7 @@ The prefixes these templates set:
 - `vw_SAPHANA_SalesOrderLine`
 - `vw_SAPHANA_SalesPerson`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
