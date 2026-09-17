@@ -2,8 +2,8 @@
 name: dlake-txdownloaderpro-salesforce/erps/aptean-made2manage
 description: >-
   What the shipped default TxDownloaderPro templates set up when Salesforce is the writeback
-  destination and Aptean Made2Manage is the source: the 1 default template the catalogue ships
-  for this pair, the 1 field-process version they are identified by, what each template family
+  destination and Aptean Made2Manage is the source: the 7 default templates the catalogue ships
+  for this pair, the 4 field-process versions they are identified by, what each template family
   delivers, the shape of the query that finds flagged records and the objects and marker columns
   it reads, the structure of the inbound mapping document, and which `ResultStructure` parts the
   templates fill for the write back to the CRM.
@@ -53,12 +53,15 @@ destination objects are and what the operation flags allow. Operations are the u
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
+| Create New Address | Salesforce Aptean Made2Manage Address to Made2Manage Address | `CommercientSF21__Aptean_M2M_SYADDR__c` → `Address` | 2 | create / update |
+| Create New Contact | Salesforce Contact to Aptean Made2Manage Contact | `Contact` → `Contact` | 2 | create / update |
+| Create New SalesOrder | Salesforce Opportunity to Aptean Made2Manage Sales Order | `Opportunity` → `Order` | 2 | create / update |
 | Create New Customer | — | — → — | 1 | create |
 
-Across the single default template: 1 carries `IsInsert`, 0 carry `IsUpdate`, 0 carry
-`IsDelete`. A flag decides which operation the process is allowed to perform, not which one it
-performs on a given record. 1 catalogue description was not printed because they are
-placeholders or carry text that is not ours to publish.
+Across the 7 default templates: 4 carry `IsInsert`, 3 carry `IsUpdate`, 0 carry `IsDelete`. A
+flag decides which operation the process is allowed to perform, not which one it performs on a
+given record. 1 catalogue description was not printed because they are placeholders or carry
+text that is not ours to publish.
 
 ## 2. The process rows the import creates
 
@@ -81,21 +84,30 @@ that never matches a run.
 | `IsInsert` / `IsUpdate` / `IsDelete` | the template’s own flags — section 1 |
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
-The field-process versions this pair’s default templates belong to: `TxDownloader_17_1`.
+The field-process versions this pair’s default templates belong to: `TxDownloader_17_4`,
+`TxDownloader_17_2`, `TxDownloader_17_1`, `TxDownloader_17_3`.
 
 ## 3. What the query retrieves
 
-`Query` does not have one shape across the product (parent §9). For this pair, 1 carries a
+`Query` does not have one shape across the product (parent §9). For this pair, 7 carry a
 `SELECT` statement in the CRM's own query language. **No query text is reproduced here**; what
 follows is what those queries read and filter on.
 
-- **Objects read:** `Account`.
-- **Marker and key columns the queries name:** `Commercient_Import__c`,
-  `CommercientSF__Commercient_ArCustomerCode__c`. These are the columns a user’s flag lands in
-  and the columns the run writes an outcome back to; which ones are in the `WHERE` is what
-  decides whether a record is in scope at all.
-- **Operators present:** `=`. The parent’s §12 is the authority on the vocabulary; the point
-  here is only which of it these templates use.
+- **Objects read:** `CommercientSF21__Aptean_M2M_SYADDR__c`, `Contact`, `Account`,
+  `OpportunityLineItems`.
+- **Child collections pulled in the same query:** `OpportunityLineItems`. A header retrieved
+  without its lines is a query that does not name the child collection.
+- **Marker and key columns the queries name:** `CommercientSF__Commercient_ArCustomerCode__c`,
+  `CommercientSF21__ExternalKey1__c`, `CommercientSF21__FCADDRTYPE__c`,
+  `CommercientSF21__FCADDRKEY__c`, `CommercientSF21__FCEMAIL__c`,
+  `CommercientSF21__FLLONGDIST__c`, `CommercientSF21__FMSTREET__c`,
+  `CommercientSF21__FCCITY__c`, `CommercientSF21__FCSTATE__c`, `CommercientSF21__FCCOUNTRY__c`,
+  `CommercientSF21__FCZIP__c`, `CommercientSF21__Aptean_M2M_SYADDR__c`, `ExternalKey__c`,
+  `Commercient_Import__c`. These are the columns a user’s flag lands in and the columns the run
+  writes an outcome back to; which ones are in the `WHERE` is what decides whether a record is
+  in scope at all.
+- **Operators present:** `!=`, `=`, `AND`, an empty-string test. The parent’s §12 is the
+  authority on the vocabulary; the point here is only which of it these templates use.
 - **Where the filtering happens:** in the query, on the CRM side, before anything reaches the
   source system. Narrowing a template means editing its query — not its mapping.
 
@@ -103,16 +115,26 @@ follows is what those queries read and filter on.
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 1 default template, 0 carry a `DefaultProcessStructure` and 1 carries none.
+pair’s 7 default templates, 6 carry a `DefaultProcessStructure` and 1 carries none. A parseable
+document carries about 16 members.
 
-- **No `Line.` section.** These templates map a single record, with no repeating child
-  collection.
+- **Template path roots used:** `Contact`, `CommercientSF21__Aptean_M2M_SYADDR__c`,
+  `Opportunity`, `OpportunityLineItems`. A path’s first segment has to match the element the
+  engine emits, and the document root itself is never part of the path.
+- **`Line.` section members present:** `Line.OpportunNum`, `Line.InMastPartNo`,
+  `Line.InMastDesc`, `Line.SalesOrderLineSalesforceID`, `Line.mainXml`, `Line.operation`,
+  `Line.identity_column`. 2 templates name the collection through `Line.mainXml`; the members
+  beside it are resolved against that collection’s own root rather than through the header.
+- **`$FUN_` value tokens the documents carry:** `$FUN_SUBSTR`, `$FUN_UNESCAPEXML`,
+  `$FUN_ISNULL`. The names are what the templates carry; **no semantics are claimed for them
+  here** — the parent’s §12 is explicit that the platform-side resolver is dotted path
+  substitution only, and these tokens are evaluated on the customer’s own host.
 
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 1 default template, 0 carry a
-parseable `DefaultResultStructure`, 0 carry none, and 1 do not parse and are counted but not
+system’s response after the write (parent §11). Of this pair’s 7 default templates, 0 carry a
+parseable `DefaultResultStructure`, 6 carry none, and 1 do not parse and are counted but not
 described.
 
 **No default template for this pair fills a part.** Nothing is written back to Salesforce by
