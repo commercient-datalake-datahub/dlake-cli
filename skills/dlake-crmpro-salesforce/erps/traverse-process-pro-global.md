@@ -179,7 +179,28 @@ process before activating it.
 | Invoice Header | `Invoice__c` | 17 | `armast_id_col` → `armast_id_col__c`, `Account` → `Account__c`, `Order` → `Order__c`, `PO_Number` → `PO_Number__c`, `Invoice_Date` → `Invoice_Date__c` |
 | Invoice Detail | `Invoice_Detail__c` | 11 | `adtran_id` → `adtran_id__c`, `Invoice` → `Invoice__c`, `Product` → `Product__c`, `Description` → `Description__c`, `Quantity` → `Quantity__c` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 19 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 19
+- Default operations: insert on 19, update on 19, delete on 19
+- Marked circular-sync: 0
+- Licence groups they span: 8
+- Destination objects: `Account`, `Product2`, `CommercientSF7__tblArCust__c`, `CommercientSF7__tblArHistDetail__c`, `CommercientSF7__tblArHistHeader__c`, `CommercientSF7__tblArOpenInvoice__c`, `CommercientSF7__tblArShipTo__c`, `CommercientSF7__tblInItem__c`, `CommercientSF7__tblSoTransDetail__c`, `CommercientSF7__tblSoTransHeader__c`, `Invoice__c`, `Invoice_Detail__c`, `Order_Detail__c`, `Order_Header__c`, `User`
+- Object display names: Account, Child Account, Get Salesforce Product, Get Salesforce User, Invoice Detail, Invoice Header, Order Detail, Order Header, Product, TRAVERSEPROCESSPROGLOBAL ArHistDetail, TRAVERSEPROCESSPROGLOBAL ArHistHeader, TRAVERSEPROCESSPROGLOBAL ArOpenInvoice and 7 more
+- Template groups: Account, Product, Invoice, Salesorder, Customer Multi Ship Addresses
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -207,7 +228,7 @@ The prefixes these templates set:
 - `vw_TRAVERSEPROCESSPROGLOBAL_OrderHeader`
 - `vw_TRAVERSEPROCESSPROGLOBAL_OrderDetail`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
