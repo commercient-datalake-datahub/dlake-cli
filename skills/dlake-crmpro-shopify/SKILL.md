@@ -209,8 +209,8 @@ its SKU.
 
 ## 10. The source ERP’s own page
 
-One row per source ERP the catalogue ships Standard Shopify templates for. Each page is a child
-file of this skill, addressed as `dlake-crmpro-shopify/erps/<erp>` — `dlake skills show
+One row per source ERP the catalogue carries Shopify templates for. Each page is a child file of
+this skill, addressed as `dlake-crmpro-shopify/erps/<erp>` — `dlake skills show
 dlake-crmpro-shopify/erps/<erp>` prints one, and `dlake skills install` writes them beside this
 file.
 
