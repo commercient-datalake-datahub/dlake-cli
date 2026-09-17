@@ -137,7 +137,28 @@ process before activating it.
 | InvoiceLine | `CommercientSF14__InvoiceLine__c` | 13 | `InvoiceLineID` → `InvoiceLineID`, `InvoiceID` → `InvoiceID`, `InvoiceLineSeqNbr` → `InvoiceLineSeqNbr`, `InvoiceLineType` → `InvoiceLineType`, `InvoiceLineDescr` → `InvoiceLineDescr` |
 | PriceBook | `CommercientSF14__Steel_Viking_PriceBook__c` | 14 | `Account` → `Account`, `Product` → `Product`, `PartCustomerPriceID` → `PartCustomerPriceID`, `PriceType` → `PriceType`, `CustomerID` → `CommercientSF14__CustomerID__c` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 9 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 9
+- Default operations: insert on 9, update on 9, delete on 9
+- Marked circular-sync: 0
+- Licence groups they span: 6
+- Destination objects: `account`, `CommercientSF14__Customer__c`, `CommercientSF14__Invoice__c`, `CommercientSF14__InvoiceLine__c`, `CommercientSF14__Part__c`, `CommercientSF14__SalesOrder__c`, `CommercientSF14__SalesOrderLine__c`, `CommercientSF14__Steel_Viking_PriceBook__c`, `Product2`
+- Object display names: CRM Account, Customer, Invoice, InvoiceLine, Part, PriceBook, Product, SalesOrder, SalesOrderLine
+- Template groups: Account, Invoice, Product, Salesorder
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -159,7 +180,7 @@ The prefixes these templates set:
 - `SalesOrder:`
 - `SalesOrderLine:`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
