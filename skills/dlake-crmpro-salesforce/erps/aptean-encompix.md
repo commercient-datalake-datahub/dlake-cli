@@ -133,7 +133,28 @@ process before activating it.
 | APTEAN ENCOMPIX InvoiceHeader | `CommercientSF21__Aptean_Encompix_invoice__c` | 79 | `Account` → `Account`, `Aptean_Encompix_Customer` → `Aptean_Encompix_Customer`, `Aptean_Encompix_Sales_Order_Header` → `Aptean_Encompix_Sales_Order_Header__c`, `ar_account` → `ar_account`, `cust_id` → `CommercientSF21__cust_id__c` |
 | APTEAN ENCOMPIX InvoiceLine | `CommercientSF21__Aptean_Encompix_inv_regl__c` | 86 | `Aptean_Encompix_Invoice_Header` → `Aptean_Encompix_Invoice_Header`, `Job_HDR` → `Job_HDR__c`, `Aptean_Encompix_Item` → `Aptean_Encompix_Item`, `disc_amt` → `disc_amt`, `item_desc` → `item_desc` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 22 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 22
+- Default operations: insert on 22, update on 22, delete on 22
+- Marked circular-sync: 0
+- Licence groups they span: 10
+- Destination objects: `Account`, `Product2`, `ACCOUNTMATCHING__c`, `Aptean_Encompix_Employee__c`, `CommercientSF21__Aptean_Encompix_customer__c`, `CommercientSF21__Aptean_Encompix_custship__c`, `CommercientSF21__Aptean_Encompix_inv_regl__c`, `CommercientSF21__Aptean_Encompix_invoice__c`, `CommercientSF21__Aptean_Encompix_item__c`, `CommercientSF21__Aptean_Encompix_job_bom__c`, `CommercientSF21__Aptean_Encompix_slsprsn__c`, `CommercientSF21__Aptean_Encompix_so_hdr__c`, `CommercientSF21__Aptean_Encompix_terms__c`, `CUSTOMER1__c`, `ITEMMASTER__c`, `Job_HDR__c`, `Labor_Log__c` and 2 custom objects
+- Object display names: Account Create, Account Update, APTEAN ENCOMPIX Customer, Aptean Encompix Employee, APTEAN ENCOMPIX InvoiceHeader, APTEAN ENCOMPIX InvoiceLine, APTEAN ENCOMPIX Item Master, APTEAN ENCOMPIX Job Header, APTEAN ENCOMPIX Labor Log, APTEAN ENCOMPIX Sales Job BOM, APTEAN ENCOMPIX SalesOrderHeader, APTEAN ENCOMPIX Salesperson, 8 more and 2 further templates
+- Template groups: Account, Product, Invoice, Customer Multi Ship Addresses, Salesorder
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -154,7 +175,7 @@ The prefixes these templates set:
 - `vw_APTEANENCOMPIX_SalesOrderHeader`
 - `vw_APTEANENCOMPIX_Salesperson`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
