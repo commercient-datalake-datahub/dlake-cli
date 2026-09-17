@@ -53,10 +53,10 @@ destination objects are and what the operation flags allow. Operations are the u
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
+| Create New Contact | Shopify Customer to Acumatica Contact | `Customer` → `Contact` | 1 | create |
 | Create New SalesInvoice | Shopify Order to Acumatica SalesInvoice | `Order` → `SalesInvoice` | 1 | create |
 | Create New SalesOrder | Shopify Order to Acumatica SalesOrder | `Order` → `SalesOrder` | 1 | create |
 | Create/Update Customer | Shopify Customer to Acumatica Customer | `Customer` → `Customer` | 1 | create |
-| TxDownloader_8_4 | Shopify Customer to Acumatica Contact | `Customer` → `Contact` | 1 | create |
 
 Across the 4 default templates: 4 carry `IsInsert`, 0 carry `IsUpdate`, 0 carry `IsDelete`, and
 3 carry `IsCustomization`. A flag decides which operation the process is allowed to perform, not
