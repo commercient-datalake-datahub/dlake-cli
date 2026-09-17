@@ -152,7 +152,28 @@ process before activating it.
 | JobBoss InvoiceHeader | `CommercientSF19__JobBoss_Invoice_Header__c` | 32 | `Document` → `CommercientSF19__ExternalKey__c`, `Document` → `CommercientSF19__Name__c`, `Customer` → `CommercientSF19__Account__c`, `Customer` → `CommercientSF19__JobBoss_Customer__c`, `Document_Date` → `CommercientSF19__Document_Date__c` |
 | JobBoss InvoiceDetail | `CommercientSF19__JobBoss_Invoice_Detail__c` | 46 | `Invoice_DetailKey` → `CommercientSF19__ExternalKey__c`, `Document, Document_Line` → `CommercientSF19__Name__c`, `Document` → `CommercientSF19__JobBoss_Invoice_Header__c`, `Invoice_Detail` → `CommercientSF19__Invoice_Detail__c`, `Document` → `CommercientSF19__Document__c` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 143 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 143
+- Default operations: insert on 143, update on 143, delete on 143
+- Marked circular-sync: 0
+- Licence groups they span: 14
+- Destination objects: `Account`, `Opportunity`, `Contact`, `OpportunityLineItem`, `Product2`, `CommercientSF19__JobBoss_Customer__c`, `CommercientSF19_JobBoss_Quote__c`, `PriceBookEntry`, `CommercientSF19__JobBoss_Address__c`, `CommercientSF19__JobBoss_Employee__c`, `CommercientSF19__JobBoss_Invoice_Detail__c`, `CommercientSF19__JobBoss_Invoice_Header__c`, `CommercientSF19__JobBoss_SO_Detail__c`, `CommercientSF19__JobBoss_SO_Header__c`, `CommercientSF19_JobBoss_Item__c`, `CommercientSF19_JobBoss_ItemWarehouse__c`, `CommercientSF19_JobBoss_QuoteLine__c`, `User`, `CommercientSF19__JobBoss_Job__c`, `CommercientSF19__JobBoss_JOB__c`, 19 more and 10 custom objects
+- Object display names: JobBoss Customer, JobBoss Customer To Account Reverse Lookup, Accounts, JobBoss CONTACT, JobBoss InvoiceDetail, JobBoss InvoiceHeader, JobBoss QUOTE, CREATE STANDARD PRICEBOOK, JobBoss Address, JobBoss Salesperson, Opportunity Line, SYNC ADDRESS, 54 more and 20 further templates
+- Template groups: Account, CRM Opportunity and Line, Product, Invoice, Opportunity, Salesorder, Customer Multi Ship Addresses, CRM Order and Line, QuoteLine
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -176,7 +197,7 @@ The prefixes these templates set:
 - `vw_JOBBOSS_SalesOrderDetail`
 - `vw_JOBBOSS_Salesperson`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
