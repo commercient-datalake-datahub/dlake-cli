@@ -55,12 +55,12 @@ destination objects are and what the operation flags allow. Operations are the u
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
+| Create New AR Invoice | HubSpot deals to Sage 300 ARInvoice | `deals` → `ARInvoice` | 1 | create |
 | Create New Customer | HubSpot companies to Sage 300 Customer | `companies` → `Customer` | 1 | create |
 | Create or Update M/T Contact | HubSpot contacts to Sage 300 M/T Contact | `contacts` → `M/T Contact` | 1 | create |
 | Create or Update PJC Contract Maintenance | HubSpot deals to Sage 300 PJC Contract Maintenance | `deals` → `PJC Contract Maintenance` | 1 | create |
 | Create or Update PJC Project | HubSpot deals to Sage 300 PJC Project | `deals` → `PJC Project` | 1 | create |
 | Sales Order | HubSpot deals to Sage 300 SalesOrder | `deals` → `SalesOrder` | 1 | create |
-| TxDownloader_15_2 | HubSpot deals to Sage 300 ARInvoice | `deals` → `ARInvoice` | 1 | create |
 
 Across the 6 default templates: 6 carry `IsInsert`, 0 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
