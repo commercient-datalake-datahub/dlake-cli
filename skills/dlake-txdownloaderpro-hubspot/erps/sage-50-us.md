@@ -55,16 +55,14 @@ destination objects are and what the operation flags allow. Operations are the u
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
+| Create New Vendor | HubSpot Companies to Sage 50 US Vendor | `Companies`, `companies` → `Vendor` | 2 | create |
+| Update Vendor | Update HubSpot Companies to Update Sage 50 US Vendor | `Companies`, `companies` → `Vendor` | 2 | update |
 | Create New Customer | HubSpot Companies to Sage 50 US Customer | `Companies` → `Customer` | 1 | create |
 | Create New Quote | HubSpot Deals to Sage 50 US Quote | `deals` → `Quote` | 1 | create |
-| Create New Vendor | HubSpot Companies to Sage 50 US Vendor | `Companies` → `Vendor` | 1 | create |
 | Delete Customer | Delete HubSpot Companies to Delete Sage 50 US Customer | `Companies` → `Customer` | 1 | delete |
 | Delete Vendor | Delete HubSpot Companies to Delete Sage 50 US Vendor | `Companies` → `Vendor` | 1 | delete |
-| TxDownloader_1_33 | HubSpot Companies to Sage 50 US Vendor | `companies` → `Vendor` | 1 | create |
-| TxDownloader_1_34 | HubSpot Update Companies to Sage 50 US Update Vendor | `companies` → `Vendor` | 1 | update |
 | Update Customer | Update HubSpot Companies to Update Sage 50 US Customer | `Companies` → `Customer` | 1 | update |
 | Update Quote | HubSpot Update Deals to Sage 50 US Update Quote | `deals` → `Quote` | 1 | update |
-| Update Vendor | Update HubSpot Companies to Update Sage 50 US Vendor | `Companies` → `Vendor` | 1 | update |
 
 Across the 10 default templates: 4 carry `IsInsert`, 4 carry `IsUpdate`, 2 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
@@ -91,10 +89,10 @@ that never matches a run.
 | `IsInsert` / `IsUpdate` / `IsDelete` | the template’s own flags — section 1 |
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
-The field-process versions this pair’s default templates belong to: `TxDownloader_1_33`,
-`TxDownloader_1_1`, `TxDownloader_1_22`, `TxDownloader_1_20`, `TxDownloader_1_6`,
-`TxDownloader_1_10`, `TxDownloader_1_12`, `TxDownloader_1_34`, `TxDownloader_1_23`,
-`TxDownloader_1_14`.
+The field-process versions this pair’s default templates belong to: `TxDownloader_1_1`,
+`TxDownloader_1_22`, `TxDownloader_1_20`, `TxDownloader_1_33`, `TxDownloader_1_6`,
+`TxDownloader_1_10`, `TxDownloader_1_12`, `TxDownloader_1_23`, `TxDownloader_1_14`,
+`TxDownloader_1_34`.
 
 ## 3. What the query retrieves
 
