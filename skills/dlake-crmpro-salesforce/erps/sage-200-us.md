@@ -235,7 +235,28 @@ process before activating it.
 | SAGE200US WorkOrder Line | `WOTRAN__c` | 66 | `id_col` → `ExternalKey__c`, `wono, tranlineno` → `Name`, `item` → `Product__c`, `item` → `Sage200_US_ItemMaster__c`, `wono` → `SAGE200US_WorkOrder_Header__c` |
 | SAGE200 ShipToAddress ARADDR | `CommercientSF7__ARADDR__c` | 28 | `id_col` → `CommercientSF7__ExternalKey__c`, `company` → `CommercientSF7__Name__c`, `custno` → `CommercientSF7__custno__c`, `invno` → `ProcessPro_Invoice_Header__c`, `custno` → `ProcessPro_Customer_Master__c` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 28 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 28
+- Default operations: insert on 28, update on 28, delete on 28
+- Marked circular-sync: 0
+- Licence groups they span: 11
+- Destination objects: `Account`, `Contact`, `PricebookEntry`, `Product2`, `APVEND__c`, `CommercientSF7__ARADDR__c`, `CommercientSF7__ARCADR__c`, `CommercientSF7__ARCUST__c`, `CommercientSF7__ARMAST__c`, `CommercientSF7__ARTRAN__c`, `CommercientSF7__ICILOC__c`, `CommercientSF7__ICITEM__c`, `CommercientSF7__ICLOCT__c`, `CommercientSF7__SOMAST__c`, `CommercientSF7__SOSLSM__c`, `CommercientSF7__SOTRAN__c`, `PEBMDT__c`, `PEBMHD__c`, `POMAST__c`, `POTRAN__c` and 4 more
+- Object display names: Account, Contact sync, Create Standard PriceBook, Customer To Account Reverse Lookup, Get Contacts, Item Location, Item Master, Item Master Reverse Lookup With Product, Location, Product, Sage 200US Invoice Payments, SAGE200 ShipToAddress ARADDR and 16 more
+- Template groups: Product, Account, Salesorder, Invoice, Customer Multi Ship Addresses, Purchase Order
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -274,7 +295,7 @@ The prefixes these templates set:
 - `vw_SAGE200US_SalesOrderDetail`
 - `vw_SAGE200US_SalesPerson`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
