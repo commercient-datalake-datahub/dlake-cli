@@ -2,8 +2,8 @@
 name: dlake-txdownloaderpro-zohocrm/erps/myob-accountright
 description: >-
   What the shipped default TxDownloaderPro templates set up when Zoho CRM is the writeback
-  destination and MYOB AccountRight is the source: the 4 default templates the catalogue ships
-  for this pair, the 1 field-process version they are identified by, what each template family
+  destination and MYOB AccountRight is the source: the 6 default templates the catalogue ships
+  for this pair, the 3 field-process versions they are identified by, what each template family
   delivers, the shape of the query that finds flagged records and the objects and marker columns
   it reads, the structure of the inbound mapping document, and which `ResultStructure` parts the
   templates fill for the write back to the CRM.
@@ -54,8 +54,10 @@ destination objects are and what the operation flags allow. Operations are the u
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
 | Create Customer | Zoho Account To MYOBACCOUNTRIGHT Customer | `Accounts`, `Account` → `Customer` | 4 | create / update |
+| Create Customer Location/Address | Zoho Account to MYOBACCOUNTRIGHT Customer Location | `Accounts` → `Location` | 1 | create |
+| Create Job | Zoho Deals to MYOBACCOUNTRIGHT Job | `Deals` → `Job` | 1 | create |
 
-Across the 4 default templates: 2 carry `IsInsert`, 2 carry `IsUpdate`, 0 carry `IsDelete`. A
+Across the 6 default templates: 4 carry `IsInsert`, 2 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
 given record. 3 catalogue descriptions were not printed because they are placeholders or carry
 text that is not ours to publish.
@@ -81,28 +83,29 @@ that never matches a run.
 | `IsInsert` / `IsUpdate` / `IsDelete` | the template’s own flags — section 1 |
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
-The field-process versions this pair’s default templates belong to: `TxDownloaderPro_36_1`.
+The field-process versions this pair’s default templates belong to: `TxDownloaderPro_36_1`,
+`TxDownloaderPro_36_7`, `TxDownloaderPro_36_5`.
 
 1 of these template rows carry a licence-group id, so what a given tenant is offered in the
 picker is narrower than what the catalogue holds.
 
 ## 3. What the query retrieves
 
-`Query` does not have one shape across the product (parent §9). For this pair, 3 carry a JSON
+`Query` does not have one shape across the product (parent §9). For this pair, 5 carry a JSON
 object naming the module to retrieve, 1 carries a `SELECT` statement in the CRM's own query
 language. **No query text is reproduced here**; what follows is what those queries read and
 filter on.
 
-- **Objects read:** `Accounts`, `Account`.
+- **Objects read:** `Accounts`, `Account`, `Deals`.
 - **Marker and key columns the queries name:** `CommercientSF__Commercient_ArCustomerCode__c`.
   These are the columns a user’s flag lands in and the columns the run writes an outcome back
   to; which ones are in the `WHERE` is what decides whether a record is in scope at all.
 - **Operators present:** `!=`, an empty-string test. The parent’s §12 is the authority on the
   vocabulary; the point here is only which of it these templates use.
-- **Members present in the JSON query object:** `selectedFields` (3), `ModuleName` (3), `Where`
-  (3). 3 of them carry a non-empty `Where`. Its content is not reproduced, and a stored `Where`
+- **Members present in the JSON query object:** `selectedFields` (5), `ModuleName` (5), `Where`
+  (5). 3 of them carry a non-empty `Where`. Its content is not reproduced, and a stored `Where`
   is not necessarily a condition on this destination — read the destination page before treating
-  it as one. 3 carry a non-empty `selectedFields` list.
+  it as one. 5 carry a non-empty `selectedFields` list.
 - **Where the filtering happens:** the query names a module rather than a condition, so the
   selection the parent’s §12 describes is applied after retrieval, not by the query.
 
@@ -110,30 +113,30 @@ filter on.
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 4 default templates, 4 carry a `DefaultProcessStructure`; 1 of those do not parse as JSON
-and are counted but not described. A parseable document carries about 16 members.
+pair’s 6 default templates, 6 carry a `DefaultProcessStructure`; 1 of those do not parse as JSON
+and are counted but not described. A parseable document carries about 13 members.
 
-- **Template path roots used:** `Accounts`, `Account`. A path’s first segment has to match the
-  element the engine emits, and the document root itself is never part of the path.
+- **Template path roots used:** `Accounts`, `Account`, `Deals`. A path’s first segment has to
+  match the element the engine emits, and the document root itself is never part of the path.
 - **No `Line.` section.** These templates map a single record, with no repeating child
   collection.
 
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 4 default templates, 2 carry a
-parseable `DefaultResultStructure`, 2 carry none.
+system’s response after the write (parent §11). Of this pair’s 6 default templates, 3 carry a
+parseable `DefaultResultStructure`, 3 carry none.
 
 | Part | Filled by | What it addresses | Members present |
 |---|---|---|---|
-| `Part1` | 2 templates | the record the run is already working with | a source-path-to-CRM-field map |
-| `Part2` | 0 templates (2 explicitly null) | the child/line records under it | — |
-| `Part3` | 0 templates (2 explicitly null) | a **new** record, matched on an external id field | — |
-| `Part4` | 0 templates (2 explicitly null) | a **different** record, addressed by an id field | — |
+| `Part1` | 3 templates | the record the run is already working with | a source-path-to-CRM-field map |
+| `Part2` | 0 templates (3 explicitly null) | the child/line records under it | — |
+| `Part3` | 0 templates (3 explicitly null) | a **new** record, matched on an external id field | — |
+| `Part4` | 0 templates (3 explicitly null) | a **different** record, addressed by an id field | — |
 
-- **CRM fields `Part1` writes to:** `comrcint_arcustomercode`. These are the fields on the
-  flagged record that carry the source system’s key or outcome once the write has happened — the
-  names only; what lands in them is the response, per record.
+- **CRM fields `Part1` writes to:** `comrcint_arcustomercode`, `Commercient_ExternalKey`. These
+  are the fields on the flagged record that carry the source system’s key or outcome once the
+  write has happened — the names only; what lands in them is the response, per record.
 - **Response fields it reads them from:** `UID`. The map is written **source-path first,
   CRM-field second** (parent §11); the wrong way round resolves to the same silent empty string
   as a mistyped path.
