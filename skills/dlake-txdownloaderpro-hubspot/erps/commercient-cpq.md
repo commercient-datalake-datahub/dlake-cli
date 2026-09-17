@@ -53,8 +53,8 @@ destination objects are and what the operation flags allow. Operations are the u
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
-| TxDownloader_26_2 | HubSpot products to Commercient CPQ Product | `products` → `Product` | 1 | create |
-| TxDownloader_26_3 | HubSpot deals to Commercient CPQ Sales Order | `deals` → `Sales Order` | 1 | create |
+| Create New Product | HubSpot products to Commercient CPQ Product | `products` → `Product` | 1 | create |
+| Create New Sales Order | HubSpot deals to Commercient CPQ Sales Order | `deals` → `Sales Order` | 1 | create |
 
 Across the 2 default templates: 2 carry `IsInsert`, 0 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
