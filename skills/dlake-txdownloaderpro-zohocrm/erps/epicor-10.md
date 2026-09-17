@@ -2,8 +2,8 @@
 name: dlake-txdownloaderpro-zohocrm/erps/epicor-10
 description: >-
   What the shipped default TxDownloaderPro templates set up when Zoho CRM is the writeback
-  destination and Epicor 10 is the source: the 3 default templates the catalogue ships for this
-  pair, the 2 field-process versions they are identified by, what each template family delivers,
+  destination and Epicor 10 is the source: the 4 default templates the catalogue ships for this
+  pair, the 3 field-process versions they are identified by, what each template family delivers,
   the shape of the query that finds flagged records and the objects and marker columns it reads,
   the structure of the inbound mapping document, and which `ResultStructure` parts the templates
   fill for the write back to the CRM.
@@ -53,10 +53,11 @@ destination objects are and what the operation flags allow. Operations are the u
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
-| TxDownloader_19_1 | Zoho Account To Epicor10 Customer | `Accounts` → `Customer` | 2 | create / update |
-| TxDownloader_19_2 | Zoho Contacts to Epicor10 Contact | `Contacts` → `Contact` | 1 | create |
+| Create/Update Customer | Zoho Account To Epicor10 Customer | `Accounts` → `Customer` | 2 | create / update |
+| Create ShipTo Address | Zoho Account to Epicor 10 ShipTo | `Accounts` → `ShipTo` | 1 | create |
+| Create/Update Contact | Zoho Contacts to Epicor10 Contact | `Contacts` → `Contact` | 1 | create |
 
-Across the 3 default templates: 2 carry `IsInsert`, 1 carries `IsUpdate`, 0 carry `IsDelete`. A
+Across the 4 default templates: 3 carry `IsInsert`, 1 carries `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
 given record.
 
@@ -81,20 +82,20 @@ that never matches a run.
 | `IsInsert` / `IsUpdate` / `IsDelete` | the template’s own flags — section 1 |
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
-The field-process versions this pair’s default templates belong to: `TxDownloader_19_1`,
-`TxDownloader_19_2`.
+The field-process versions this pair’s default templates belong to: `TxDownloaderPro_19_11`,
+`TxDownloader_19_2`, `TxDownloader_19_1`.
 
 ## 3. What the query retrieves
 
-`Query` does not have one shape across the product (parent §9). For this pair, 3 carry a JSON
+`Query` does not have one shape across the product (parent §9). For this pair, 4 carry a JSON
 object naming the module to retrieve. **No query text is reproduced here**; what follows is what
 those queries read and filter on.
 
 - **Objects read:** `Accounts`, `Contacts`.
-- **Members present in the JSON query object:** `selectedFields` (3), `ModuleName` (3), `Where`
-  (3). 3 of them carry a non-empty `Where`. Its content is not reproduced, and a stored `Where`
+- **Members present in the JSON query object:** `selectedFields` (4), `ModuleName` (4), `Where`
+  (4). 3 of them carry a non-empty `Where`. Its content is not reproduced, and a stored `Where`
   is not necessarily a condition on this destination — read the destination page before treating
-  it as one. 3 carry a non-empty `selectedFields` list.
+  it as one. 4 carry a non-empty `selectedFields` list.
 - **Where the filtering happens:** the query names a module rather than a condition, so the
   selection the parent’s §12 describes is applied after retrieval, not by the query.
 
@@ -102,8 +103,8 @@ those queries read and filter on.
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 3 default templates, 3 carry a `DefaultProcessStructure`. A parseable document carries
-about 15 members.
+pair’s 4 default templates, 4 carry a `DefaultProcessStructure`. A parseable document carries
+about 14 members.
 
 - **Template path roots used:** `Accounts`, `Contacts`. A path’s first segment has to match the
   element the engine emits, and the document root itself is never part of the path.
@@ -113,8 +114,8 @@ about 15 members.
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 3 default templates, 1 carries a
-parseable `DefaultResultStructure`, 2 carry none.
+system’s response after the write (parent §11). Of this pair’s 4 default templates, 1 carries a
+parseable `DefaultResultStructure`, 3 carry none.
 
 | Part | Filled by | What it addresses | Members present |
 |---|---|---|---|
