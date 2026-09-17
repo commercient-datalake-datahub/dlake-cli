@@ -2,7 +2,7 @@
 name: dlake-crmpro-hubspot/erps/syspro-7-and-above
 description: >-
   What the shipped CRMPro templates set up for a SYSPRO 7 and above source pushing into HubSpot:
-  the `CRM_Configuration` row each template inserts (object API names `comapny`, `product`,
+  the `CRM_Configuration` row each template inserts (object API names `company`, `product`,
   `deal`, `line_item`, `contact`, the match key, `Sync_Order`, `TimeStamp_Prefix` and the field
   prefix/postfix pair), the views they create and how each one detects change, the `::` repository
   key these templates build, and the business outcome of each template group — create customer,
@@ -38,7 +38,7 @@ above → HubSpot templates themselves set, read from their `Insert_Query`, `Cre
 
 | Group | Business outcome | Objects | Source tables and views |
 |---|---|---|---|
-| **create customer** | ERP `SF_ERP_Salesforce_Clone_ArCustomer` data becomes `comapny` in HubSpot. New records are created and existing ones updated; none are deleted. | `comapny` | `SF_ERP_Salesforce_Clone_ArCustomer` |
+| **create customer** | ERP `SF_ERP_Salesforce_Clone_ArCustomer` data becomes `company` in HubSpot. New records are created and existing ones updated; none are deleted. | `company` | `SF_ERP_Salesforce_Clone_ArCustomer` |
 | **create product** | ERP `SF_ERP_Salesforce_Clone_InvMaster`, `SF_ERP_Salesforce_Clone_InvPrice` data becomes `product` in HubSpot. New records are created and existing ones updated; none are deleted. | `product` | `SF_ERP_Salesforce_Clone_InvMaster`, `SF_ERP_Salesforce_Clone_InvPrice` |
 | **create salesorder** | The templates push `deal` to HubSpot. New records are created and existing ones updated; none are deleted. | `deal` | `SF_ERP_Salesforce_Clone_SorMaster`, `SF_ERP_Salesforce_Clone_SorDetail` |
 | **create salesorder line** | The templates push `line_item` to HubSpot. New records are created and existing ones updated; none are deleted. | `line_item` | `SF_ERP_Salesforce_Clone_SorDetail` |
@@ -56,7 +56,7 @@ column the inserts never set is not listed.
 | Display name | `CRM_Object_API_Name` | `Sync_Order` | `TimeStamp_Prefix` | `SQL_Query` target | field prefix / postfix | `Sync_Operation_Type` |
 |---|---|---|---|---|---|---|
 | create contact | `contact` | 5 | `HUBSPOT_NEW_CONTACT` | `vw_HUBSPOT_NEW_CONTACT` | `''` / `''` | `2` |
-| create customer | `comapny` | 11 | `HUBSPOT_NEW_CUSTOMER` | `vw_HUBSPOT_NEW_CUSTOMER` | `''` / `''` | `2` |
+| create customer | `company` | 11 | `HUBSPOT_NEW_CUSTOMER` | `vw_HUBSPOT_NEW_CUSTOMER` | `''` / `''` | `2` |
 | create product | `product` | 11 | `HUBSPOT_NEW_ITEM` | `vw_HUBSPOT_NEW_ITEM` | `''` / `''` | `2` |
 | create salesorder | `deal` | 11 | `HUBSPOT_NEW_DEAL` | `vw_HUBSPOT_NEW_SALESORDER_DEAL` | `''` / `''` | `2` |
 | create salesorder line | `line_item` | 11 | `HUBSPOT_NEW_LINEITEM` | `vw_HUBSPOT_NEW_SALESORDER_LINEITEM` | `''` / `''` | `2` |
@@ -128,7 +128,7 @@ process before activating it.
 | Template | Object | Mapped fields | First ERP → HubSpot pairs |
 |---|---|---|---|
 | create contact | `contact` | 10 | `Contact` → `lastname`, `Contact` → `firstname`, `Email` → `email`, `Telephone, TelephoneExtn` → `phone`, `SoldToAddr1, SoldToAddr2` → `address` |
-| create customer | `comapny` | 9 | `Customer` → `arcustomercode`, `Name` → `name`, `SoldToAddr1` → `address`, `SoldToAddr2` → `address2`, `SoldToAddr3` → `city` |
+| create customer | `company` | 9 | `Customer` → `arcustomercode`, `Name` → `name`, `SoldToAddr1` → `address`, `SoldToAddr2` → `address2`, `SoldToAddr3` → `city` |
 | create product | `product` | 5 | `StockCode` → `hs_sku`, `Description` → `name`, `LongDesc` → `description`, `MaterialCost` → `hs_cost_of_goods_sold`, `SellingPrice` → `price` |
 | create salesorder | `deal` | 9 | `MPrice` → `amount`, `ReqShipDate` → `closedate`, `OrderDate` → `createdate`, `CustomerName` → `dealname`, `SFDCID` → `associate_company` |
 | create salesorder line | `line_item` | 5 | `MStockCode` → `hs_product_id`, `MStockDes` → `name`, `MPrice` → `price`, `MOrderQty` → `quantity`, `SalesOrder` → `associate_deal` |
@@ -137,7 +137,28 @@ process before activating it.
 | create invoice | `deal` | 9 | `CurrencyValue` → `amount`, `InvoiceDate` → `closedate`, `InvoiceDate` → `createdate`, `Customer, Invoice` → `dealname`, `SFDCID` → `associate_company` |
 | create invoice line | `line_item` | 6 | `WarehouseAmount` → `price`, `QtyInvoiced` → `quantity`, `StockCode` → `hs_product_id`, `StockCode` → `name`, `Invoice` → `associate_deal` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 170 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 170
+- Default operations: insert on 170, update on 170, delete on 170
+- Marked circular-sync: 0
+- Licence groups they span: 9
+- Destination objects: `company`, `line_item`, `deal`, `product`, `contact`, `invoice`, `ticket`, `Products`, `CommercientSF__ACCOUNTMATCHING__c`, `CommercientSF__ARCUSTOMER__c`, `CommercientSF__PRODUCTMATCHING__c`, `CommercientSF__PRODUCTS__c`, `CommercientSF__VWHUBSPOTNEWITEM__c`, `CommercientSF__VWHUBSPOTNEWQUOTELINEITEM__c`, `CommercientSF__VWSYSPROPRODUCTDETAILS__c`, `Company`, `Contact`, `Deal`, `line_items`, `order`, 3 more and 8 custom objects
+- Object display names: upsert customer, upsert invoice, upsert product, upsert invoice line, upsert contact, upsert salesorder, create contact, create customer, create product, create salesorder line, create invoice line, delete order, 51 more and 20 further templates
+- Template groups: Account, Product, CRM Opportunity and Line, CRM Order and Line, Opportunity
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -155,7 +176,7 @@ The prefixes these templates set:
 - `HUBSPOT_NEW_LINEITEM`
 - `HUBSPOT_NEW_CONTACT`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
