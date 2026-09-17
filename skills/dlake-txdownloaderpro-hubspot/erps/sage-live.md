@@ -55,8 +55,8 @@ destination objects are and what the operation flags allow. Operations are the u
 |---|---|---|---|---|
 | Create/Update Customer | HubSpot companies to Sage Live Customer | `companies` → `Customer` | 2 | create / update |
 | Create New Invoice | HubSpot deals to Sage Live Invoice | `deals` → `Invoice` | 1 | create |
-| TxDownloader_4_3 | HubSpot deals to Sage Live Sales Credit | `deals` → `Sales Credit` | 1 | create |
-| TxDownloader_4_5 | HubSpot deals to Sage Live Sales Order | `deals` → `Sales Order` | 1 | create |
+| Create New Sales Credit | HubSpot deals to Sage Live Sales Credit | `deals` → `Sales Credit` | 1 | create |
+| Create New Sales Order | HubSpot deals to Sage Live Sales Order | `deals` → `Sales Order` | 1 | create |
 
 Across the 5 default templates: 4 carry `IsInsert`, 1 carries `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
@@ -83,8 +83,8 @@ that never matches a run.
 | `IsInsert` / `IsUpdate` / `IsDelete` | the template’s own flags — section 1 |
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
-The field-process versions this pair’s default templates belong to: `TxDownloader_4_3`,
-`TxDownloader_4_5`, `TxDownloader_4_2`, `TxDownloader_4_1`.
+The field-process versions this pair’s default templates belong to: `TxDownloader_4_2`,
+`TxDownloader_4_3`, `TxDownloader_4_5`, `TxDownloader_4_1`.
 
 ## 3. What the query retrieves
 
@@ -107,8 +107,8 @@ about 16 members.
 
 - **Template path roots used:** `deals`, `companies`, `LineItem`. A path’s first segment has to
   match the element the engine emits, and the document root itself is never part of the path.
-- **`Line.` section members present:** `Line.Quantity`, `Line.UnitPrice`,
-  `Line.DescriptionLine`, `Line.DiscountType`, `Line.mainXml`, `Line.Product`, `Line.ProductId`,
+- **`Line.` section members present:** `Line.mainXml`, `Line.Quantity`, `Line.UnitPrice`,
+  `Line.DescriptionLine`, `Line.DiscountType`, `Line.Product`, `Line.ProductId`,
   `Line.DiscountValue`. 3 templates name the collection through `Line.mainXml`; the members
   beside it are resolved against that collection’s own root rather than through the header.
 - **`$FUN_` value tokens the documents carry:** `$FUN_SUBSTR`. The names are what the templates
