@@ -38,8 +38,8 @@ described from their `DefaultQuery`, `DefaultProcessStructure` and `DefaultResul
 columns — structure only. **No template text is reproduced.** This page grows as the default
 catalogue does.
 
-The default set ships **126 templates across 25 ERP names, in 68 field-process versions** — the
-second largest destination after Salesforce. Each of those ERPs has its own page,
+The default set ships **221 templates across 25 ERP names, in 154 field-process versions** — the
+third largest destination, after Salesforce and HubSpot. Each of those ERPs has its own page,
 `dlake-txdownloaderpro-<erp>-zohocrm`.
 
 ## 1. What the templates deliver
@@ -55,9 +55,9 @@ second largest destination after Salesforce. Each of those ERPs has its own page
 | **Vendor** | An account becomes an ERP vendor | create, update |
 | **Job** | An account or order becomes the ERP's job object, on the ERPs that have one | create, update |
 
-Across the 126 default templates, **66 carry `IsInsert`, 53 carry `IsUpdate`, 8 carry `IsDelete`
-and 3 carry `IsCustomization`**. A flag decides which operation the process is allowed to
-perform, not which one it performs on a given record. 18 rows carry a licence-group id.
+Across the 221 default templates, **120 carry `IsInsert`, 85 carry `IsUpdate`, 17 carry
+`IsDelete` and 3 carry `IsCustomization`**. A flag decides which operation the process is
+allowed to perform, not which one it performs on a given record. 18 rows carry a licence-group id.
 
 **The catalogue carries no `BusinessDescription` on any ZOHO row.** The business language on the
 per-ERP pages is each row's `Message` — direction of travel and two object names — and nearly all
@@ -79,22 +79,23 @@ field-process version is its identity and supplies the DLL on a create. In-fligh
 
 ## 3. The queries
 
-**120 of the 126 default templates carry a JSON `Query` with three members** — `ModuleName`,
-`selectedFields` and `Where` — and **6 carry a `SELECT` statement** instead. Check which shape a
+**198 of the 221 default templates carry a JSON `Query` with three members** — `ModuleName`,
+`selectedFields` and `Where` — and **23 carry a `SELECT` statement** instead. Check which shape a
 process holds before editing it; the parent's §9 is explicit that `Query` is not one format
 across the product.
 
 - **`ModuleName`** names the module to retrieve. The default set names `Accounts`, `Contacts`,
-  `Quotes`, `Sales_Orders` and `Products`, and a few templates use lower-case spellings of them.
-  The spelling is also the path root the mapping document has to use (section 4).
-- **`selectedFields`** is non-empty on all 120 and holds the field list to request.
-- **`Where` is non-empty on all 120, and what it holds is not a filter you can rely on.** Some of
-  those values are stored record identifiers rather than conditions. Their contents are not
+  `Quotes`, `Sales_Orders`, `Products`, `Purchase_Orders` and `Deals`, and a few templates use
+  lower-case spellings of them. The spelling is also the path root the mapping document has to use
+  (section 4).
+- **`selectedFields`** is non-empty on all 198 and holds the field list to request.
+- **`Where` is non-empty on 120 of the 198, and what it holds is not a filter you can rely on.**
+  Some of those values are stored record identifiers rather than conditions. Their contents are not
   reproduced here and are not documentation of anything: **do not copy a `Where` value from one
   tenant's template into another's**, and do not expect putting a condition there to narrow a
   run.
-- **Operators the six `SELECT` templates use:** `=`, `!=`, `AND`, a null test and an
-  empty-string test. Only 5 of the 126 templates carry a condition at all.
+- **Operators the 23 `SELECT` templates use:** `=`, `!=`, `AND`, a null test and an
+  empty-string test. Only 22 of the 221 templates carry a condition at all.
 
 ### The marker conventions
 
@@ -108,43 +109,43 @@ spellings rather than the managed-package ones:
 | an external-key field — `Commercient_ExternalKey` | the ERP's key for the record, and the usual `Part1` writeback target (section 5) |
 
 **Where the filtering happens** is therefore the thing to understand on this destination: for the
-120 module-named templates the query names a module, not a condition, so a run retrieves what the
+198 module-named templates the query names a module, not a condition, so a run retrieves what the
 module returns and the selection the parent's §12 describes is applied after retrieval. Only the
-six `SELECT` templates filter on the CRM side.
+23 `SELECT` templates filter on the CRM side.
 
 ## 4. The inbound mapping document
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
-value is a template resolved against the retrieved record's XML document (parent §11). All 126
+value is a template resolved against the retrieved record's XML document (parent §11). All 221
 default templates carry one; **5 do not parse as JSON** and are counted but not described. A
 parseable document carries about 12 members.
 
 - **Path roots the documents use:** `Accounts`, `Contacts`, `Sales_Orders`, `Quotes`, `Products`,
   `Product_Details`, `Account`, `Order`, and lower-case spellings of several of them. `Accounts`
   and `accounts` are different strings; the root has to match what the engine emitted.
-- **25 of the parseable documents carry a `Line.` section and 23 name the collection through
+- **63 of the parseable documents carry a `Line.` section and 61 name the collection through
   `Line.mainXml`.** The collection is normally the order's or quote's `Product_Details`. The
   members beside it — item, quantity, amount, unit price, tax and description in each ERP's
   spelling — resolve against that collection's own root, not through the header. **Two templates
   carry a `Line.` section with no `Line.mainXml`**, so nothing tells the engine which collection
-  to loop, and one spells the member with a different capitalisation of `mainXml`, which is a
+  to loop, and both spell the member with a different capitalisation of `mainXml`, which is a
   different key.
 - **`$FUN_` value tokens the documents carry:** `$FUN_SUBSTR`, `$FUN_UNESCAPEXML`,
-  `$FUN_ISNULL`. **Names only; no semantics are claimed.** The parent's §12 is explicit that the
-  platform-side resolver is dotted path substitution only — these are evaluated by the service on
-  the customer's own host.
+  `$FUN_ISNULL`, `$FUN_SPLIT`. **Names only; no semantics are claimed.** The parent's §12 is
+  explicit that the platform-side resolver is dotted path substitution only — these are evaluated
+  by the service on the customer's own host.
 
 ## 5. Result structure — what goes back to Zoho CRM
 
-Of the 126 default templates, **56 carry a parseable `DefaultResultStructure` and 69 carry none**;
-one does not parse.
+Of the 221 default templates, **100 carry a parseable `DefaultResultStructure` and 120 carry
+none**; one does not parse.
 
 | Part | Filled by | What it addresses | Members the default set uses |
 |---|---|---|---|
-| `Part1` | 56 templates | the record the run is already working with | a source-path-to-CRM-field map |
+| `Part1` | 100 templates | the record the run is already working with | a source-path-to-CRM-field map |
 | `Part2` | 1 template | the child/line records under it | `ObjectAPIName`, `LoopFieldTagName`, `LoopFieldIDName`, `FieldName` |
-| `Part3` | none (explicitly null on all 56) | a **new** record | — |
-| `Part4` | none (explicitly null on all 56) | a **different** record | — |
+| `Part3` | none (explicitly null on all 100) | a **new** record | — |
+| `Part4` | none (explicitly null on all 100) | a **different** record | — |
 
 - **CRM fields `Part1` writes to:** `Commercient_ExternalKey`, `arcustomercode`,
   `comrcint_arcustomercode`, `Commercient_ArCustomer_Code`, and a per-ERP document-number field
@@ -194,31 +195,36 @@ beside this file.
 <!-- ERP-TABLE:BEGIN dlake-txdownloaderpro-zohocrm -->
 | ERP | Page | What its templates deliver |
 |---|---|---|
-| Epicor 10 | [`erps/epicor-10.md`](erps/epicor-10.md) | 3 default templates in 2 processes, mostly JSON module objects; writes back through `Part1` |
+| Epicor 10 | [`erps/epicor-10.md`](erps/epicor-10.md) | 4 default templates in 3 processes, mostly JSON module objects; writes back through `Part1`; 3 community templates |
 | Epicor 9 and 9.5 | [`erps/epicor-9-and-9-5.md`](erps/epicor-9-and-9-5.md) | 2 default templates in 1 process, mostly JSON module objects; writes back through `Part1` |
-| Epicor Prophet 21 (P21) | [`erps/epicor-prophet-21-p21.md`](erps/epicor-prophet-21-p21.md) | 4 default templates in 2 processes, mostly JSON module objects; writes back through `Part1` |
-| Infor SyteLine | [`erps/infor-syteline.md`](erps/infor-syteline.md) | 3 default templates in 3 processes, mostly `SELECT` queries; writes back through `Part1` |
-| Microsoft Business Central | [`erps/microsoft-business-central.md`](erps/microsoft-business-central.md) | 5 default templates in 3 processes, mostly JSON module objects; writes back through `Part1` |
-| Microsoft Dynamics GP | [`erps/microsoft-dynamics-gp.md`](erps/microsoft-dynamics-gp.md) | 2 default templates in 1 process, mostly JSON module objects; writes back through `Part1` |
+| Epicor Prophet 21 (P21) | [`erps/epicor-prophet-21-p21.md`](erps/epicor-prophet-21-p21.md) | 6 default templates in 4 processes, mostly JSON module objects; writes back through `Part1` |
+| Exact Online | [`erps/exact-online.md`](erps/exact-online.md) | no default templates; 1 community template |
+| GenericDLLs | [`erps/genericdlls.md`](erps/genericdlls.md) | no default templates; 14 community templates |
+| Infor SyteLine | [`erps/infor-syteline.md`](erps/infor-syteline.md) | 20 default templates in 18 processes, mostly `SELECT` queries; writes back through `Part1`; 8 community templates |
+| Microsoft Business Central | [`erps/microsoft-business-central.md`](erps/microsoft-business-central.md) | 7 default templates in 4 processes, mostly JSON module objects; writes back through `Part1` |
+| Microsoft Dynamics AX | [`erps/microsoft-dynamics-ax.md`](erps/microsoft-dynamics-ax.md) | no default templates; 4 community templates |
+| Microsoft Dynamics GP | [`erps/microsoft-dynamics-gp.md`](erps/microsoft-dynamics-gp.md) | 4 default templates in 3 processes, mostly JSON module objects; writes back through `Part1`; 1 community template |
 | Microsoft Dynamics NAV | [`erps/microsoft-dynamics-nav.md`](erps/microsoft-dynamics-nav.md) | 2 default templates in 1 process, mostly JSON module objects; writes back through `Part1` |
-| MYOB AccountRight | [`erps/myob-accountright.md`](erps/myob-accountright.md) | 4 default templates in 1 process, mostly JSON module objects; writes back through `Part1` |
-| NetSuite | [`erps/netsuite.md`](erps/netsuite.md) | 12 default templates in 4 processes, mostly JSON module objects; writes back through `Part1` |
-| QuickBooks Desktop | [`erps/quickbooks-desktop.md`](erps/quickbooks-desktop.md) | 5 default templates in 3 processes, mostly JSON module objects; writes back through `Part1` |
-| QuickBooks Online | [`erps/quickbooks-online.md`](erps/quickbooks-online.md) | 4 default templates in 3 processes, mostly JSON module objects; nothing written back |
-| Sage 100 (US) | [`erps/sage-100-us.md`](erps/sage-100-us.md) | 10 default templates in 8 processes, mostly JSON module objects; writes back through `Part1` |
-| Sage 100 Contractor | [`erps/sage-100-contractor.md`](erps/sage-100-contractor.md) | 10 default templates in 3 processes, mostly JSON module objects; writes back through `Part1` |
-| Sage 100 Contractor 2018 | [`erps/sage-100-contractor-2018.md`](erps/sage-100-contractor-2018.md) | 10 default templates in 3 processes, mostly JSON module objects; writes back through `Part1` |
-| Sage 200 UK | [`erps/sage-200-uk.md`](erps/sage-200-uk.md) | 2 default templates in 1 process, mostly JSON module objects; writes back through `Part1` |
-| Sage 300 | [`erps/sage-300.md`](erps/sage-300.md) | 5 default templates in 3 processes, mostly JSON module objects; nothing written back |
-| Sage 50 Canada | [`erps/sage-50-canada.md`](erps/sage-50-canada.md) | 2 default templates in 1 process, mostly JSON module objects; nothing written back |
-| Sage 50 UK | [`erps/sage-50-uk.md`](erps/sage-50-uk.md) | 4 default templates in 3 processes, mostly JSON module objects; writes back through `Part1` |
-| Sage 50 US | [`erps/sage-50-us.md`](erps/sage-50-us.md) | 17 default templates in 11 processes, mostly JSON module objects; writes back through `Part1` |
-| Sage 500 | [`erps/sage-500.md`](erps/sage-500.md) | 2 default templates in 1 process, mostly JSON module objects; writes back through `Part1` |
-| Sage Intacct | [`erps/sage-intacct.md`](erps/sage-intacct.md) | 1 default template in 1 process, mostly `SELECT` queries; writes back through `Part1` |
-| Sage Live | [`erps/sage-live.md`](erps/sage-live.md) | 2 default templates in 1 process, mostly JSON module objects; writes back through `Part1` |
-| SAP B1 | [`erps/sap-b1.md`](erps/sap-b1.md) | 7 default templates in 4 processes, mostly JSON module objects; writes back through `Part1` |
-| SYSPRO 6 | [`erps/syspro-6.md`](erps/syspro-6.md) | 2 default templates in 1 process, mostly JSON module objects; writes back through `Part1` |
-| VAI S2K | [`erps/vai-s2k.md`](erps/vai-s2k.md) | 6 default templates in 3 processes, mostly JSON module objects; writes back through `Part1`, `Part2` |
+| MYOB AccountRight | [`erps/myob-accountright.md`](erps/myob-accountright.md) | 6 default templates in 3 processes, mostly JSON module objects; writes back through `Part1` |
+| NetSuite | [`erps/netsuite.md`](erps/netsuite.md) | 18 default templates in 7 processes, mostly JSON module objects; writes back through `Part1`; 11 community templates |
+| QuickBooks Desktop | [`erps/quickbooks-desktop.md`](erps/quickbooks-desktop.md) | 7 default templates in 4 processes, mostly JSON module objects; writes back through `Part1`; 2 community templates |
+| QuickBooks Online | [`erps/quickbooks-online.md`](erps/quickbooks-online.md) | 18 default templates in 17 processes, mostly JSON module objects; writes back through `Part1`; 4 community templates |
+| Sage 100 (US) | [`erps/sage-100-us.md`](erps/sage-100-us.md) | 17 default templates in 14 processes, mostly JSON module objects; writes back through `Part1`; 24 community templates |
+| Sage 100 Contractor | [`erps/sage-100-contractor.md`](erps/sage-100-contractor.md) | 12 default templates in 5 processes, mostly JSON module objects; writes back through `Part1` |
+| Sage 100 Contractor 2018 | [`erps/sage-100-contractor-2018.md`](erps/sage-100-contractor-2018.md) | 10 default templates in 3 processes, mostly JSON module objects; writes back through `Part1`; 4 community templates |
+| Sage 200 UK | [`erps/sage-200-uk.md`](erps/sage-200-uk.md) | 4 default templates in 3 processes, mostly JSON module objects; writes back through `Part1`; 3 community templates |
+| Sage 300 | [`erps/sage-300.md`](erps/sage-300.md) | 6 default templates in 4 processes, mostly JSON module objects; nothing written back; 5 community templates |
+| Sage 50 Canada | [`erps/sage-50-canada.md`](erps/sage-50-canada.md) | 7 default templates in 5 processes, mostly JSON module objects; writes back through `Part1`; 8 community templates |
+| Sage 50 UK | [`erps/sage-50-uk.md`](erps/sage-50-uk.md) | 5 default templates in 4 processes, mostly JSON module objects; writes back through `Part1`; 5 community templates |
+| Sage 50 US | [`erps/sage-50-us.md`](erps/sage-50-us.md) | 21 default templates in 15 processes, mostly JSON module objects; writes back through `Part1`; 4 community templates |
+| Sage 500 | [`erps/sage-500.md`](erps/sage-500.md) | 4 default templates in 3 processes, mostly JSON module objects; writes back through `Part1` |
+| Sage Intacct | [`erps/sage-intacct.md`](erps/sage-intacct.md) | 5 default templates in 5 processes, mostly JSON module objects; writes back through `Part1`; 6 community templates |
+| Sage Live | [`erps/sage-live.md`](erps/sage-live.md) | 4 default templates in 3 processes, mostly JSON module objects; writes back through `Part1` |
+| Sage X3 | [`erps/sage-x3.md`](erps/sage-x3.md) | no default templates; 4 community templates |
+| SAP B1 | [`erps/sap-b1.md`](erps/sap-b1.md) | 8 default templates in 5 processes, mostly JSON module objects; writes back through `Part1` |
+| SQLConnector | [`erps/sqlconnector.md`](erps/sqlconnector.md) | no default templates; 1 community template |
+| SYSPRO 6 | [`erps/syspro-6.md`](erps/syspro-6.md) | 17 default templates in 16 processes, mostly JSON module objects; writes back through `Part1`; 6 community templates |
+| VAI S2K | [`erps/vai-s2k.md`](erps/vai-s2k.md) | 7 default templates in 4 processes, mostly JSON module objects; writes back through `Part1`, `Part2` |
 <!-- ERP-TABLE:END -->
 
 **Work out which row applies before reading one.** The source is the ERP the tenant was registered
