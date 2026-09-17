@@ -58,18 +58,16 @@ destination objects are and what the operation flags allow. Operations are the u
 | Create New Customer | Zoho Account to Sage 50 US Customer | `Account`, `Accounts` → `Customer` | 2 | create / update |
 | Create New SalesInvoice | Zoho Sales Order to Sage 50 US Invoice | `Sales Order`, `Quote` → `Invoice` | 2 | create |
 | Create New SalesOrder | — | `Sales Order`, `Quote` → `Sales Order` | 2 | create |
+| Create New Vendor | Zoho Account to Sage 50 US Vendor | `Account`, `Accounts` → `Vendor` | 2 | create |
 | Delete Quote | Zoho Sales Order to Sage 50 US Quote - Delete Quote | `Sales Order`, `Quote` → `Quote` | 2 | delete |
 | Update SalesInvoice | Zoho Sales Order to Sage 50 US Invoice - Update Invoice | `Sales Order`, `Quote` → `Invoice` | 2 | update |
 | Update SalesOrder | — | `Sales Order`, `Quote` → `Sales Order` | 2 | update |
+| Update Vendor | Update Zoho Account to Update Sage 50 US Vendor | `Account`, `Accounts` → `Vendor` | 2 | update |
 | Create New Quote | Zoho Quotes to Sage 50 US Quote | `Quotes` → `Quote` | 1 | create |
-| Create New Vendor | Zoho Account to Sage 50 US Vendor | `Account` → `Vendor` | 1 | create |
 | Delete Customer | Delete Zoho Account to Delete Sage 50 US Customer | `Account` → `Customer` | 1 | delete |
 | Delete Vendor | Delete Zoho Account to Delete Sage 50 US Vendor | `Account` → `Vendor` | 1 | delete |
-| TxDownloader_1_33 | Zoho Account to Sage 50 US Vendor | `Accounts` → `Vendor` | 1 | create |
-| TxDownloader_1_34 | Zoho Update Account to Sage 50 US Update Vendor | `Accounts` → `Vendor` | 1 | update |
 | Update Customer | Update Zoho Account to Update Sage 50 US Customer | `Account` → `Customer` | 1 | update |
 | Update Quote | Zoho Update Quotes to Sage 50 US Update Quote | `Quotes` → `Quote` | 1 | update |
-| Update Vendor | Update Zoho Account to Update Sage 50 US Vendor | `Account` → `Vendor` | 1 | update |
 
 Across the 21 default templates: 8 carry `IsInsert`, 9 carry `IsUpdate`, 4 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
@@ -97,11 +95,11 @@ that never matches a run.
 | `IsInsert` / `IsUpdate` / `IsDelete` | the template’s own flags — section 1 |
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
-The field-process versions this pair’s default templates belong to: `TxDownloader_1_33`,
-`TxDownloader_1_1`, `TxDownloader_1_22`, `TxDownloader_1_3`, `TxDownloader_1_2`,
-`TxDownloader_1_20`, `TxDownloader_1_6`, `TxDownloader_1_24`, `TxDownloader_1_10`,
-`TxDownloader_1_12`, `TxDownloader_1_34`, `TxDownloader_1_23`, `TxDownloader_1_16`,
-`TxDownloader_1_13`, `TxDownloader_1_14`.
+The field-process versions this pair’s default templates belong to: `TxDownloader_1_1`,
+`TxDownloader_1_22`, `TxDownloader_1_3`, `TxDownloader_1_2`, `TxDownloader_1_20`,
+`TxDownloader_1_33`, `TxDownloader_1_6`, `TxDownloader_1_24`, `TxDownloader_1_10`,
+`TxDownloader_1_12`, `TxDownloader_1_23`, `TxDownloader_1_16`, `TxDownloader_1_13`,
+`TxDownloader_1_14`, `TxDownloader_1_34`.
 
 3 of these template rows carry a licence-group id, so what a given tenant is offered in the
 picker is narrower than what the catalogue holds.
