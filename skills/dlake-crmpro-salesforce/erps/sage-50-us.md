@@ -208,7 +208,28 @@ process before activating it.
 | Standard Pricebook Create | `PricebookEntry` | 5 | `SFDCID` → `Product2ID`, `SFDCID` → `Pricebook2ID`, `IsActive` → `IsActive`, `PriceLevel1Amount` → `UnitPrice`, `ItemRecordNumber` → `ExternalKey__c` |
 | Standard Pricebook Update | `PricebookEntry` | 3 | `IsActive` → `IsActive`, `PriceLevel1Amount` → `UnitPrice`, `ItemRecordNumber` → `ExternalKey__c` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 438 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 438
+- Default operations: insert on 438, update on 438, delete on 438
+- Marked circular-sync: 11
+- Licence groups they span: 18
+- Destination objects: `Account`, `Product2`, `CommercientSF8__SAGE50US_SalesInvoiceHeader__c`, `CommercientSF8__SAGE50US_Customer__c`, `CommercientSF8__SAGE50US_Address__c`, `CommercientSF8__SAGE50US_SalesOrderDetail__c`, `CommercientSF8__SAGE50US_SalesOrderHeader__c`, `CommercientSF8__SAGE50US_SalesInvoiceDetail__c`, `Contact`, `CommercientSF8__SAGE50US_SalesPerson__c`, `CommercientSF8__SAGE50US_ARTerms__c`, `CommercientSF8__LineItem__c`, `PricebookEntry`, `Opportunity`, `CommercientSF8__SAGE50US_PurchaseOrderDetail__c`, `CommercientSF8__SAGE50US_PurchaseOrderHeader__c`, `CommercientSF8__SAGE50US_Vendors__c`, `Oppertunity`, `PriceBookEntry`, `User`, 22 more and 7 custom objects
+- Object display names: Account, Customer Reverse Lookup Account, Sage50 US Sales Invoice Header, Sage50 US Address, Sage50 US Customer, Sage50 US Sales Invoice Detail, Sage50 US Sales Order Detail, Sage50 US Sales Order Header, Contact, Sage50 US SalesPerson, Sage50 US ARTerm, Product, 68 more and 10 further templates
+- Template groups: Account, Product, Invoice, Salesorder, Customer Multi Ship Addresses, CRM Opportunity and Line, Purchase Order, CRM Quote and Line, CRM Order and Line, Invoice History Headers, Opportunity, QuoteLine
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -242,7 +263,7 @@ The prefixes these templates set:
 - `vw_SAGE50US_SalesOrderDetail`
 - `vw_SAGE50US_SalesPerson`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
