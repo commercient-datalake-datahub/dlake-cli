@@ -54,10 +54,10 @@ destination objects are and what the operation flags allow. Operations are the u
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
 | Create/Update Customer | HubSpot companies to Acumatica Cloud Customer | `companies` → `Customer` | 2 | create / update |
+| Create New Contact | HubSpot contacts to Acumatica Cloud Contact | `contacts` → `Contact` | 1 | create |
+| Create New Opportunity | HubSpot deals to Acumatica Cloud Opportunity | `deals` → `Opportunity` | 1 | create |
 | Create New SalesInvoice | HubSpot deals to Acumatica Cloud SalesInvoice | `deals` → `SalesInvoice` | 1 | create |
 | Create New SalesOrder | HubSpot deals to Acumatica Cloud SalesOrder | `deals` → `SalesOrder` | 1 | create |
-| TxDownloader_8_4 | HubSpot contacts to Acumatica Cloud Contact | `contacts` → `Contact` | 1 | create |
-| TxDownloader_8_5 | HubSpot deals to Acumatica Cloud Opportunity | `deals` → `Opportunity` | 1 | create |
 
 Across the 6 default templates: 5 carry `IsInsert`, 1 carries `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
