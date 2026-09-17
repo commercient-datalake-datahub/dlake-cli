@@ -55,6 +55,7 @@ destination objects are and what the operation flags allow. Operations are the u
 | Update Customer | Salesforce Account to Update IFS Customer | `Account` → `Customer` | 2 | update |
 | Create Activity | Salesforce Task to IFS Project Activity | `Task` → `Activity` | 1 | create |
 | Create Customer Contact | Salesforce Contact to IFS Customer Contact | `Contact` → `Contact` | 1 | create |
+| Create New Contact | Salesforce Contact to IFS Person, Address and Customer Contact | `Contact` → `Contact` | 1 | create |
 | Create New Customer | Salesforce Account to IFS Customer | `Account` → `Customer` | 1 | create |
 | Create New Customer Order | Salesforce Order to IFS Customer Order | `Order` → `CustomerOrder` | 1 | create |
 | Create New Customer with Address | Salesforce Account to IFS Customer WIth Address | — → — | 1 | create |
@@ -65,7 +66,6 @@ destination objects are and what the operation flags allow. Operations are the u
 | Create New Sales Contract | Salesforce Contract to IFS Sales Contract | `Contract` → `SalesContract` | 1 | create |
 | Create New Service Contract | Salesforce Contract to IFS Service Contract | `Contract` → `ServiceContract` | 1 | create |
 | Create Order with Customer Tax | Salesforce Order to IFS Customer Order with Customer Tax | `Order` → `Order` | 1 | create |
-| TxDownloader_116_7 | Salesforce Contact to IFS Person, Address and Customer Contact | `Contact` → `Contact` | 1 | create |
 | TxDownloaderPro_116_17 | — | `Order` → `CustomerOrder` | 1 | create |
 | TxDownloaderPro_116_23 | Salesforce Account to IFS Contact | — → — | 1 | create |
 | TxDownloaderPro_116_27 | Salesforce Account to IFS Customer with Address | `Account` → `Customer` | 1 | create |
@@ -102,13 +102,13 @@ that never matches a run.
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
 The field-process versions this pair’s default templates belong to: `TxDownloaderPro_116_9`,
-`TxDownloader_116_4`, `TxDownloaderPro_116_23`, `TxDownloaderPro_116_1`,
+`TxDownloader_116_4`, `TxDownloader_116_7`, `TxDownloaderPro_116_23`, `TxDownloaderPro_116_1`,
 `TxDownloaderPro_116_22`, `TxDownloaderPro_116_3`, `TxDownloaderPro_116_27`,
 `TxDownloaderPro_116_34`, `TxDownloaderPro_116_30`, `TxDownloader_116_6`, `TxDownloader_116_5`,
-`TxDownloader_116_7`, `TxDownloader_116_10`, `TxDownloader_116_8`, `TxDownloader_116_12`,
-`TxDownloaderPro_116_28`, `TxDownloaderPro_116_17`, `TxDownloaderPro_116_24`,
-`TxDownloader_116_2`, `TxDownloaderPro_116_33`, `TxDownloaderPro_116_20`,
-`TxDownloaderPro_116_19`, `TxDownloader_116_16`.
+`TxDownloader_116_10`, `TxDownloader_116_8`, `TxDownloader_116_12`, `TxDownloaderPro_116_28`,
+`TxDownloaderPro_116_17`, `TxDownloaderPro_116_24`, `TxDownloader_116_2`,
+`TxDownloaderPro_116_33`, `TxDownloaderPro_116_20`, `TxDownloaderPro_116_19`,
+`TxDownloader_116_16`.
 
 ## 3. What the query retrieves
 
