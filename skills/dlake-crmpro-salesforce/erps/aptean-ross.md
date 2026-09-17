@@ -146,7 +146,28 @@ process before activating it.
 | APTEANROSS SALES_ORDER_HISTORY | `CommercientSF21__SALES_ORDER_HISTORY__c` | 42 | `GEM_DBKEY` → `CommercientSF21__ExternalKey__c`, `ORDER_NUMBER, ORDER_LINE_NUMBER` → `CommercientSF21__Name__c`, `COMPANY_CODE` → `CommercientSF21__COMPANY_CODE__c`, `DIVISION` → `CommercientSF21__DIVISION__c`, `ORDER_NUMBER` → `CommercientSF21__ORDER_NUMBER__c` |
 | APTEANROSS SALES_ORDER_LINES_QTYS | `CommercientSF21__SALES_ORDER_LINE_QTYS__c` | 24 | `ORDER_NUMBER, ORDER_LINE_NUMBER, UNIT_OF_MEASURE` → `Name`, `GEM_DBKEY` → `CommercientSF21__GEM_DBKEY__c`, `COMPANY_CODE` → `CommercientSF21__COMPANY_CODE__c`, `DIVISION` → `CommercientSF21__DIVISION__c`, `ORDER_NUMBER` → `CommercientSF21__ORDER_NUMBER__c` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 29 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 29
+- Default operations: insert on 29, update on 29, delete on 29
+- Marked circular-sync: 0
+- Licence groups they span: 9
+- Destination objects: `Account`, `OrderItem`, `PricebookEntry`, `CommercientSF21__SALES_ORDER_HEADERS__c`, `CommercientSF21__SALES_ORDER_INVOICE_LINES__c`, `Product2`, `Aptean_Address__c`, `AR_Invoice_Detail__c`, `AR_Invoice_Header__c`, `CommercientSF21__CUSTOMER_ADDRESSES__c`, `CommercientSF21__CUSTOMERS__c`, `CommercientSF21__SALES_ORDER_HISTORY__c`, `CommercientSF21__SALES_ORDER_INVOICES__c`, `CommercientSF21__SALES_ORDER_LINE_QTYS__c`, `CommercientSF21__SALES_ORDER_LINES__c`, `CommercientSF21__SALESPERSONS__c`, `Customer_Part_Code__c`, `Order`, `Pricebook2`, `User`
+- Object display names: Account, APTEANROSS SALES_ORDER_HEADERS, APTEANROSS SALES_ORDER_INVOICE_LINES, AccountCustomerLookup, APTEANROSS CUSTOMER_ADDRESSES, APTEANROSS SALES_ORDER_HISTORY, APTEANROSS SALES_ORDER_INVOICES, APTEANROSS SALES_ORDER_LINES, APTEANROSS SALES_ORDER_LINES_QTYS, APTEANROSS SALESPERSONS, AR Invoice, AR Invoice Detail, 13 more and a further template
+- Template groups: Account, Invoice, Product, Salesorder, CRM Order and Line, Customer Multi Ship Addresses
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -169,7 +190,7 @@ The prefixes these templates set:
 - `ORDER_LINES_QTYS`
 - `SALESPERSONS`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
