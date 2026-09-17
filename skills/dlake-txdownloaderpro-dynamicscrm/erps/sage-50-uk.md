@@ -2,8 +2,8 @@
 name: dlake-txdownloaderpro-dynamicscrm/erps/sage-50-uk
 description: >-
   What the shipped default TxDownloaderPro templates set up when Dynamics CRM is the writeback
-  destination and Sage 50 UK is the source: the 5 default templates the catalogue ships for this
-  pair, the 5 field-process versions they are identified by, what each template family delivers,
+  destination and Sage 50 UK is the source: the 6 default templates the catalogue ships for this
+  pair, the 6 field-process versions they are identified by, what each template family delivers,
   the shape of the query that finds flagged records and the objects and marker columns it reads,
   the structure of the inbound mapping document, and which `ResultStructure` parts the templates
   fill for the write back to the CRM.
@@ -57,9 +57,10 @@ destination objects are and what the operation flags allow. Operations are the u
 | Create New Sales Invoice | Salesforce Invoice__c to Sage50UK Sales Invoice | `Invoice` → `Invoice` | 1 | create / update |
 | Create New Sales Order | Salesforce Order to Sage 50 UK Sales Order | `Order` → `Order` | 1 | create |
 | TxDownloader_3_1 | Dynamic CRM Account to Sage 50 UK Customer | `Account` → `Customer` | 1 | create / update |
+| Update Contact | Dynamics Contact to Sage50UK Update Contact | `contact` → `Contact` | 1 | update |
 | Update Product | Salesforce Product2 to Sage50US Update Product | — → — | 1 | create / update |
 
-Across the 5 default templates: 5 carry `IsInsert`, 4 carry `IsUpdate`, 0 carry `IsDelete`. A
+Across the 6 default templates: 5 carry `IsInsert`, 5 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
 given record. 1 catalogue description was not printed because they are placeholders or carry
 text that is not ours to publish.
@@ -86,7 +87,8 @@ that never matches a run.
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
 The field-process versions this pair’s default templates belong to: `TxDownloader_3_6`,
-`TxDownloader_3_3`, `TxDownloader_3_2`, `TxDownloader_3_1`, `TxDownloader_3_11`.
+`TxDownloader_3_3`, `TxDownloader_3_2`, `TxDownloader_3_1`, `TxDownloader_3_9`,
+`TxDownloader_3_11`.
 
 2 of these template rows carry a licence-group id, so what a given tenant is offered in the
 picker is narrower than what the catalogue holds.
@@ -94,14 +96,14 @@ picker is narrower than what the catalogue holds.
 ## 3. What the query retrieves
 
 `Query` does not have one shape across the product (parent §9). For this pair, 4 carry a
-`SELECT` statement in the CRM's own query language, 1 carries a FetchXML document. **No query
-text is reproduced here**; what follows is what those queries read and filter on.
+`SELECT` statement in the CRM's own query language, 2 carry a FetchXML document. **No query text
+is reproduced here**; what follows is what those queries read and filter on.
 
 - **Objects read:** `OpportunityLineItem`, `Invoice_Line_Items__r`, `OrderLineItems`, `account`,
   `contact`, `Product2`.
 - **Child collections pulled in the same query:** `Invoice_Line_Items__r`, `OrderLineItems`,
-  `contact`. A header retrieved without its lines is a query that does not name the child
-  collection.
+  `contact`, `account`. A header retrieved without its lines is a query that does not name the
+  child collection.
 - **Marker and key columns the queries name:** `Commercient_Import__c`,
   `Commercient_Message__c`, `CommercientSF__Commercient_ArCustomerCode__c`,
   `CommercientSF8__SAGE50UK_Customer__c`, `Commercient_bCompleted__c`,
@@ -111,7 +113,7 @@ text is reproduced here**; what follows is what those queries read and filter on
 - **Operators present:** `!=`, `=`, `AND`, a null test, an empty-string test. The parent’s §12
   is the authority on the vocabulary; the point here is only which of it these templates use.
 - **FetchXML elements used:** `fetch`, `entity`, `attribute`, `link-entity`, `filter`,
-  `condition`; condition operators: `null`.
+  `condition`; condition operators: `null`, `not-null`.
 - **Where the filtering happens:** in the query, on the CRM side, before anything reaches the
   source system. Narrowing a template means editing its query — not its mapping.
 
@@ -119,10 +121,10 @@ text is reproduced here**; what follows is what those queries read and filter on
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 5 default templates, 5 carry a `DefaultProcessStructure`. A parseable document carries
+pair’s 6 default templates, 6 carry a `DefaultProcessStructure`. A parseable document carries
 about 12 members.
 
-- **Template path roots used:** `Order`, `account`, `Invoice__c`, `OrderLineItems`,
+- **Template path roots used:** `Order`, `contact`, `account`, `Invoice__c`, `OrderLineItems`,
   `OpportunityLineItem`, `Product2`. A path’s first segment has to match the element the engine
   emits, and the document root itself is never part of the path.
 - **`Line.` section members present:** `Line.QTY_ORDER`, `Line.mainXml`, `Line.TAX_CODE`,
@@ -138,8 +140,8 @@ about 12 members.
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 5 default templates, 3 carry a
-parseable `DefaultResultStructure`, 2 carry none.
+system’s response after the write (parent §11). Of this pair’s 6 default templates, 3 carry a
+parseable `DefaultResultStructure`, 3 carry none.
 
 | Part | Filled by | What it addresses | Members present |
 |---|---|---|---|
