@@ -2,8 +2,8 @@
 name: dlake-txdownloaderpro-dynamicscrm/erps/infor-syteline
 description: >-
   What the shipped default TxDownloaderPro templates set up when Dynamics CRM is the writeback
-  destination and Infor SyteLine is the source: the 2 default templates the catalogue ships for
-  this pair, the 2 field-process versions they are identified by, what each template family
+  destination and Infor SyteLine is the source: the 27 default templates the catalogue ships for
+  this pair, the 21 field-process versions they are identified by, what each template family
   delivers, the shape of the query that finds flagged records and the objects and marker columns
   it reads, the structure of the inbound mapping document, and which `ResultStructure` parts the
   templates fill for the write back to the CRM.
@@ -53,12 +53,31 @@ destination objects are and what the operation flags allow. Operations are the u
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
+| Create/Update Customer Item Prices | Dynamics 365 Price List Item to Infor SyteLine SLItemCusts customer price (insert) | `Price List Item` → `SLItemCusts` | 2 | create / update |
+| Create/update New Estimate/Quote With Blanket Lines | Dynamics 365 Sales Order to Infor SyteLine SLCos blanket estimate (insert) | `Sales Order` → `SLCos` | 2 | create / update |
+| Create/Update/Delete Opportunity | Dynamics 365 Opportunity to Infor SyteLine SLOpportunities (insert) | `Opportunity` → `SLOpportunities` | 2 | create / update |
+| Create/Update/Delete Product Item | Dynamics 365 Product to Infor SyteLine SLProdMixItems (insert) | `Product` → `SLProdMixItems` | 2 | create / update |
+| TxDownloader_32_14 | Dynamics 365 Order Product to Infor SyteLine SLCoBlns blanket release (insert) | `Order Product` → `SLCoBlns` | 2 | create / update |
+| TxDownloader_32_15 | Dynamics 365 Order Product to Infor SyteLine SLCoitems blanket release (insert) | `Order Product` → `SLCoitems` | 2 | create / update |
 | Create New Prospects | — | `Account` → `Prospect` | 1 | create |
+| Create New Ship To Address | Dynamics 365 account address to Infor SyteLine SLCustomers ship-to (insert) | `Account Address` → `SLCustomers` | 1 | create |
+| Create/Update/Delete Ship To Address | Dynamics 365 account address to Infor SyteLine SLShipTos (update) | `Account Address` → `SLShipTos` | 1 | update |
+| TxDownloader_32_13 | Dynamics 365 account address to Infor SyteLine SLCustomers ship-to (update) | `Account Address` → `SLCustomers` | 1 | update |
+| TxDownloader_32_18 | — | `Account` → `SLCustomers` | 1 | create |
+| TxDownloader_32_19 | — | `Contact` → `SLContacts` | 1 | create |
+| TxDownloader_32_20 | — | `Sales Order` → `SLCos` | 1 | create |
+| TxDownloader_32_23 | Dynamics 365 Account to Infor LN Customer360_WT (insert) | `Account` → `Customer360_WT` | 1 | create |
+| TxDownloader_32_24 | Dynamics 365 Account to Infor LN Customer360_WT (update) | `Account` → `Customer360_WT` | 1 | update |
+| TxDownloader_32_25 | Dynamics 365 Contact to Infor LN Contact_v3 (insert) | `Contact` → `Contact_v3` | 1 | create |
+| TxDownloader_32_26 | Dynamics 365 Contact to Infor LN Contact_v3 (update) | `Contact` → `Contact_v3` | 1 | update |
+| TxDownloader_32_27 | Dynamics 365 Sales Order to Infor LN SalesOrderDetails (insert) | `Sales Order` → `SalesOrderDetails` | 1 | create |
 | TxDownloader_32_3 | Create New Estimate/Quote from DynamicsCRM | `Quotes` → `Quotes` | 1 | create |
+| Update Customer | Dynamics 365 Account to Infor SyteLine SLCustomers (update) | `Account` → `SLCustomers` | 1 | update |
+| Update Estimate/Quote | Dynamics 365 Quote to Infor SyteLine SLCos estimate (update) | `Quote` → `SLCos` | 1 | update |
 
-Across the 2 default templates: 2 carry `IsInsert`, 0 carry `IsUpdate`, 0 carry `IsDelete`. A
+Across the 27 default templates: 15 carry `IsInsert`, 12 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
-given record. 1 catalogue description was not printed because they are placeholders or carry
+given record. 4 catalogue descriptions were not printed because they are placeholders or carry
 text that is not ours to publish.
 
 ## 2. The process rows the import creates
@@ -82,22 +101,28 @@ that never matches a run.
 | `IsInsert` / `IsUpdate` / `IsDelete` | the template’s own flags — section 1 |
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
-The field-process versions this pair’s default templates belong to: `TxDownloader_32_3`,
-`TxDownloader_32_2`.
+The field-process versions this pair’s default templates belong to: `TxDownloader_32_19`,
+`TxDownloader_32_20`, `TxDownloader_32_25`, `TxDownloader_32_18`, `TxDownloader_32_3`,
+`TxDownloader_32_2`, `TxDownloader_32_27`, `TxDownloader_32_8`, `TxDownloader_32_14`,
+`TxDownloader_32_15`, `TxDownloader_32_16`, `TxDownloader_32_11`, `TxDownloader_32_5`,
+`TxDownloader_32_6`, `TxDownloader_32_7`, `TxDownloader_32_23`, `TxDownloader_32_26`,
+`TxDownloader_32_12`, `TxDownloader_32_24`, `TxDownloader_32_10`, `TxDownloader_32_13`.
 
 ## 3. What the query retrieves
 
-`Query` does not have one shape across the product (parent §9). For this pair, 2 carry a
+`Query` does not have one shape across the product (parent §9). For this pair, 27 carry a
 FetchXML document. **No query text is reproduced here**; what follows is what those queries read
 and filter on.
 
-- **Objects read:** `quote`, `quotedetail`, `account`, `contact`, `systemuser`,
-  `comrcint_inforsytelinev9_address`.
-- **Child collections pulled in the same query:** `quotedetail`, `account`, `contact`,
-  `systemuser`, `comrcint_inforsytelinev9_address`. A header retrieved without its lines is a
-  query that does not name the child collection.
-- **FetchXML elements used:** `fetch`, `entity`, `attribute`, `order`, `link-entity`, `filter`,
-  `condition`; condition operators: `not-null`, `null`, `eq`.
+- **Objects read:** `contact`, `account`, `salesorder`, `salesorderdetail`, `quote`,
+  `quotedetail`, `systemuser`, `comrcint_inforsytelinev9_address`, `customeraddress`,
+  `productpricelevel`, `product`, `opportunity`, `opportunityproduct`.
+- **Child collections pulled in the same query:** `account`, `salesorderdetail`, `quotedetail`,
+  `contact`, `systemuser`, `comrcint_inforsytelinev9_address`, `salesorder`, `product`,
+  `opportunityproduct`. A header retrieved without its lines is a query that does not name the
+  child collection.
+- **FetchXML elements used:** `fetch`, `entity`, `attribute`, `link-entity`, `filter`,
+  `condition`, `order`; condition operators: `not-null`, `null`, `eq`.
 - **Where the filtering happens:** in the query, on the CRM side, before anything reaches the
   source system. Narrowing a template means editing its query — not its mapping.
 
@@ -105,17 +130,20 @@ and filter on.
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 2 default templates, 2 carry a `DefaultProcessStructure`. A parseable document carries
-about 43 members.
+pair’s 27 default templates, 27 carry a `DefaultProcessStructure`. A parseable document carries
+about 17 members.
 
-- **Template path roots used:** `quote`, `quotedetail`, `account`. A path’s first segment has to
-  match the element the engine emits, and the document root itself is never part of the path.
-- **`Line.` section members present:** `Line.AdrName`, `Line.CoStat`, `Line.Description`,
-  `Line.DueDate`, `Line.ItDescription`, `Line.Item`, `Line.PriceConv`, `Line.ProspectId`,
-  `Line.QtyOrderedConv`, `Line.RefType`, `Line.Stat`, `Line.UM`, `Line.mainXml`,
-  `Line.ObjectNotesContent`, `Line.ObjectNotesDescription`, `Line.NoteHeaderToken`. 1 template
-  name the collection through `Line.mainXml`; the members beside it are resolved against that
-  collection’s own root rather than through the header.
+- **Template path roots used:** `quote`, `salesorder`, `salesorderdetail`, `account`, `contact`,
+  `customeraddress`, `productpricelevel`, `opportunity`, `quotedetail`, `opportunityproduct`,
+  `product`. A path’s first segment has to match the element the engine emits, and the document
+  root itself is never part of the path.
+- **`Line.` section members present:** `Line.mainXml`, `Line.Item`, `Line.UM`,
+  `Line.Description`, `Line.DueDate`, `Line.PriceConv`, `Line.QtyOrderedConv`,
+  `Line.ItmDescription`, `Line.CoNum`, `Line.AdrCurrCode`, `Line.ItmcstUM`, `Line.ContPrice`,
+  `Line.Qty`, `Line.UnitPrice`, `Line.QtyOrdered`, `Line.Price`, `Line.AdrName`, `Line.CoStat`,
+  `Line.ItDescription`, `Line.ProspectId`, and 14 more. 10 templates name the collection through
+  `Line.mainXml`; the members beside it are resolved against that collection’s own root rather
+  than through the header.
 - **`$FUN_` value tokens the documents carry:** `$FUN_STRREPLACE`, `$FUN_SPLIT`. The names are
   what the templates carry; **no semantics are claimed for them here** — the parent’s §12 is
   explicit that the platform-side resolver is dotted path substitution only, and these tokens
@@ -124,23 +152,24 @@ about 43 members.
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 2 default templates, 2 carry a
-parseable `DefaultResultStructure`, 0 carry none.
+system’s response after the write (parent §11). Of this pair’s 27 default templates, 15 carry a
+parseable `DefaultResultStructure`, 12 carry none.
 
 | Part | Filled by | What it addresses | Members present |
 |---|---|---|---|
-| `Part1` | 2 templates | the record the run is already working with | a source-path-to-CRM-field map |
-| `Part2` | 0 templates (2 explicitly null) | the child/line records under it | — |
-| `Part3` | 0 templates (2 explicitly null) | a **new** record, matched on an external id field | — |
-| `Part4` | 0 templates (2 explicitly null) | a **different** record, addressed by an id field | — |
+| `Part1` | 15 templates | the record the run is already working with | a source-path-to-CRM-field map |
+| `Part2` | 0 templates (15 explicitly null) | the child/line records under it | — |
+| `Part3` | 0 templates (15 explicitly null) | a **new** record, matched on an external id field | — |
+| `Part4` | 0 templates (15 explicitly null) | a **different** record, addressed by an id field | — |
 
-- **CRM fields `Part1` writes to:** `comrcint_estimateid`, `comrcint_arcustomercode`,
-  `comrcint_prospectid`. These are the fields on the flagged record that carry the source
-  system’s key or outcome once the write has happened — the names only; what lands in them is
-  the response, per record.
-- **Response fields it reads them from:** `CoNum`, `ProspectGuid`, `ProspectID`. The map is
-  written **source-path first, CRM-field second** (parent §11); the wrong way round resolves to
-  the same silent empty string as a mistyped path.
+- **CRM fields `Part1` writes to:** `comrcint_externalkey`, `comrcint_arcustomercode`,
+  `comrcint_estimateid`, `comrcint_prospectid`. These are the fields on the flagged record that
+  carry the source system’s key or outcome once the write has happened — the names only; what
+  lands in them is the response, per record.
+- **Response fields it reads them from:** `CoNum`, `RowPointer`, `ContactID`, `contactCode`,
+  `CustNum`, `ProspectGuid`, `ProspectID`, `salesOrder`, `CustSeq`, `OpportunityID`, `Item`,
+  `Customer_CustomerID`. The map is written **source-path first, CRM-field second** (parent
+  §11); the wrong way round resolves to the same silent empty string as a mistyped path.
 
 ## 6. Verifying
 
