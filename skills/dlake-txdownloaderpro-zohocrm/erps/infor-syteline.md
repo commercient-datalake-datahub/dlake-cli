@@ -55,28 +55,24 @@ destination objects are and what the operation flags allow. Operations are the u
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
+| Create New Customer | Create Customer | `Accounts` → `SLCustomers`, `Customer360_WT` | 3 | create / update |
+| Create New Contact | Zoho CRM Contacts to Infor LN Contact_v3 (insert) | `Contacts` → `SLContacts`, `Contact_v3` | 2 | create |
 | Create/update New Estimate/Quote With Blanket Lines | Zoho CRM Sales Orders to Infor SyteLine SLCos blanket estimate (insert) | `Sales_Orders` → `SLCos` | 2 | create / update |
 | Create/Update/Delete Product Item | Zoho CRM Products to Infor SyteLine SLProdMixItems (insert) | `Products` → `SLProdMixItems` | 2 | create / update |
-| Create New Customer | Create Customer | `Accounts` → `SLCustomers` | 1 | create / update |
+| Update Customer | Zoho CRM Accounts to Infor SyteLine SLCustomers (update) | `Accounts` → `SLCustomers`, `Customer360_WT` | 2 | update |
+| Create New Customer Order | — | `Sales_Orders` → `SLCos` | 1 | create |
 | Create New Estimate/Quote | Create Estimate | `Quotes` → `SLCos` | 1 | create |
+| Create New Sales Order | Zoho CRM Sales Orders to Infor LN SalesOrderDetails (insert) | `Sales_Orders` → `SalesOrderDetails` | 1 | create |
 | Create New Ship To Address | Zoho CRM Accounts shipping address to Infor SyteLine SLCustomers ship-to (insert) | `Accounts` → `SLCustomers` | 1 | create |
 | Create/Update/Delete Contact | Create Contact | `Contacts` → `SLContacts` | 1 | create |
 | Create/Update/Delete Ship To Address | Zoho CRM Accounts shipping address to Infor SyteLine SLShipTos (update) | `Accounts` → `SLShipTos` | 1 | update |
-| TxDownloader_32_13 | Zoho CRM Accounts shipping address to Infor SyteLine SLCustomers ship-to (update) | `Accounts` → `SLCustomers` | 1 | update |
-| TxDownloader_32_18 | — | `Accounts` → `SLCustomers` | 1 | create |
-| TxDownloader_32_19 | — | `Contacts` → `SLContacts` | 1 | create |
-| TxDownloader_32_20 | — | `Sales_Orders` → `SLCos` | 1 | create |
-| TxDownloader_32_23 | Zoho CRM Accounts to Infor LN Customer360_WT (insert) | `Accounts` → `Customer360_WT` | 1 | create |
-| TxDownloader_32_24 | Zoho CRM Accounts to Infor LN Customer360_WT (update) | `Accounts` → `Customer360_WT` | 1 | update |
-| TxDownloader_32_25 | Zoho CRM Contacts to Infor LN Contact_v3 (insert) | `Contacts` → `Contact_v3` | 1 | create |
-| TxDownloader_32_26 | Zoho CRM Contacts to Infor LN Contact_v3 (update) | `Contacts` → `Contact_v3` | 1 | update |
-| TxDownloader_32_27 | Zoho CRM Sales Orders to Infor LN SalesOrderDetails (insert) | `Sales_Orders` → `SalesOrderDetails` | 1 | create |
-| Update Customer | Zoho CRM Accounts to Infor SyteLine SLCustomers (update) | `Accounts` → `SLCustomers` | 1 | update |
+| Update Contact | Zoho CRM Contacts to Infor LN Contact_v3 (update) | `Contacts` → `Contact_v3` | 1 | update |
 | Update Estimate/Quote | Zoho CRM Quotes to Infor SyteLine SLCos estimate (update) | `Quotes` → `SLCos` | 1 | update |
+| Update Ship To Address | Zoho CRM Accounts shipping address to Infor SyteLine SLCustomers ship-to (update) | `Accounts` → `SLCustomers` | 1 | update |
 
 Across the 20 default templates: 12 carry `IsInsert`, 9 carry `IsUpdate`, 0 carry `IsDelete`,
 and 2 carry `IsCustomization`. A flag decides which operation the process is allowed to perform,
-not which one it performs on a given record. 3 catalogue descriptions were not printed because
+not which one it performs on a given record. 2 catalogue descriptions were not printed because
 they are placeholders or carry text that is not ours to publish.
 
 ## 2. The process rows the import creates
@@ -101,9 +97,9 @@ that never matches a run.
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
 The field-process versions this pair’s default templates belong to: `TxDownloader_32_19`,
-`TxDownloader_32_20`, `TxDownloader_32_25`, `TxDownloader_32_1`, `TxDownloader_32_18`,
-`TxDownloader_32_9`, `TxDownloader_32_27`, `TxDownloader_32_8`, `TxDownloader_32_11`,
-`TxDownloader_32_4`, `TxDownloader_32_6`, `TxDownloader_32_7`, `TxDownloader_32_23`,
+`TxDownloader_32_25`, `TxDownloader_32_1`, `TxDownloader_32_18`, `TxDownloader_32_23`,
+`TxDownloader_32_20`, `TxDownloader_32_9`, `TxDownloader_32_27`, `TxDownloader_32_8`,
+`TxDownloader_32_11`, `TxDownloader_32_4`, `TxDownloader_32_6`, `TxDownloader_32_7`,
 `TxDownloader_32_26`, `TxDownloader_32_12`, `TxDownloader_32_24`, `TxDownloader_32_10`,
 `TxDownloader_32_13`.
 
@@ -113,7 +109,7 @@ The field-process versions this pair’s default templates belong to: `TxDownloa
 `SELECT` statement in the CRM's own query language. **No query text is reproduced here**; what
 follows is what those queries read and filter on.
 
-- **Objects read:** `Contacts`, `Sales_Orders`, `Accounts`, `Quotes`, `Products`.
+- **Objects read:** `Contacts`, `Accounts`, `Sales_Orders`, `Quotes`, `Products`.
 - **Marker and key columns the queries name:** `Commercient_ExternalKey`,
   `Commercient_ArCustomer_Code`. These are the columns a user’s flag lands in and the columns
   the run writes an outcome back to; which ones are in the `WHERE` is what decides whether a
@@ -157,8 +153,8 @@ parseable `DefaultResultStructure`, 8 carry none.
 - **CRM fields `Part1` writes to:** `Commercient_ExternalKey`, `Commercient_ArCustomer_Code`.
   These are the fields on the flagged record that carry the source system’s key or outcome once
   the write has happened — the names only; what lands in them is the response, per record.
-- **Response fields it reads them from:** `ContactID`, `CoNum`, `CustNum`, `contactCode`,
-  `EstimateGuid`, `salesOrder`, `CustSeq`, `Item`, `Customer_CustomerID`. The map is written
+- **Response fields it reads them from:** `ContactID`, `CustNum`, `CoNum`, `contactCode`,
+  `Customer_CustomerID`, `EstimateGuid`, `salesOrder`, `CustSeq`, `Item`. The map is written
   **source-path first, CRM-field second** (parent §11); the wrong way round resolves to the same
   silent empty string as a mistyped path.
 
