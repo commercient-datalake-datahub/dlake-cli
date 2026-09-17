@@ -55,13 +55,13 @@ destination objects are and what the operation flags allow. Operations are the u
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
+| Create New AR Invoice | Salesforce Order to Sage 300 ARInvoice | `Order`, `Quote`, `Opprtunity` → `ARInvoice` | 3 | create |
 | Sales Order | Salesforce Order to Sage 300 Sales Order | `Order`, `Quote`, `Opprtunity` → `Sales Order` | 3 | create |
-| TxDownloader_15_2 | Salesforce Order to Sage 300 ARInvoice | `Order`, `Quote`, `Opprtunity` → `ARInvoice` | 3 | create |
+| Create New AR Receipt | — | — → — | 1 | create |
 | Create New Customer | Salesforce Account to Sage 300 Customer | `Account` → `Customer` | 1 | create |
 | Create or Update M/T Contact | Salesforce Contacts to Sage 300 M/T Contact | `Contact` → `M/T Contact` | 1 | create |
 | Create or Update PJC Contract Maintenance | Salesforce Opportunity to Sage 300 PJC Contract Maintenance | `Opportunity` → `PJC Contract Maintenance` | 1 | create |
 | Create or Update PJC Project | Salesforce Opportunity to Sage 300 PJC Project | `Opportunity` → `PJC Project` | 1 | create |
-| TxDownloader_15_4 | — | — → — | 1 | create |
 
 Across the 11 default templates: 11 carry `IsInsert`, 0 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
@@ -89,8 +89,8 @@ that never matches a run.
 | `IsInsert` / `IsUpdate` / `IsDelete` | the template’s own flags — section 1 |
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
-The field-process versions this pair’s default templates belong to: `TxDownloader_15_4`,
-`TxDownloader_15_2`, `TxDownloader_15_1`, `TxDownloaderPro_15_7`, `TxDownloaderPro_15_9`,
+The field-process versions this pair’s default templates belong to: `TxDownloader_15_2`,
+`TxDownloader_15_4`, `TxDownloader_15_1`, `TxDownloaderPro_15_7`, `TxDownloaderPro_15_9`,
 `TxDownloaderPro_15_8`, `TxDownloader_15_5`.
 
 1 of these template rows carry a licence-group id, so what a given tenant is offered in the
@@ -102,11 +102,11 @@ picker is narrower than what the catalogue holds.
 `SELECT` statement in the CRM's own query language. **No query text is reproduced here**; what
 follows is what those queries read and filter on.
 
-- **Objects read:** `Transaction_Lines__r`, `OrderItems`, `QuoteLineItems`,
-  `OpportunityLineItems`, `Account`, `Contact`, `Opportunity`.
-- **Child collections pulled in the same query:** `Transaction_Lines__r`, `OrderItems`,
-  `QuoteLineItems`, `OpportunityLineItems`. A header retrieved without its lines is a query that
-  does not name the child collection.
+- **Objects read:** `OrderItems`, `QuoteLineItems`, `OpportunityLineItems`,
+  `Transaction_Lines__r`, `Account`, `Contact`, `Opportunity`.
+- **Child collections pulled in the same query:** `OrderItems`, `QuoteLineItems`,
+  `OpportunityLineItems`, `Transaction_Lines__r`. A header retrieved without its lines is a
+  query that does not name the child collection.
 - **Marker and key columns the queries name:** `Commercient_Import__c`,
   `Commercient_ArCustomerCode__c`, `CommercientSF__Commercient_ArCustomerCode__c`,
   `Commercient_bCompleted__c`, `Commercient_Message__c`, `ExternalKey__c`. These are the columns
