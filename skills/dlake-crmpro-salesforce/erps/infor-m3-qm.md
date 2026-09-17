@@ -145,7 +145,28 @@ process before activating it.
 | INFORM3QM InvoiceLine | `CommercientSF18__arsf_li__c` | 18 | `arsf` → `CommercientSF18__arsf__c`, `parent_key` → `CommercientSF18__parent_key__c`, `ar_id` → `CommercientSF18__ar_id__c`, `item_val` → `CommercientSF18__item_val__c`, `li` → `CommercientSF18__li__c` |
 | Contact | `Contact` | 10 | `AccountID` → `AccountID`, `FirstName` → `FirstName`, `LastName` → `LastName`, `Title` → `Title`, `Fax` → `Fax` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 11 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 11
+- Default operations: insert on 11, update on 11, delete on 11
+- Marked circular-sync: 0
+- Licence groups they span: 8
+- Destination objects: `Account`, `CommercientSF18__arsf__c`, `CommercientSF18__arsf_li__c`, `CommercientSF18__custsf__c`, `CommercientSF18__rep__c`, `CommercientSF18__shipsf__c`, `CommercientSF18__sosf__c`, `CommercientSF18__sosf_lis__c`, `Contact`, `User`
+- Object display names: Account, Contact, Get Salesforce Users, INFORM3QM Customer, INFORM3QM CustomerToAccountLookup, INFORM3QM InvoiceHeader, INFORM3QM InvoiceLine, INFORM3QM SalesOrderHeader, INFORM3QM SalesOrderLine, INFORM3QM Salesperson, INFORM3QM ShipTo
+- Template groups: Account, Invoice, Salesorder, Customer Multi Ship Addresses
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -169,7 +190,7 @@ The prefixes these templates set:
 - `vw_INFORM3QM_SalesOrderLine`
 - `vw_INFORM3QM_Salesperson`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
