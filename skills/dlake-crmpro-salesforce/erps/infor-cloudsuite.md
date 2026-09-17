@@ -130,7 +130,28 @@ process before activating it.
 | InforCloud Salesorder | `CommercientSF18__co_all__c` | 50 | `Account` → `Account`, `Infor_Syteline_Customer` → `Infor_Syteline_Customer`, `co_num` → `CommercientSF18__co_num__c`, `cost` → `CommercientSF18__cost__c`, `CreateDate` → `CommercientSF18__CreateDate__c` |
 | InforCloud Salesorderline | `CommercientSF18__coitem_all__c` | 73 | `Infor_Syteline_Customer_Order` → `Infor_Syteline_Customer_Order`, `Infor_Syteline_Item` → `CommercientSF18__Infor_Syteline_Item__c`, `co_cust_num` → `co_cust_num`, `co_line` → `CommercientSF18__co_line__c`, `co_num` → `CommercientSF18__co_num__c` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 12 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 12
+- Default operations: insert on 12, update on 12, delete on 12
+- Marked circular-sync: 0
+- Licence groups they span: 6
+- Destination objects: `Accounts`, `CommercientSF18__co_all__c`, `CommercientSF18__coitem_all__c`, `CommercientSF18__custaddr__c`, `CommercientSF18__customer_all__c`, `CommercientSF18__slsman_all__c`
+- Object display names: InforCloud Address, InforCloud Customer, InforCloud Salesorder, InforCloud Salesorderline, InforCloud Salesperson, Account, InforCloud CustomerToAccountLookup
+- Template groups: Account, Salesorder, Customer Multi Ship Addresses
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -151,7 +172,7 @@ The prefixes these templates set:
 - `vw_INFORCLOUDSUITE_OrderLine:`
 - `vw_INFORCLOUDSUITE_SalesPerson:`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
