@@ -150,7 +150,28 @@ process before activating it.
 | IQMS InvoiceDetail | `Commercient31__ARINVOICE_DETAIL__c` | 76 | `ARINVOICE` → `ARINVOICE`, `ID` → `Commercient31__ID__c`, `ARINVOICE_ID` → `ARINVOICE_ID`, `SHIPMENT_DTL_ID` → `Commercient31__SHIPMENT_DTL_ID__c`, `ORD_DETAIL_ID` → `Commercient31__ORD_DETAIL_ID__c` |
 | Contact | `Contact` | 12 | `AccountID` → `AccountID`, `FirstName` → `FirstName`, `LastName` → `LastName`, `Email` → `Email`, `Phone` → `Phone` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 47 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 47
+- Default operations: insert on 47, update on 47, delete on 47
+- Marked circular-sync: 0
+- Licence groups they span: 12
+- Destination objects: `Account`, `Commercient31__ARCUSTO__c`, `Commercient31__ARINVOICE__c`, `Commercient31__ARINVOICE_DETAIL__c`, `Commercient31__HIST_ORD_DETAIL__c`, `Commercient31__HIST_ORDERS__c`, `Commercient31__SHIP_TO__c`, `Contact`, `Commercient31__ORD_DETAIL__c`, `Commercient31__ORDERS__c`, `Commercient31__SALESPEOPLE__c`, `Commercient31__TERMS__c`, `Product2`, `IQMS_Inventory__c`, `IQMS_Order_Detail__c`, `IQMS_Quote_Detail__c`, `IQMS_Quote_Header__c` and 3 custom objects
+- Object display names: Account, IQMS Customer, IQMS CustomerToAccountLookup, SYNC ACCOUNT, SYNC CONTACT, SYNC CUSTOMER, SYNC CUSTOMERTOACCOUNTLOOKUP, SYNC INVOICEDETAIL, SYNC INVOICEHEADER, SYNC SALESORDERDETAIL, SYNC SALESORDERHEADER, SYNC SALESORDERHISTORYDETAIL, 19 more and 2 further templates
+- Template groups: Account, Salesorder, Invoice, Product, Customer Multi Ship Addresses, Opportunity
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -175,7 +196,7 @@ The prefixes these templates set:
 - `vw_IQMS_SalesOrderHistoryDetail`
 - `vw_IQMS_SalesPerson`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
