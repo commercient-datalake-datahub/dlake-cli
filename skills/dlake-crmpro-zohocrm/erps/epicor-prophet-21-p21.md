@@ -228,7 +228,28 @@ process before activating it.
 | Epicorp21 Invoice Line | `commercientepicorp21__EpicorP21_InvoiceDetails` | 87 | `invoice_no,line_no` → `Commercient_ExternalKey__c`, `unit_of_measure` → `Unit_Of_Measure`, `item_id` → `Item_Id`, `item_desc` → `Item_Desc`, `gl_revenue_account_no` → `Gl_Revenue_Account_No` |
 | Epicorp21 InvoicePayment | `commercientepicorp21__EpicorP21_InvoicePayment` | 22 | `invoice_no, receipt_number` → `Commercient_ExternalKey__c`, `invoice_no, receipt_number` → `Name`, `invoice_no, receipt_number` → `ExternalKey`, `invoice_no` → `Invoice_No`, `company_id` → `Company_Id` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 37 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 37
+- Default operations: insert on 37, update on 37, delete on 37
+- Marked circular-sync: 0
+- Licence groups they span: 4
+- Destination objects: `Accounts`, `commercientepicorp21__EpicorP21_Address`, `commercientepicorp21__EpicorP21_Customer`, `commercientepicorp21__EpicorP21_InvoiceDetails`, `commercientepicorp21__EpicorP21_InvoiceHeader`, `commercientepicorp21__EpicorP21_InvoicePayment`, `commercientepicorp21__Epicorp21_Sales_Person`, `commercientepicorp21__EpicorP21_ShipToAddress`, `commercientepicorp21__EpicorP21_SODetails`, `commercientepicorp21__EpicorP21_SOHeader`, `Contacts`, `Quotes`, `commercientepicorp21__Epicorp21_Branch`, `commercientepicorp21__Epicorp21_Class`, `commercientepicorp21__Epicorp21_Item_Master`, `commercientepicorp21__Epicorp21_Item_Warehouse`, `commercientepicorp21__Epicorp21_Serial_Number`, `commercientepicorp21__Epicorp21_Terms`, `commercientepicorp21__Epicorp21_Territory`, `commercientepicorp21__Epicorp21_Warehouse`, 3 more and a custom object
+- Object display names: Accounts, Contacts, Epicorp21 Address, Epicorp21 Invoice Header, Epicorp21 InvoicePayment, Epicorp21 Sales Person, Epicorp21 Ship To, Epicorp21 Branch, Epicorp21 Class, Epicorp21 Customer, Epicorp21 Invoice Line, EPICORP21 InvoiceLine, 16 more and a further template
+- Template groups: Account, CRM Quote and Line
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -264,7 +285,7 @@ The prefixes these templates set:
 - `vwInvoiceLine:`
 - `vwInvoicePayment:`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
