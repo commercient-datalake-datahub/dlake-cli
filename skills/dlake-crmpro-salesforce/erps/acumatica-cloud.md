@@ -197,7 +197,28 @@ process before activating it.
 | Quote | `Quote` | 17 | `OrderNbr` → `ExternalKey__c`, `OrderNbr` → `Name`, `SFDCID` → `OpportunityID`, `SFDCID` → `AccountId`, `SFDCID` → `Pricebook2Id` |
 | Quote Line | `QuoteLineItem` | 6 | `OrderNbr, lineNbr, lineType` → `ExternalKey__c`, `inventoryID` → `Product2ID`, `PricebookEntryId` → `PricebookEntryId`, `OrderNbr` → `QuoteID`, `orderQty` → `Quantity` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 170 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 170
+- Default operations: insert on 170, update on 170, delete on 170
+- Marked circular-sync: 0
+- Licence groups they span: 12
+- Destination objects: `Account`, `Product2`, `PricebookEntry`, `CommercientSF24__ACUMATICA_Customer__c`, `CommercientSF24__ACUMATICA_SalesInvoice__c`, `CommercientSF24__ACUMATICA_SalesInvoiceDetail__c`, `CommercientSF24__ACUMATICA_SalesOrder__c`, `CommercientSF24__ACUMATICA_SalesOrderDetails__c`, `CommercientSF24__StockItem__c`, `CommercientSF24__ACUMATICA_Contact__c`, `CommercientSF24__ACUMATICA_Employee__c`, `Contact`, `ACUMATICA_ItemWarehouse__c`, `CommercientSF24__ACCOUNTMATCHING__c`, `Quote`, `CommercientSF24__ACUMATICA_PaymentDetail__c`, `CommercientSF24__CONTACTMATCHING__c`, `Opportunity`, `ACUMATICA_CustomerCreditCard__c`, `CommercientSF24__ACUMATICA_Payment__c` and 16 more
+- Object display names: Account, ACUMATICACLOUD InvoiceDetail, ACUMATICACLOUD InvoiceHeader, ACUMATICACLOUD Customer, ACUMATICACLOUD Item Master, Product, ACUMATICACLOUD SalesOrder, ACUMATICACLOUD SalesOrderDetail, Update Standard Pricebook, ACUMATICACLOUD Address, Create Standard PriceBook, SYNC ITEMTOPRODUCTLOOKUP, 48 more and 2 further templates
+- Template groups: Account, Product, Invoice, Salesorder, CRM Quote and Line, Customer Multi Ship Addresses, CRM Opportunity and Line
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -229,7 +250,7 @@ The prefixes these templates set:
 - `vw_ACUMATICACLOUD_SalesOrderDetail`
 - `vw_ACUMATICACLOUD_Salesperson`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
