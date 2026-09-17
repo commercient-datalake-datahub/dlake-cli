@@ -152,7 +152,28 @@ process before activating it.
 | XERO Invoice Credit Notes | `CommercientSF15__InvoicesCreditNotes__c` | 13 | `Account` → `Account`, `XERO_Contact` → `XERO_Contact`, `XERO_Invoice` → `XERO_Invoice`, `CreditNoteID` → `CommercientSF15__CreditNoteID__c`, `CreditNoteNumber` → `CommercientSF15__CreditNoteNumber__c` |
 | XERO Credit Notes | `CommercientSF15__InvoicesCreditNotes__c` | 11 | `Account` → `Account`, `XERO_Contact` → `XERO_Contact`, `CreditNoteID` → `CommercientSF15__CreditNoteID__c`, `CreditNoteNumber` → `CommercientSF15__CreditNoteNumber__c`, `ID` → `CommercientSF15__ID__c` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 23 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 23
+- Default operations: insert on 23, update on 23, delete on 23
+- Marked circular-sync: 1
+- Licence groups they span: 6
+- Destination objects: `Account`, `CommercientSF15__InvoicesCreditNotes__c`, `CommercientSF15__XERO_ADDRESS__c`, `CommercientSF15__XERO_CONTACT__c`, `CommercientSF15__XERO_INVOICE__c`, `CommercientSF15__XERO_LINEITEM__c`, `CommercientSF15__XERO_PAYMENT__c`, `Contact`, `ContentDocument`, `User`
+- Object display names: Account, Contact, DOCUMENT SYNC - XERO INVOICES, XERO Address, XERO Credit Notes, XERO Customer, XERO CustomerToAccountLookup, XERO Invoice, XERO Invoice Credit Notes, XERO InvoiceLineItem, XERO InvoicePayment, Get Salesforce User
+- Template groups: Account, Invoice, Customer Multi Ship Addresses
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -177,7 +198,7 @@ The prefixes these templates set:
 - `vw_XERO_InvoicePayment`
 - `vw_XERO_InvoiceCreditNotes`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
