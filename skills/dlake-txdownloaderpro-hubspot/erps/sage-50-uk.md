@@ -2,8 +2,8 @@
 name: dlake-txdownloaderpro-hubspot/erps/sage-50-uk
 description: >-
   What the shipped default TxDownloaderPro templates set up when HubSpot is the writeback
-  destination and Sage 50 UK is the source: the 1 default template the catalogue ships for this
-  pair, the 1 field-process version they are identified by, what each template family delivers,
+  destination and Sage 50 UK is the source: the 2 default templates the catalogue ships for this
+  pair, the 2 field-process versions they are identified by, what each template family delivers,
   the shape of the query that finds flagged records and the objects and marker columns it reads,
   the structure of the inbound mapping document, and which `ResultStructure` parts the templates
   fill for the write back to the CRM.
@@ -54,10 +54,11 @@ destination objects are and what the operation flags allow. Operations are the u
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
 | Create new Contact | HubSpot Contact to Sage50UK Contact | `Contact` → `Contact` | 1 | create |
+| Update Contact | Hubspot Contact to Sage50UK Update Contact | `contacts` → `Contact` | 1 | update |
 
-Across the single default template: 1 carries `IsInsert`, 0 carry `IsUpdate`, 0 carry
-`IsDelete`. A flag decides which operation the process is allowed to perform, not which one it
-performs on a given record.
+Across the 2 default templates: 1 carries `IsInsert`, 1 carries `IsUpdate`, 0 carry `IsDelete`.
+A flag decides which operation the process is allowed to perform, not which one it performs on a
+given record.
 
 ## 2. The process rows the import creates
 
@@ -80,19 +81,20 @@ that never matches a run.
 | `IsInsert` / `IsUpdate` / `IsDelete` | the template’s own flags — section 1 |
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
-The field-process versions this pair’s default templates belong to: `TxDownloader_3_8`.
+The field-process versions this pair’s default templates belong to: `TxDownloader_3_8`,
+`TxDownloader_3_9`.
 
 ## 3. What the query retrieves
 
-`Query` does not have one shape across the product (parent §9). For this pair, 1 carries a JSON
+`Query` does not have one shape across the product (parent §9). For this pair, 2 carry a JSON
 object naming the module to retrieve. **No query text is reproduced here**; what follows is what
 those queries read and filter on.
 
 - **Objects read:** `contacts`.
-- **Members present in the JSON query object:** `selectedFields` (1), `ModuleName` (1), `Where`
-  (1). 1 of them carry a non-empty `Where`. Its content is not reproduced, and a stored `Where`
+- **Members present in the JSON query object:** `selectedFields` (2), `ModuleName` (2), `Where`
+  (2). 1 of them carry a non-empty `Where`. Its content is not reproduced, and a stored `Where`
   is not necessarily a condition on this destination — read the destination page before treating
-  it as one. 1 carry a non-empty `selectedFields` list.
+  it as one. 2 carry a non-empty `selectedFields` list.
 - **Where the filtering happens:** the query names a module rather than a condition, so the
   selection the parent’s §12 describes is applied after retrieval, not by the query.
 
@@ -100,7 +102,7 @@ those queries read and filter on.
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 1 default template, 1 carries a `DefaultProcessStructure`. A parseable document carries
+pair’s 2 default templates, 2 carry a `DefaultProcessStructure`. A parseable document carries
 about 12 members.
 
 - **Template path roots used:** `contacts`. A path’s first segment has to match the element the
@@ -111,8 +113,8 @@ about 12 members.
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 1 default template, 0 carry a
-parseable `DefaultResultStructure`, 1 carries none.
+system’s response after the write (parent §11). Of this pair’s 2 default templates, 0 carry a
+parseable `DefaultResultStructure`, 2 carry none.
 
 **No default template for this pair fills a part.** Nothing is written back to HubSpot by these
 templates: the source system’s key stays in `TxDownloaderProTrans` and the CRM record is left as
