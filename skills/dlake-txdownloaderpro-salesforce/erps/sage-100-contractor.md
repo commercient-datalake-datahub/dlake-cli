@@ -2,8 +2,8 @@
 name: dlake-txdownloaderpro-salesforce/erps/sage-100-contractor
 description: >-
   What the shipped default TxDownloaderPro templates set up when Salesforce is the writeback
-  destination and Sage 100 Contractor is the source: the 14 default templates the catalogue
-  ships for this pair, the 6 field-process versions they are identified by, what each template
+  destination and Sage 100 Contractor is the source: the 16 default templates the catalogue
+  ships for this pair, the 8 field-process versions they are identified by, what each template
   family delivers, the shape of the query that finds flagged records and the objects and marker
   columns it reads, the structure of the inbound mapping document, and which `ResultStructure`
   parts the templates fill for the write back to the CRM.
@@ -59,8 +59,10 @@ destination objects are and what the operation flags allow. Operations are the u
 | Create/Update Job version 2019 | Salesforce Opportunity to Sage 100 Contractor 2019 Job | `Opportunity` → `Job` | 2 | create / update |
 | Create/Update New WorkOrder version 2019 | Salesforce WorkOrder to Sage 100 Contractor WorkOrder | `WorkOrder` → `WorkOrder` | 2 | create / update |
 | TxDownloaderPro_34_8 | Salesforce Building to Sage 100 Contractor ClientLocation | `Building` → `ClientLocation` | 2 | create / update |
+| Create New Employee version 2019 | Salesforce Contact to Sage 100 Contractor Employee | `Contact` → `Employee` | 1 | create |
+| Create New PurchaseOrder version 2019 | Salesforce Order to Sage 100 Contractor PurchaseOrder | `Order` → `PurchaseOrder` | 1 | create |
 
-Across the 14 default templates: 7 carry `IsInsert`, 7 carry `IsUpdate`, 0 carry `IsDelete`. A
+Across the 16 default templates: 9 carry `IsInsert`, 7 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
 given record. 2 catalogue descriptions were not printed because they are placeholders or carry
 text that is not ours to publish.
@@ -87,22 +89,22 @@ that never matches a run.
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
 The field-process versions this pair’s default templates belong to: `TxDownloaderPro_34_8`,
-`TxDownloaderPro_34_7`, `TxDownloaderPro_34_6`, `TxDownloaderPro_34_2`, `TxDownloaderPro_34_1`,
-`TxDownloaderPro_34_3`.
+`TxDownloaderPro_34_7`, `TxDownloaderPro_34_5`, `TxDownloaderPro_34_4`, `TxDownloaderPro_34_6`,
+`TxDownloaderPro_34_2`, `TxDownloaderPro_34_1`, `TxDownloaderPro_34_3`.
 
 1 of these template rows carry a licence-group id, so what a given tenant is offered in the
 picker is narrower than what the catalogue holds.
 
 ## 3. What the query retrieves
 
-`Query` does not have one shape across the product (parent §9). For this pair, 14 carry a
+`Query` does not have one shape across the product (parent §9). For this pair, 16 carry a
 `SELECT` statement in the CRM's own query language. **No query text is reproduced here**; what
 follows is what those queries read and filter on.
 
-- **Objects read:** `Building__c`, `TimeSheetEntry`, `WorkOrderLineItems`, `Contact`, `account`,
-  `Opportunity`.
-- **Child collections pulled in the same query:** `WorkOrderLineItems`. A header retrieved
-  without its lines is a query that does not name the child collection.
+- **Objects read:** `Building__c`, `TimeSheetEntry`, `Contact`, `OrderItems`,
+  `WorkOrderLineItems`, `account`, `Opportunity`.
+- **Child collections pulled in the same query:** `OrderItems`, `WorkOrderLineItems`. A header
+  retrieved without its lines is a query that does not name the child collection.
 - **Marker and key columns the queries name:** `ExternalKey__c`,
   `CommercientSF__Commercient_ArCustomerCode__c`, `Commercient_LocationID__c`,
   `CommercientSF8__ExternalKey__c`. These are the columns a user’s flag lands in and the columns
@@ -117,14 +119,14 @@ follows is what those queries read and filter on.
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 14 default templates, 14 carry a `DefaultProcessStructure`. A parseable document carries
+pair’s 16 default templates, 16 carry a `DefaultProcessStructure`. A parseable document carries
 about 11 members.
 
 - **Template path roots used:** `Contact`, `Account`, `WorkOrder`, `Building__c`, `Opportunity`,
-  `TimeSheetEntry`, `WorkOrderLineItems`. A path’s first segment has to match the element the
-  engine emits, and the document root itself is never part of the path.
-- **`Line.` section members present:** `Line.mainXml`, `Line.Desc`. 2 templates name the
-  collection through `Line.mainXml`; the members beside it are resolved against that
+  `Order`, `TimeSheetEntry`, `OrderItems`, `WorkOrderLineItems`. A path’s first segment has to
+  match the element the engine emits, and the document root itself is never part of the path.
+- **`Line.` section members present:** `Line.mainXml`, `Line.Desc`, `Line.PartRef`. 3 templates
+  name the collection through `Line.mainXml`; the members beside it are resolved against that
   collection’s own root rather than through the header.
 - **`$FUN_` value tokens the documents carry:** `$FUN_SUBSTR`, `$FUN_UNESCAPEXML`. The names are
   what the templates carry; **no semantics are claimed for them here** — the parent’s §12 is
@@ -134,15 +136,15 @@ about 11 members.
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 14 default templates, 9 carry a
+system’s response after the write (parent §11). Of this pair’s 16 default templates, 11 carry a
 parseable `DefaultResultStructure`, 5 carry none.
 
 | Part | Filled by | What it addresses | Members present |
 |---|---|---|---|
-| `Part1` | 7 templates (2 explicitly null) | the record the run is already working with | a source-path-to-CRM-field map |
-| `Part2` | 3 templates (6 explicitly null) | the child/line records under it | `ObjectAPIName`, `LoopFieldTagName`, `LoopFieldIDName`, `FieldName` |
-| `Part3` | 0 templates (9 explicitly null) | a **new** record, matched on an external id field | — |
-| `Part4` | 0 templates (9 explicitly null) | a **different** record, addressed by an id field | — |
+| `Part1` | 9 templates (2 explicitly null) | the record the run is already working with | a source-path-to-CRM-field map |
+| `Part2` | 3 templates (8 explicitly null) | the child/line records under it | `ObjectAPIName`, `LoopFieldTagName`, `LoopFieldIDName`, `FieldName` |
+| `Part3` | 0 templates (11 explicitly null) | a **new** record, matched on an external id field | — |
+| `Part4` | 0 templates (11 explicitly null) | a **different** record, addressed by an id field | — |
 
 - **CRM fields `Part1` writes to:** `ExternalKey__c`, `CommercientSF8__ExternalKey__c`,
   `LineID__c`, `Sage_Work_Date__c`, `CommercientSF__Commercient_ArCustomerCode__c`. These are
