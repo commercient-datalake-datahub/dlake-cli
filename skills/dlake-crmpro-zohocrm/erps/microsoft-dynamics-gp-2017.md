@@ -186,7 +186,28 @@ process before activating it.
 | SalesOrders | `Sales_Orders` | 18 | `SOPNUMBE` → `Commercient_ExternalKey__c`, `CUSTNMBR` → `Account_Name`, `SOPNUMBE` → `Name`, `SOPNUMBE` → `SO_Number`, `ORDRDATE` → `ERP_Created_Date__c` |
 | Invoices | `Invoices` | 19 | `SOPNUMBE` → `Commercient_ExternalKey__c`, `CUSTNMBR` → `Account_Name`, `SOPNUMBE` → `Name`, `SOPNUMBE` → `Invoice_Number`, `CREATDDT` → `Invoice_Date` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 16 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 16
+- Default operations: insert on 16, update on 16, delete on 16
+- Marked circular-sync: 0
+- Licence groups they span: 3
+- Destination objects: `Accounts`, `commercientmsdynamicgp__MSDYGP_Customer`, `commercientmsdynamicgp__MSDYGP_CustomerAddress`, `commercientmsdynamicgp__MSDYGP_InvoiceDetails`, `commercientmsdynamicgp__MSDYGP_InvoiceHeader`, `commercientmsdynamicgp__MSDYGP_Item_Master`, `commercientmsdynamicgp__MSDYGP_Item_Warehouse`, `commercientmsdynamicgp__MSDYGP_SODetails`, `commercientmsdynamicgp__MSDYGP_SOHeader`, `commercientmsdynamicgp__MSDYGP_Warehouse`, `Invoices`, `Price_Books`, `Products`, `Sales_Orders` and a custom object
+- Object display names: Child Account, Invoices, MSDYGP Customer, MSDYGP CustomerAddress, MSDYGP InvoiceDetail, MSDYGP InvoiceHeader, MSDYGP ItemMaster, MSDYGP ItemWareHouse, MSDYGP SalesOrderDetail, MSDYGP SalesOrderHeader, MSDYGP Warehouse, Parent Account and 4 more
+- Template groups: Account, CRM Order and Line
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -214,7 +235,7 @@ The prefixes these templates set:
 - `vw_MSDCG_DSalesOrder:`
 - `vw_MSDCG_DInvoice:`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
