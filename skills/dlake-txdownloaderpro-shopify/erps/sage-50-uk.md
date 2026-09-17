@@ -2,8 +2,8 @@
 name: dlake-txdownloaderpro-shopify/erps/sage-50-uk
 description: >-
   What the shipped default TxDownloaderPro templates set up when Shopify is the writeback
-  destination and Sage 50 UK is the source: the 4 default templates the catalogue ships for this
-  pair, the 4 field-process versions they are identified by, what each template family delivers,
+  destination and Sage 50 UK is the source: the 5 default templates the catalogue ships for this
+  pair, the 5 field-process versions they are identified by, what each template family delivers,
   the shape of the query that finds flagged records and the objects and marker columns it reads,
   the structure of the inbound mapping document, and which `ResultStructure` parts the templates
   fill for the write back to the CRM.
@@ -57,10 +57,11 @@ destination objects are and what the operation flags allow. Operations are the u
 | Create New Sales Order | Shopify Order to Sage 50UK SalesOrder | `Order` → `SalesOrder` | 1 | create |
 | Create/Update Product | Shopify Product to Sage 50UK Product | `Product` → `Product` | 1 | create |
 | TxDownloader_3_1 | Shopify Customer to Sage 50UK Customer | `Customer` → `Customer` | 1 | create |
+| Update Contact | Shopify Customer to Sage50UK Update Contact | `Customer` → `Contact` | 1 | update |
 
-Across the 4 default templates: 4 carry `IsInsert`, 0 carry `IsUpdate`, 0 carry `IsDelete`, and
-4 carry `IsCustomization`. A flag decides which operation the process is allowed to perform, not
-which one it performs on a given record.
+Across the 5 default templates: 4 carry `IsInsert`, 1 carries `IsUpdate`, 0 carry `IsDelete`,
+and 4 carry `IsCustomization`. A flag decides which operation the process is allowed to perform,
+not which one it performs on a given record.
 
 ## 2. The process rows the import creates
 
@@ -84,19 +85,19 @@ that never matches a run.
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
 The field-process versions this pair’s default templates belong to: `TxDownloader_3_3`,
-`TxDownloader_3_2`, `TxDownloader_3_5`, `TxDownloader_3_1`.
+`TxDownloader_3_2`, `TxDownloader_3_5`, `TxDownloader_3_1`, `TxDownloader_3_9`.
 
 1 of these template rows carry a licence-group id, so what a given tenant is offered in the
 picker is narrower than what the catalogue holds.
 
 ## 3. What the query retrieves
 
-`Query` does not have one shape across the product (parent §9). For this pair, 4 carry a JSON
+`Query` does not have one shape across the product (parent §9). For this pair, 5 carry a JSON
 object naming the module to retrieve. **No query text is reproduced here**; what follows is what
 those queries read and filter on.
 
 - **Objects read:** `order`, `product`, `customer`.
-- **Members present in the JSON query object:** `ModuleName` (4). Where a `Where` member is
+- **Members present in the JSON query object:** `ModuleName` (5). Where a `Where` member is
   present it is empty.
 - **Where the filtering happens:** the query names a module rather than a condition, so the
   selection the parent’s §12 describes is applied after retrieval, not by the query.
@@ -105,10 +106,10 @@ those queries read and filter on.
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 4 default templates, 4 carry a `DefaultProcessStructure`. A parseable document carries
-about 12 members.
+pair’s 5 default templates, 5 carry a `DefaultProcessStructure`. A parseable document carries
+about 11 members.
 
-- **Template path roots used:** `Order`, `Customer`, `line_items`, `Product`. A path’s first
+- **Template path roots used:** `Customer`, `Order`, `line_items`, `Product`. A path’s first
   segment has to match the element the engine emits, and the document root itself is never part
   of the path.
 - **`Line.` section members present:** `Line.DESCRIPTION`, `Line.QTY_ORDER`, `Line.STOCK_CODE`,
@@ -119,8 +120,8 @@ about 12 members.
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 4 default templates, 0 carry a
-parseable `DefaultResultStructure`, 4 carry none.
+system’s response after the write (parent §11). Of this pair’s 5 default templates, 0 carry a
+parseable `DefaultResultStructure`, 5 carry none.
 
 **No default template for this pair fills a part.** Nothing is written back to Shopify by these
 templates: the source system’s key stays in `TxDownloaderProTrans` and the CRM record is left as
