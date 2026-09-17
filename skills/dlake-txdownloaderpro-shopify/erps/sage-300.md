@@ -53,10 +53,10 @@ destination objects are and what the operation flags allow. Operations are the u
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
+| Create New AR Invoice | Shopify Order to Sage 300 SalesInvoice | `Order` → `SalesInvoice` | 1 | create |
 | Create New Customer | Shopify Customer to Sage 300 Customer | `Customer` → `Customer` | 1 | create |
 | Create or Update M/T Contact | Shopify Customer to Sage 300 M/T Contact | `customer` → `M/T Contact` | 1 | create |
 | Sales Order | Shopify Order to Sage 300 SalesOrder | `Order` → `SalesOrder` | 1 | create |
-| TxDownloader_15_2 | Shopify Order to Sage 300 SalesInvoice | `Order` → `SalesInvoice` | 1 | create |
 
 Across the 4 default templates: 4 carry `IsInsert`, 0 carry `IsUpdate`, 0 carry `IsDelete`, and
 3 carry `IsCustomization`. A flag decides which operation the process is allowed to perform, not
