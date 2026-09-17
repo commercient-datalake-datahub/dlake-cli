@@ -66,9 +66,9 @@ destination objects are and what the operation flags allow. Operations are the u
 | Create New Lead | Salesforce Lead to QuickBooks Lead | `Lead` → `Lead` | 2 | create / update |
 | Create New Non Inventory Item | Salesforce Product to QuickBooks Non Inventory Item | `Product2` → `ItemNonInventory` | 2 | create / update |
 | Create New Sales Receipt | Salesforce Order to QuickBooks Sales Receipt | `Order` → `SalesReceipt` | 2 | create / update |
+| Create or Update Payment | — | `Order` → `Payment` | 2 | create / update |
 | CreateNewEstimate | Salesforce Quote to QuickBooks Estimate | `Quote` → `Estimate` | 2 | create / update |
 | New Job Import | Commercient sync's your CRM Accounts and creates Receivable Customer (AR Customer) list in the ERP. The AR Customer's ship to and a bill to addresses are imported and mapped to the ERP fields. | `Account` → `Customer`, `Job` | 2 | create / update |
-| TxDownloader_5_11 | — | `Order` → `Payment` | 2 | create / update |
 | CustomerShipToAddress | Salesforce Account to QuickBooks Customer Ship To Address | `Account` → `ShipTo` | 1 | update |
 | Delete List Entry | Salesforce Account to QuickBooks Customer - Delete List Entry | `Account` → `List Entry` | 1 | delete |
 | Delete Transaction Entry | Salesforce Order to QuickBooks Sales Order - Delete Transaction Entry | `Order` → `Transaction Entry` | 1 | delete |
@@ -104,9 +104,9 @@ that never matches a run.
 
 The field-process versions this pair’s default templates belong to: `TxDownloaderPro_5_22`,
 `TxDownloaderPro_5_25`, `TxDownloaderPro_5_15`, `TxDownloaderPro_5_28`, `TxDownloaderPro_5_27`,
-`TxDownloaderPro_5_16`, `TxDownloader_5_1`, `TxDownloaderPro_5_17`, `TxDownloaderPro_5_19`,
-`TxDownloaderPro_5_20`, `TxDownloader_5_8`, `TxDownloader_5_6`, `TxDownloader_5_4`,
-`TxDownloader_5_5`, `TxDownloader_5_7`, `TxDownloader_5_11`, `TxDownloader_5_3`,
+`TxDownloader_5_11`, `TxDownloaderPro_5_16`, `TxDownloader_5_1`, `TxDownloaderPro_5_17`,
+`TxDownloaderPro_5_19`, `TxDownloaderPro_5_20`, `TxDownloader_5_8`, `TxDownloader_5_6`,
+`TxDownloader_5_4`, `TxDownloader_5_5`, `TxDownloader_5_7`, `TxDownloader_5_3`,
 `TxDownloader_5_2`, `TxDownloader_5_9`, `TxDownloader_5_12`.
 
 10 of these template rows carry a licence-group id, so what a given tenant is offered in the
@@ -119,7 +119,7 @@ picker is narrower than what the catalogue holds.
 follows is what those queries read and filter on.
 
 - **Objects read:** `OpportunityLineItems`, `OrderItems`, `QuoteLineItems`, `Account`, `Lead`,
-  `Product2`, `CommercientSF11__Customer__c`, `Order`, `product2`,
+  `Product2`, `Order`, `CommercientSF11__Customer__c`, `product2`,
   `CommercientSF11__SalesOrderLines__r`.
 - **Child collections pulled in the same query:** `OpportunityLineItems`, `OrderItems`,
   `QuoteLineItems`, `CommercientSF11__SalesOrderLines__r`. A header retrieved without its lines
@@ -223,8 +223,8 @@ of every shape above is empty.
 - **Names not reproduced:** 12 of these templates carry a name that is not a product artefact
   name, and it is not printed here.
 - **Field-process versions they belong to:** `TxDownloaderPro_5_22`, `TxDownloaderPro_5_25`,
-  `TxDownloaderPro_5_26`, `TxDownloaderPro_5_27`, `TxDownloader_5_1`, `TxDownloader_5_8`,
-  `TxDownloader_5_6`, `TxDownloader_5_4`, `TxDownloader_5_7`, `TxDownloader_5_11`,
+  `TxDownloaderPro_5_26`, `TxDownloaderPro_5_27`, `TxDownloader_5_11`, `TxDownloader_5_1`,
+  `TxDownloader_5_8`, `TxDownloader_5_6`, `TxDownloader_5_4`, `TxDownloader_5_7`,
   `TxDownloader_5_3`, `TxDownloader_5_2`, `TxDownloader_5_9`, `TxDownloader_5_12`.
 
 Importing one of these writes the same `TxDownloaderPro` row that importing a default template
