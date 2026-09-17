@@ -54,6 +54,7 @@ destination objects are and what the operation flags allow. Operations are the u
 |---|---|---|---|---|
 | Update Customer | HubSpot Update companies to IFS Update Customer | `companies` → `Customer` | 2 | update |
 | Create Customer Contact | HubSpot contacts to IFS Contact | `contacts` → `Contact` | 1 | create |
+| Create New Contact | HubSpot contacts to IFS Person, Address and Contact | `contacts` → `Contact` | 1 | create |
 | Create New Customer | HubSpot companies to IFS Customer | `companies` → `Customer` | 1 | create |
 | Create New Customer Order | HubSpot deals to IFS CustomerOrder | `deals` → `CustomerOrder` | 1 | create |
 | Create New Customer with Address | HubSpot companies to IFS Customer with Address | `companies` → `Customer` | 1 | create |
@@ -64,7 +65,6 @@ destination objects are and what the operation flags allow. Operations are the u
 | Create New Sales Contract | HubSpot deals to IFS SalesContract | `deals` → `SalesContract` | 1 | create |
 | Create New Service Contract | HubSpot deals to IFS ServiceContract | `deals` → `ServiceContract` | 1 | create |
 | Create Order with Customer Tax | HubSpot deals to IFS Order with Customer Tax | `deals` → `Order` | 1 | create |
-| TxDownloader_116_7 | HubSpot contacts to IFS Person, Address and Contact | `contacts` → `Contact` | 1 | create |
 | TxDownloaderPro_116_17 | — | `deals` → `CustomerOrder` | 1 | create |
 | TxDownloaderPro_116_23 | HubSpot contacts to IFS Contact, Person and Address | `contacts` → `Contact` | 1 | create |
 | TxDownloaderPro_116_27 | HubSpot companies to IFS Customer with Address | `companies` → `Customer` | 1 | create |
@@ -101,9 +101,9 @@ that never matches a run.
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
 The field-process versions this pair’s default templates belong to: `TxDownloader_116_4`,
-`TxDownloaderPro_116_23`, `TxDownloaderPro_116_1`, `TxDownloaderPro_116_22`,
-`TxDownloaderPro_116_3`, `TxDownloaderPro_116_27`, `TxDownloaderPro_116_34`,
-`TxDownloaderPro_116_30`, `TxDownloader_116_6`, `TxDownloader_116_5`, `TxDownloader_116_7`,
+`TxDownloader_116_7`, `TxDownloaderPro_116_23`, `TxDownloaderPro_116_1`,
+`TxDownloaderPro_116_22`, `TxDownloaderPro_116_3`, `TxDownloaderPro_116_27`,
+`TxDownloaderPro_116_34`, `TxDownloaderPro_116_30`, `TxDownloader_116_6`, `TxDownloader_116_5`,
 `TxDownloader_116_10`, `TxDownloader_116_8`, `TxDownloader_116_12`, `TxDownloaderPro_116_28`,
 `TxDownloaderPro_116_17`, `TxDownloaderPro_116_24`, `TxDownloader_116_2`,
 `TxDownloaderPro_116_33`, `TxDownloaderPro_116_20`, `TxDownloaderPro_116_19`,
