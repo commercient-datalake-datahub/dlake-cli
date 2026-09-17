@@ -2,8 +2,8 @@
 name: dlake-txdownloaderpro-dynamicscrm/erps/syspro-6
 description: >-
   What the shipped default TxDownloaderPro templates set up when Dynamics CRM is the writeback
-  destination and SYSPRO 6 is the source: the 12 default templates the catalogue ships for this
-  pair, the 10 field-process versions they are identified by, what each template family
+  destination and SYSPRO 6 is the source: the 19 default templates the catalogue ships for this
+  pair, the 17 field-process versions they are identified by, what each template family
   delivers, the shape of the query that finds flagged records and the objects and marker columns
   it reads, the structure of the inbound mapping document, and which `ResultStructure` parts the
   templates fill for the write back to the CRM.
@@ -57,14 +57,21 @@ destination objects are and what the operation flags allow. Operations are the u
 | Create New Customer | Dynamic CRM Account to Syspro Customer | `Account` → `Customer` | 1 | create |
 | Create New Quote | Dynamic Quote to Syspro Quote | `Quote` → `Quote` | 1 | create |
 | Create New Sales Invoice | Dynamic Order to Syspro Sales Invoice | `Order` → `Sales Invoice` | 1 | create |
+| Create New Supplier | Dynamic CRM Account to Syspro Supplier | `account` → `Supplier` | 1 | create |
+| Create/Update Purchase Order | Dynamic CRM Order to Syspro Purchase Order | `order` → `Purchase Order` | 1 | create |
 | Delete Customer | Dynamic Account to Syspro Delete Customer | `Account` → `Customer` | 1 | delete |
+| Delete Product | Dynamic CRM Product to Syspro Delete Product | `product` → `Product` | 1 | delete |
+| Delete Purchase Order | Dynamic CRM Order to Syspro Delete Purchase Order | `order` → `Purchase Order` | 1 | delete |
 | Delete Quote | Dynamic Quote to Syspro Delete Quote | `Quote` → `Quote` | 1 | delete |
 | Delete Sales Order | Dynamic Order to Syspro Delete Sales Order | `Order` → `Sales Order` | 1 | delete |
+| Delete Supplier | Dynamic CRM Account to Syspro Delete Supplier | `account` → `Supplier` | 1 | delete |
 | TxDownloaderPro_6_10 | Dynamic Contact to Syspro Contact | `Contact` → `Contact` | 1 | create |
 | TxDownloaderPro_6_7 | Dynamic Update Account to Syspro Update Customer | `Account` → `Customer` | 1 | update |
 | TxDownloaderPro_6_9 | — | `Order` → `Sales Order` | 1 | update |
+| Update Product | Dynamic CRM Product to Syspro Update Product | `product` → `Product` | 1 | update |
+| Update Supplier | Dynamic CRM Update Account to Syspro Update Supplier | `account` → `Supplier` | 1 | update |
 
-Across the 12 default templates: 7 carry `IsInsert`, 2 carry `IsUpdate`, 3 carry `IsDelete`. A
+Across the 19 default templates: 9 carry `IsInsert`, 4 carry `IsUpdate`, 6 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
 given record. 1 catalogue description was not printed because they are placeholders or carry
 text that is not ours to publish.
@@ -92,20 +99,21 @@ that never matches a run.
 
 The field-process versions this pair’s default templates belong to: `TxDownloaderPro_6_7`,
 `TxDownloaderPro_6_9`, `TxDownloaderPro_6_10`, `TxDownloaderPro_6_1`, `TxDownloaderPro_6_29`,
-`TxDownloaderPro_6_3`, `TxDownloaderPro_6_2`, `TxDownloaderPro_6_11`, `TxDownloaderPro_6_30`,
-`TxDownloaderPro_6_12`.
+`TxDownloaderPro_6_3`, `TxDownloaderPro_6_2`, `TxDownloaderPro_6_17`, `TxDownloaderPro_6_20`,
+`TxDownloaderPro_6_11`, `TxDownloaderPro_6_16`, `TxDownloaderPro_6_21`, `TxDownloaderPro_6_30`,
+`TxDownloaderPro_6_12`, `TxDownloaderPro_6_19`, `TxDownloaderPro_6_15`, `TxDownloaderPro_6_18`.
 
 4 of these template rows carry a licence-group id, so what a given tenant is offered in the
 picker is narrower than what the catalogue holds.
 
 ## 3. What the query retrieves
 
-`Query` does not have one shape across the product (parent §9). For this pair, 12 carry a
+`Query` does not have one shape across the product (parent §9). For this pair, 19 carry a
 FetchXML document. **No query text is reproduced here**; what follows is what those queries read
 and filter on.
 
 - **Objects read:** `account`, `salesorder`, `contact`, `quote`, `quotedetail`, `order`,
-  `orderdetail`, `opportunity`, `opportunitydetail`.
+  `orderdetail`, `opportunity`, `opportunitydetail`, `product`.
 - **Child collections pulled in the same query:** `account`, `contact`, `quotedetail`,
   `orderdetail`, `opportunitydetail`. A header retrieved without its lines is a query that does
   not name the child collection.
@@ -118,19 +126,20 @@ and filter on.
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 12 default templates, 12 carry a `DefaultProcessStructure`. A parseable document carries
-about 24 members.
+pair’s 19 default templates, 19 carry a `DefaultProcessStructure`. A parseable document carries
+about 18 members.
 
-- **Template path roots used:** `account`, `opportunity`, `quote`, `contact`, `order`,
-  `opportunitydetail`, `salesorder`, `quotedetail`, `orderdetail`. A path’s first segment has to
-  match the element the engine emits, and the document root itself is never part of the path.
+- **Template path roots used:** `account`, `order`, `opportunity`, `quote`, `contact`,
+  `orderdetail`, `opportunitydetail`, `salesorder`, `quotedetail`, `product`. A path’s first
+  segment has to match the element the engine emits, and the document root itself is never part
+  of the path.
 - **`Line.` section members present:** `Line.StockCode`, `Line.mainXml`, `Line.LineActionType`,
-  `Line.StockDescription`, `Line.LineWarehouse`, `Line.Price`, `Line.PriceUom`,
+  `Line.StockDescription`, `Line.Price`, `Line.LineWarehouse`, `Line.PriceUom`,
   `Line.LineAlwaysUsePriceEntered`, `Line.LineDiscPercent1`, `Line.LineAllocationAction`,
-  `Line.opportunityQty`, `Line.opportunityUom`, `Line.StockType`, `Line.LineAction`,
-  `Line.Description`, `Line.QL_OfferNumber1_OfferAction`, `Line.QL_OfferNumber1_Quantity`,
-  `Line.QL_OfferNumber1_Price`, `Line.OrderQty`, `Line.OrderUom`. 4 templates name the
-  collection through `Line.mainXml`; the members beside it are resolved against that
+  `Line.OrderQty`, `Line.opportunityQty`, `Line.opportunityUom`, `Line.StockType`,
+  `Line.LineAction`, `Line.Description`, `Line.QL_OfferNumber1_OfferAction`,
+  `Line.QL_OfferNumber1_Quantity`, `Line.QL_OfferNumber1_Price`, `Line.OrderUom`. 5 templates
+  name the collection through `Line.mainXml`; the members beside it are resolved against that
   collection’s own root rather than through the header.
 - **`$FUN_` value tokens the documents carry:** `$FUN_SUBSTR`. The names are what the templates
   carry; **no semantics are claimed for them here** — the parent’s §12 is explicit that the
@@ -140,22 +149,22 @@ about 24 members.
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 12 default templates, 3 carry a
-parseable `DefaultResultStructure`, 9 carry none.
+system’s response after the write (parent §11). Of this pair’s 19 default templates, 4 carry a
+parseable `DefaultResultStructure`, 15 carry none.
 
 | Part | Filled by | What it addresses | Members present |
 |---|---|---|---|
-| `Part1` | 3 templates | the record the run is already working with | a source-path-to-CRM-field map |
-| `Part2` | 0 templates (3 explicitly null) | the child/line records under it | — |
-| `Part3` | 0 templates (3 explicitly null) | a **new** record, matched on an external id field | — |
-| `Part4` | 0 templates (3 explicitly null) | a **different** record, addressed by an id field | — |
+| `Part1` | 4 templates | the record the run is already working with | a source-path-to-CRM-field map |
+| `Part2` | 0 templates (4 explicitly null) | the child/line records under it | — |
+| `Part3` | 0 templates (4 explicitly null) | a **new** record, matched on an external id field | — |
+| `Part4` | 0 templates (4 explicitly null) | a **different** record, addressed by an id field | — |
 
 - **CRM fields `Part1` writes to:** `comrcint_externalkey`, `comrcint_arcustomercode`. These are
   the fields on the flagged record that carry the source system’s key or outcome once the write
   has happened — the names only; what lands in them is the response, per record.
-- **Response fields it reads them from:** `NewContactFullName`, `NewCustomerCode`, `Quote`. The
-  map is written **source-path first, CRM-field second** (parent §11); the wrong way round
-  resolves to the same silent empty string as a mistyped path.
+- **Response fields it reads them from:** `NewContactFullName`, `NewCustomerCode`, `Quote`,
+  `NewPurchaseOrderNumber`. The map is written **source-path first, CRM-field second** (parent
+  §11); the wrong way round resolves to the same silent empty string as a mistyped path.
 
 ## 6. Verifying
 
