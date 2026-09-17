@@ -2,8 +2,8 @@
 name: dlake-txdownloaderpro-salesforce/erps/myob-accountright
 description: >-
   What the shipped default TxDownloaderPro templates set up when Salesforce is the writeback
-  destination and MYOB AccountRight is the source: the 6 default templates the catalogue ships
-  for this pair, the 4 field-process versions they are identified by, what each template family
+  destination and MYOB AccountRight is the source: the 8 default templates the catalogue ships
+  for this pair, the 6 field-process versions they are identified by, what each template family
   delivers, the shape of the query that finds flagged records and the objects and marker columns
   it reads, the structure of the inbound mapping document, and which `ResultStructure` parts the
   templates fill for the write back to the CRM.
@@ -56,9 +56,11 @@ destination objects are and what the operation flags allow. Operations are the u
 | Create SalesOrder | Salesforce Opportunity To MYOBACCOUNTRIGHT SalesOrder | `Quote`, `Order` → `Salesorder` | 3 | create |
 | Create Contact | Salesforce Contact To MyOBACCOUNTRIGHT Contact | `Contact` → `Contact` | 1 | create |
 | Create Customer | Salesfoce Account TO MYOBACCOUNTRIGHT Customer | `Accounts` → `Customer` | 1 | create |
+| Create Customer Location/Address | Salesforce Account to MYOBACCOUNTRIGHT Customer Location | `Account` → `Location` | 1 | create |
+| Create Job | Salesforce Opportunity to MYOBACCOUNTRIGHT Job | `Opportunity` → `Job` | 1 | create |
 | Create Product | — | `Product` → `Product` | 1 | create / update |
 
-Across the 6 default templates: 6 carry `IsInsert`, 1 carries `IsUpdate`, 0 carry `IsDelete`. A
+Across the 8 default templates: 8 carry `IsInsert`, 1 carries `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
 given record. 1 catalogue description was not printed because they are placeholders or carry
 text that is not ours to publish.
@@ -85,19 +87,20 @@ that never matches a run.
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
 The field-process versions this pair’s default templates belong to: `TxDownloaderPro_36_2`,
-`TxDownloaderPro_36_1`, `TxDownloaderPro_36_6`, `TxDownloaderPro_36_3`.
+`TxDownloaderPro_36_1`, `TxDownloaderPro_36_7`, `TxDownloaderPro_36_5`, `TxDownloaderPro_36_6`,
+`TxDownloaderPro_36_3`.
 
 1 of these template rows carry a licence-group id, so what a given tenant is offered in the
 picker is narrower than what the catalogue holds.
 
 ## 3. What the query retrieves
 
-`Query` does not have one shape across the product (parent §9). For this pair, 6 carry a
+`Query` does not have one shape across the product (parent §9). For this pair, 8 carry a
 `SELECT` statement in the CRM's own query language. **No query text is reproduced here**; what
 follows is what those queries read and filter on.
 
-- **Objects read:** `contact`, `Account`, `Product2`, `OpportunityLineItems`, `QuoteLineItems`,
-  `OrderItems`.
+- **Objects read:** `contact`, `Account`, `Opportunity`, `Product2`, `OpportunityLineItems`,
+  `QuoteLineItems`, `OrderItems`.
 - **Child collections pulled in the same query:** `OpportunityLineItems`, `QuoteLineItems`,
   `OrderItems`. A header retrieved without its lines is a query that does not name the child
   collection.
@@ -114,8 +117,8 @@ follows is what those queries read and filter on.
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 6 default templates, 6 carry a `DefaultProcessStructure`; 4 of those do not parse as JSON
-and are counted but not described. A parseable document carries about 6 members.
+pair’s 8 default templates, 8 carry a `DefaultProcessStructure`; 4 of those do not parse as JSON
+and are counted but not described. A parseable document carries about 7 members.
 
 - **Template path roots used:** `Account`, `Opportunity`, `Quote`, `Order`,
   `OpportunityLineItems`, `QuoteLineItems`, `OrderItems`, `Contact`, `Product2`. A path’s first
@@ -131,15 +134,15 @@ and are counted but not described. A parseable document carries about 6 members.
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 6 default templates, 6 carry a
-parseable `DefaultResultStructure`, 0 carry none.
+system’s response after the write (parent §11). Of this pair’s 8 default templates, 7 carry a
+parseable `DefaultResultStructure`, 1 carries none.
 
 | Part | Filled by | What it addresses | Members present |
 |---|---|---|---|
-| `Part1` | 6 templates | the record the run is already working with | a source-path-to-CRM-field map |
-| `Part2` | 0 templates (6 explicitly null) | the child/line records under it | — |
-| `Part3` | 0 templates (6 explicitly null) | a **new** record, matched on an external id field | — |
-| `Part4` | 0 templates (6 explicitly null) | a **different** record, addressed by an id field | — |
+| `Part1` | 7 templates | the record the run is already working with | a source-path-to-CRM-field map |
+| `Part2` | 0 templates (7 explicitly null) | the child/line records under it | — |
+| `Part3` | 0 templates (7 explicitly null) | a **new** record, matched on an external id field | — |
+| `Part4` | 0 templates (7 explicitly null) | a **different** record, addressed by an id field | — |
 
 - **CRM fields `Part1` writes to:** `ExternalKey__c`,
   `CommercientSF__Commercient_ArCustomerCode__c`, `CommercientSF__ExternalKey__c`. These are the
