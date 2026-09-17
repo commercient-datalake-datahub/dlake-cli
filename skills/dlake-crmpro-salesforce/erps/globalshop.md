@@ -141,7 +141,28 @@ process before activating it.
 | Invoice Payments | `Commercient33__AR_OPEN_ITEMS__c` | 60 | `Account` → `Account`, `GlobalShop_Customer_Master` → `GlobalShop_Customer_Master`, `GlobalShop_Invoice_Header` → `GlobalShop_Invoice_Header`, `CUSTOMER` → `Commercient33__CUSTOMER__c`, `INVOICE` → `INVOICE` |
 | Ship To Address | `Commercient33__CUSTOMER_SHIPTO__c` | 26 | `Account` → `Account`, `GlobalShop_Customer_Master` → `GlobalShop_Customer_Master`, `CUSTOMER` → `Commercient33__CUSTOMER__c`, `ship_seq` → `ship_seq__c`, `NAME_CUSTOMER_SHIP` → `NAME_CUSTOMER_SHIP` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 265 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 265
+- Default operations: insert on 265, update on 265, delete on 265
+- Marked circular-sync: 8
+- Licence groups they span: 13
+- Destination objects: `Account`, `Product2`, `Commercient33__CUSTOMER_MASTER__c`, `Commercient33__CUSTOMER_SHIPTO__c`, `Commercient33__ORDER_HEADER__c`, `Commercient33__ORDER_HIST_HEAD__c`, `Commercient33__ORDER_HIST_LINE__c`, `Commercient33__ORDER_LINES__c`, `Commercient33__AR_OPEN_ITEMS__c`, `PriceBookEntry`, `Contact`, `Opportunity`, `QUOTE_HEADER__c`, `QUOTE_LINES__c`, `User`, `Pricebookentry`, `Commercient33__VWSAGEACCOUNTMATCHING__c`, `GlobalShop_Salesperson__c`, `PART_PRICE_CODE__c` and 10 custom objects
+- Object display names: Account, Product, Customer To Account Reverse Lookup, Invoice Header, Invoice Lines, Item Master, Item To Product Reverse Lookup, Sales Order Header, Sales Order Lines, Customer Master, Invoice Payments, Ship To Address, 51 more and 6 further templates
+- Template groups: Account, Product, Invoice, Salesorder, Customer Multi Ship Addresses, Opportunity, CRM Opportunity and Line
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -164,7 +185,7 @@ The prefixes these templates set:
 - `vw_SalesOrderHeader`
 - `vw_SalesOrderLines`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
