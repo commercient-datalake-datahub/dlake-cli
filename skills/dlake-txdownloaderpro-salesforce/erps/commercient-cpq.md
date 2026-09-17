@@ -53,9 +53,9 @@ destination objects are and what the operation flags allow. Operations are the u
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
-| TxDownloader_26_1 | — | — → — | 1 | create |
-| TxDownloader_26_2 | Salesforce Product2 to Commercient CPQ Product | `Product2` → `Product` | 1 | create |
-| TxDownloader_26_3 | Salesforce Order to Commercient CPQ SalesOrder | `Order` → `Sales Order` | 1 | create |
+| Create New Customer | — | — → — | 1 | create |
+| Create New Product | Salesforce Product2 to Commercient CPQ Product | `Product2` → `Product` | 1 | create |
+| Create New Sales Order | Salesforce Order to Commercient CPQ SalesOrder | `Order` → `Sales Order` | 1 | create |
 
 Across the 3 default templates: 3 carry `IsInsert`, 0 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
