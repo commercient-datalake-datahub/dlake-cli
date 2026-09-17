@@ -56,7 +56,7 @@ destination objects are and what the operation flags allow. Operations are the u
 | Create and Update Product Price | — | — → — | 1 | create / update |
 | Create New Sales Invoice | Salesforce Invoice__c to Sage50UK Sales Invoice | `Invoice` → `Invoice` | 1 | create / update |
 | Create New Sales Order | Salesforce Order to Sage 50 UK Sales Order | `Order` → `Order` | 1 | create |
-| TxDownloader_3_1 | Dynamic CRM Account to Sage 50 UK Customer | `Account` → `Customer` | 1 | create / update |
+| Create or Update Customer | Dynamic CRM Account to Sage 50 UK Customer | `Account` → `Customer` | 1 | create / update |
 | Update Contact | Dynamics Contact to Sage50UK Update Contact | `contact` → `Contact` | 1 | update |
 | Update Product | Salesforce Product2 to Sage50US Update Product | — → — | 1 | create / update |
 
