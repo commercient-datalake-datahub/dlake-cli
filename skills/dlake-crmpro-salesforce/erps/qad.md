@@ -145,7 +145,28 @@ process before activating it.
 | QADERP Address | `CommercientSF18__QAD_ADDR__c` | 68 | `Account` → `Account__c`, `QAD_Customer` → `QAD_Customer__c`, `ad_addr` → `CommercientSF18__ad_addr__c`, `ad_asn_data` → `CommercientSF18__ad_asn_data__c`, `ad_attn` → `CommercientSF18__ad_attn__c` |
 | Contact | `Contact` | 13 | `QAD_Address` → `QAD_Address__c`, `LastName` → `LastName`, `FirstName` → `FirstName`, `Email` → `Email`, `Phone` → `Phone` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 12 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 12
+- Default operations: insert on 12, update on 12, delete on 12
+- Marked circular-sync: 0
+- Licence groups they span: 7
+- Destination objects: `Account`, `CommercientSF18__QAD_ADDR__c`, `CommercientSF18__QAD_Address__c`, `CommercientSF18__QAD_Customer__c`, `CommercientSF18__QAD_Invoice__c`, `CommercientSF18__QAD_InvoiceDetail__c`, `CommercientSF18__QAD_SalesOrder__c`, `CommercientSF18__QAD_SalesOrderDetail__c`, `CommercientSF18__QAD_Salesperson__c`, `Contact`
+- Object display names: QADERP Address, Account, Account Update, Contact, QADERP Customer, QADERP CustomerToAccountLookup, QADERP Invoice, QADERP InvoiceLine, QADERP SalesOrder, QADERP SalesOrderLine, QADERP Salesperson
+- Template groups: Account, Customer Multi Ship Addresses, Invoice, Salesorder
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -169,7 +190,7 @@ The prefixes these templates set:
 - `vw_QADERP_SalesOrderLine`
 - `vw_QADERP_SalesPerson`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
