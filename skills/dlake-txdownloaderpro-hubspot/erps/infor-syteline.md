@@ -55,31 +55,27 @@ destination objects are and what the operation flags allow. Operations are the u
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
+| Create New Customer | HubSpot companies to Infor SyteLine SLCustomers | `companies` → `SLCustomers`, `Customer360_WT` | 3 | create / update |
+| Create New Contact | HubSpot contacts to Infor LN Contact_v3 | `contacts` → `SLContacts`, `Contact_v3` | 2 | create |
 | Create/update New Estimate/Quote With Blanket Lines | HubSpot deals to Infor SyteLine SLCos blanket estimate | `deals` → `SLCos` | 2 | create / update |
 | Create/Update/Delete Opportunity | HubSpot deals to Infor SyteLine SLOpportunities | `deals` → `SLOpportunities` | 2 | create / update |
 | Create/Update/Delete Product Item | HubSpot products to Infor SyteLine SLProdMixItems | `products` → `SLProdMixItems` | 2 | create / update |
-| Create New Customer | HubSpot companies to Infor SyteLine SLCustomers | `companies` → `SLCustomers` | 1 | create / update |
+| Update Customer | HubSpot Update companies to Infor SyteLine Update SLCustomers | `companies` → `SLCustomers`, `Customer360_WT` | 2 | update |
+| Create New Customer Order | — | `deals` → `SLCos` | 1 | create |
+| Create New Estimate | HubSpot deals to Infor SyteLine estimate | `deals` → `Quotes` | 1 | create |
 | Create New Estimate/Quote | HubSpot deals to Infor SyteLine SLCos estimate | `deals` → `SLCos` | 1 | create |
 | Create New Prospects | HubSpot companies to Infor SyteLine Prospect | `companies` → `Prospect` | 1 | create |
+| Create New Sales Order | HubSpot deals to Infor LN SalesOrderDetails | `deals` → `SalesOrderDetails` | 1 | create |
 | Create New Ship To Address | HubSpot companies to Infor SyteLine SLCustomers ship-to | `companies` → `SLCustomers` | 1 | create |
 | Create/Update/Delete Contact | HubSpot contacts to Infor SyteLine SLContacts | `contacts` → `SLContacts` | 1 | create |
 | Create/Update/Delete Ship To Address | HubSpot Update companies to Infor SyteLine Update SLShipTos | `companies` → `SLShipTos` | 1 | update |
-| TxDownloader_32_13 | HubSpot Update companies to Infor SyteLine Update SLCustomers ship-to | `companies` → `SLCustomers` | 1 | update |
-| TxDownloader_32_18 | — | `companies` → `SLCustomers` | 1 | create |
-| TxDownloader_32_19 | — | `contacts` → `SLContacts` | 1 | create |
-| TxDownloader_32_20 | — | `deals` → `SLCos` | 1 | create |
-| TxDownloader_32_23 | HubSpot companies to Infor LN Customer360_WT | `companies` → `Customer360_WT` | 1 | create |
-| TxDownloader_32_24 | HubSpot Update companies to Infor LN Update Customer360_WT | `companies` → `Customer360_WT` | 1 | update |
-| TxDownloader_32_25 | HubSpot contacts to Infor LN Contact_v3 | `contacts` → `Contact_v3` | 1 | create |
-| TxDownloader_32_26 | HubSpot Update contacts to Infor LN Update Contact_v3 | `contacts` → `Contact_v3` | 1 | update |
-| TxDownloader_32_27 | HubSpot deals to Infor LN SalesOrderDetails | `deals` → `SalesOrderDetails` | 1 | create |
-| TxDownloader_32_3 | HubSpot deals to Infor SyteLine estimate | `deals` → `Quotes` | 1 | create |
-| Update Customer | HubSpot Update companies to Infor SyteLine Update SLCustomers | `companies` → `SLCustomers` | 1 | update |
+| Update Contact | HubSpot Update contacts to Infor LN Update Contact_v3 | `contacts` → `Contact_v3` | 1 | update |
 | Update Estimate/Quote | HubSpot Update deals to Infor SyteLine Update SLCos estimate | `deals` → `SLCos` | 1 | update |
+| Update Ship To Address | HubSpot Update companies to Infor SyteLine Update SLCustomers ship-to | `companies` → `SLCustomers` | 1 | update |
 
 Across the 24 default templates: 15 carry `IsInsert`, 10 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
-given record. 3 catalogue descriptions were not printed because they are placeholders or carry
+given record. 2 catalogue descriptions were not printed because they are placeholders or carry
 text that is not ours to publish.
 
 ## 2. The process rows the import creates
@@ -104,10 +100,10 @@ that never matches a run.
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
 The field-process versions this pair’s default templates belong to: `TxDownloader_32_19`,
-`TxDownloader_32_20`, `TxDownloader_32_25`, `TxDownloader_32_1`, `TxDownloader_32_18`,
-`TxDownloader_32_9`, `TxDownloader_32_3`, `TxDownloader_32_2`, `TxDownloader_32_27`,
-`TxDownloader_32_8`, `TxDownloader_32_11`, `TxDownloader_32_4`, `TxDownloader_32_5`,
-`TxDownloader_32_6`, `TxDownloader_32_7`, `TxDownloader_32_23`, `TxDownloader_32_26`,
+`TxDownloader_32_25`, `TxDownloader_32_1`, `TxDownloader_32_18`, `TxDownloader_32_23`,
+`TxDownloader_32_20`, `TxDownloader_32_3`, `TxDownloader_32_9`, `TxDownloader_32_2`,
+`TxDownloader_32_27`, `TxDownloader_32_8`, `TxDownloader_32_11`, `TxDownloader_32_4`,
+`TxDownloader_32_5`, `TxDownloader_32_6`, `TxDownloader_32_7`, `TxDownloader_32_26`,
 `TxDownloader_32_12`, `TxDownloader_32_24`, `TxDownloader_32_10`, `TxDownloader_32_13`.
 
 ## 3. What the query retrieves
@@ -116,7 +112,7 @@ The field-process versions this pair’s default templates belong to: `TxDownloa
 object naming the module to retrieve. **No query text is reproduced here**; what follows is what
 those queries read and filter on.
 
-- **Objects read:** `contacts`, `deals`, `companies`, `products`.
+- **Objects read:** `contacts`, `companies`, `deals`, `products`.
 - **Members present in the JSON query object:** `selectedFields` (24), `ModuleName` (24),
   `Where` (24). Where a `Where` member is present it is empty. 24 carry a non-empty
   `selectedFields` list.
@@ -135,8 +131,8 @@ about 14 members.
   is never part of the path.
 - **`Line.` section members present:** `Line.mainXml`, `Line.Item`, `Line.Description`,
   `Line.UM`, `Line.QtyOrderedConv`, `Line.PriceConv`, `Line.CoNum`, `Line.QtyOrdered`,
-  `Line.Price`, `Line.ItmDescription`, `Line.Qty`, `Line.UnitPrice`, `Line.DerNetPrice`,
-  `Line.ItDescription`, `Line.CoStat`, `Line.Stat`, `Line.item`, `Line.orderLineCustomerOrder`,
+  `Line.Price`, `Line.ItmDescription`, `Line.Qty`, `Line.UnitPrice`, `Line.ItDescription`,
+  `Line.CoStat`, `Line.Stat`, `Line.DerNetPrice`, `Line.item`, `Line.orderLineCustomerOrder`,
   `Line.orderLineText`, `Line.orderLineOrderQuantityInOrderUOMValue`, and 1 more. 9 templates
   name the collection through `Line.mainXml`; the members beside it are resolved against that
   collection’s own root rather than through the header.
@@ -158,8 +154,8 @@ parseable `DefaultResultStructure`, 9 carry none.
   flagged record that carry the source system’s key or outcome once the write has happened — the
   names only; what lands in them is the response, per record.
 - **Response fields it reads them from:** `CoNum`, `ContactID`, `CustNum`, `contactCode`,
-  `EstimateGuid`, `ProspectGuid`, `salesOrder`, `CustSeq`, `OpportunityID`, `Item`,
-  `Customer_CustomerID`. The map is written **source-path first, CRM-field second** (parent
+  `Customer_CustomerID`, `EstimateGuid`, `ProspectGuid`, `salesOrder`, `CustSeq`,
+  `OpportunityID`, `Item`. The map is written **source-path first, CRM-field second** (parent
   §11); the wrong way round resolves to the same silent empty string as a mistyped path.
 
 ## 6. Community templates
@@ -189,8 +185,8 @@ of every shape above is empty.
   Account` (2), `Update Contact` (2), `Create Contact` (1), `Create New Customer` (1), `Create
   New Deals` (1), `New Customer` (1), `New Sales Order` (1).
 - **Field-process versions they belong to:** `TxDownloader_32_28`, `TxDownloader_32_25`,
-  `TxDownloader_32_1`, `TxDownloader_32_22`, `TxDownloader_32_9`, `TxDownloader_32_27`,
-  `TxDownloader_32_4`, `TxDownloader_32_23`, `TxDownloader_32_26`, `TxDownloader_32_24`.
+  `TxDownloader_32_23`, `TxDownloader_32_1`, `TxDownloader_32_22`, `TxDownloader_32_9`,
+  `TxDownloader_32_27`, `TxDownloader_32_4`, `TxDownloader_32_26`, `TxDownloader_32_24`.
 
 Importing one of these writes the same `TxDownloaderPro` row that importing a default template
 writes (parent §9); what differs is where the template came from, not how it is stored. What any
