@@ -55,8 +55,8 @@ destination objects are and what the operation flags allow. Operations are the u
 |---|---|---|---|---|
 | Create New Sales Invoice | Shopify Order to Sage 50UK SalesInvoice | `Order` → `SalesInvoice` | 1 | create |
 | Create New Sales Order | Shopify Order to Sage 50UK SalesOrder | `Order` → `SalesOrder` | 1 | create |
+| Create or Update Customer | Shopify Customer to Sage 50UK Customer | `Customer` → `Customer` | 1 | create |
 | Create/Update Product | Shopify Product to Sage 50UK Product | `Product` → `Product` | 1 | create |
-| TxDownloader_3_1 | Shopify Customer to Sage 50UK Customer | `Customer` → `Customer` | 1 | create |
 | Update Contact | Shopify Customer to Sage50UK Update Contact | `Customer` → `Contact` | 1 | update |
 
 Across the 5 default templates: 4 carry `IsInsert`, 1 carries `IsUpdate`, 0 carry `IsDelete`,
@@ -85,7 +85,7 @@ that never matches a run.
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
 The field-process versions this pair’s default templates belong to: `TxDownloader_3_3`,
-`TxDownloader_3_2`, `TxDownloader_3_5`, `TxDownloader_3_1`, `TxDownloader_3_9`.
+`TxDownloader_3_2`, `TxDownloader_3_1`, `TxDownloader_3_5`, `TxDownloader_3_9`.
 
 1 of these template rows carry a licence-group id, so what a given tenant is offered in the
 picker is narrower than what the catalogue holds.
@@ -96,7 +96,7 @@ picker is narrower than what the catalogue holds.
 object naming the module to retrieve. **No query text is reproduced here**; what follows is what
 those queries read and filter on.
 
-- **Objects read:** `order`, `product`, `customer`.
+- **Objects read:** `order`, `customer`, `product`.
 - **Members present in the JSON query object:** `ModuleName` (5). Where a `Where` member is
   present it is empty.
 - **Where the filtering happens:** the query names a module rather than a condition, so the
