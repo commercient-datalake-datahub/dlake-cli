@@ -149,7 +149,28 @@ process before activating it.
 | InvoiceDetail | `CommercientSF21__Aptean_M2M_ARITEM__c` | 55 | `identity_column` → `CommercientSF21__ExternalKey__c`, `identity_column` → `CommercientSF21__Name__c`, `fbkordqty` → `CommercientSF21__FBKORDQTY__c`, `fcinvoice` → `CommercientSF21__FCINVOICE__c`, `fcost` → `CommercientSF21__FCOST__c` |
 | Contact SYNC | `Contact` | 8 | `FirstName` → `FirstName`, `LastName` → `LastName`, `Fax` → `Fax`, `MobilePhone` → `MobilePhone`, `Title` → `Title` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 182 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 182
+- Default operations: insert on 182, update on 182, delete on 182
+- Marked circular-sync: 0
+- Licence groups they span: 19
+- Destination objects: `Account`, `Product2`, `Opportunity`, `Contact`, `Quote`, `PriceBookEntry`, `OpportunityLineItem`, `QuoteLineItem`, `Attachment`, `PricebookEntry`, `APTEANMADE2MANAGE_Opportunity__c`, `APTEANMADE2MANAGE_Quote__c`, `APTEANMADE2MANAGE_QuoteLine__c`, `ShipTo__c`, `SOShipToHeader__c`, `SOShipToLine__c`, `User` and 29 custom objects
+- Object display names: Customer, SalesOrderDetail, SalesOrderHeader, Account, Address, InvoiceDetail, InvoiceHeader, Item Master, Account Reverse Lookup, Contact SYNC, SalesPerson, Product, 61 more and 22 further templates
+- Template groups: Account, Product, Salesorder, CRM Opportunity and Line, Customer Multi Ship Addresses, Invoice, CRM Quote and Line, Opportunity, Pricebook, Open AR Invoice Header, QuoteLine
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -173,7 +194,7 @@ The prefixes these templates set:
 - `vw_APTEANMADE2MANAGE_SODetail:`
 - `vw_APTEANMADE2MANAGE_SalesPerson:`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
