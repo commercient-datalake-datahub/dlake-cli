@@ -2,8 +2,8 @@
 name: dlake-txdownloaderpro-shopify/erps/syspro-6
 description: >-
   What the shipped default TxDownloaderPro templates set up when Shopify is the writeback
-  destination and SYSPRO 6 is the source: the 3 default templates the catalogue ships for this
-  pair, the 3 field-process versions they are identified by, what each template family delivers,
+  destination and SYSPRO 6 is the source: the 9 default templates the catalogue ships for this
+  pair, the 9 field-process versions they are identified by, what each template family delivers,
   the shape of the query that finds flagged records and the objects and marker columns it reads,
   the structure of the inbound mapping document, and which `ResultStructure` parts the templates
   fill for the write back to the CRM.
@@ -55,11 +55,18 @@ destination objects are and what the operation flags allow. Operations are the u
 |---|---|---|---|---|
 | Create New Customer | Shopify Customer to Syspro Customer | `Customer` → `Customer` | 1 | create |
 | Create New Product | Shopify Product to Syspro Product | `Product` → `Product` | 1 | create |
+| Create New Sales Invoice | Shopify Order to Syspro Sales Invoice | `Order` → `Sales Invoice` | 1 | create |
 | Create New Sales Order | Shopify Order to Syspro SalesOrder | `Order` → `SalesOrder` | 1 | create |
+| Delete Customer | Shopify Customer to Syspro Delete Customer | `Customer` → `Customer` | 1 | delete |
+| Delete Sales Order | Shopify Order to Syspro Delete Sales Order | `Order` → `Sales Order` | 1 | delete |
+| TxDownloaderPro_6_10 | Shopify Customer to Syspro Contact | `Customer` → `Contact` | 1 | create |
+| TxDownloaderPro_6_7 | Shopify Update Customer to Syspro Update Customer | `Customer` → `Customer` | 1 | update |
+| TxDownloaderPro_6_9 | — | `Order` → `Sales Order` | 1 | update |
 
-Across the 3 default templates: 3 carry `IsInsert`, 0 carry `IsUpdate`, 0 carry `IsDelete`, and
+Across the 9 default templates: 5 carry `IsInsert`, 2 carry `IsUpdate`, 2 carry `IsDelete`, and
 3 carry `IsCustomization`. A flag decides which operation the process is allowed to perform, not
-which one it performs on a given record.
+which one it performs on a given record. 1 catalogue description was not printed because they
+are placeholders or carry text that is not ours to publish.
 
 ## 2. The process rows the import creates
 
@@ -82,20 +89,21 @@ that never matches a run.
 | `IsInsert` / `IsUpdate` / `IsDelete` | the template’s own flags — section 1 |
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
-The field-process versions this pair’s default templates belong to: `TxDownloaderPro_6_1`,
-`TxDownloaderPro_6_14`, `TxDownloaderPro_6_2`.
+The field-process versions this pair’s default templates belong to: `TxDownloaderPro_6_7`,
+`TxDownloaderPro_6_9`, `TxDownloaderPro_6_10`, `TxDownloaderPro_6_1`, `TxDownloaderPro_6_14`,
+`TxDownloaderPro_6_3`, `TxDownloaderPro_6_2`, `TxDownloaderPro_6_11`, `TxDownloaderPro_6_12`.
 
 1 of these template rows carry a licence-group id, so what a given tenant is offered in the
 picker is narrower than what the catalogue holds.
 
 ## 3. What the query retrieves
 
-`Query` does not have one shape across the product (parent §9). For this pair, 3 carry a JSON
+`Query` does not have one shape across the product (parent §9). For this pair, 9 carry a JSON
 object naming the module to retrieve. **No query text is reproduced here**; what follows is what
 those queries read and filter on.
 
-- **Objects read:** `customer`, `product`, `order`.
-- **Members present in the JSON query object:** `ModuleName` (3). Where a `Where` member is
+- **Objects read:** `customer`, `order`, `product`.
+- **Members present in the JSON query object:** `ModuleName` (9). Where a `Where` member is
   present it is empty.
 - **Where the filtering happens:** the query names a module rather than a condition, so the
   selection the parent’s §12 describes is applied after retrieval, not by the query.
@@ -104,8 +112,8 @@ those queries read and filter on.
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 3 default templates, 3 carry a `DefaultProcessStructure`. A parseable document carries
-about 23 members.
+pair’s 9 default templates, 9 carry a `DefaultProcessStructure`. A parseable document carries
+about 13 members.
 
 - **Template path roots used:** `Customer`, `Order`, `Product`, `line_items`. A path’s first
   segment has to match the element the engine emits, and the document root itself is never part
@@ -120,8 +128,8 @@ about 23 members.
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 3 default templates, 0 carry a
-parseable `DefaultResultStructure`, 3 carry none.
+system’s response after the write (parent §11). Of this pair’s 9 default templates, 0 carry a
+parseable `DefaultResultStructure`, 9 carry none.
 
 **No default template for this pair fills a part.** Nothing is written back to Shopify by these
 templates: the source system’s key stays in `TxDownloaderProTrans` and the CRM record is left as
