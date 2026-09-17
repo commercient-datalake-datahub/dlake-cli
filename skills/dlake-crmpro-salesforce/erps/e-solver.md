@@ -148,7 +148,28 @@ process before activating it.
 | ESOLVER_Invoice Header | `CommercientSF8_ESOLVER_INVOICEHEADER__c` | 28 | `DocumentClass` → `documentclass__c`, `DocumentGroup` → `documentgroup__c`, `Reg_Code` → `reg_code__c`, `RegistrationDate` → `registrationdate__c`, `Registration_Num` → `registration_num__c` |
 | ESOLVER_Invoice Details | `CommercientSF8_ESOLVER_INVOICEDETAIL__c` | 44 | `DocumentClass` → `documentclass__c`, `Reg_Code` → `reg_code__c`, `DocumentGroup` → `documentgroup__c`, `RegistrationDate` → `registrationdate__c`, `RegistrationNum` → `registrationnum__c` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 12 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 12
+- Default operations: insert on 12, update on 12, delete on 12
+- Marked circular-sync: 0
+- Licence groups they span: 7
+- Destination objects: `Account`, `account`, `CommercientSF8_ESOLVER_CUSTOMER__c`, `CommercientSF8_ESOLVER_INVOICEDETAIL__c`, `CommercientSF8_ESOLVER_INVOICEHEADER__c`, `CommercientSF8_ESOLVER_SALESORDERDETAIL__c`, `CommercientSF8_ESOLVER_SALESORDERHEADER__c`, `CommercientSF8_ESOLVER_SalesPerson__c`, `CommercientSF8_ESOLVER_SHIPTOADDRESS__c`, `RecordType` and a custom object
+- Object display names: Account, AccountCustomerLookup, CRM AccountChild, ESOLVER Invoice_CreditNote, ESOLVER_Address, ESOLVER_Customer, ESOLVER_Invoice Details, ESOLVER_Invoice Header, ESOLVER_Sales Order, ESOLVER_Sales OrderLine, ESOLVER_SalesPerson, Get Recordtype
+- Template groups: Account, Invoice, Salesorder, Customer Multi Ship Addresses
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -172,7 +193,7 @@ The prefixes these templates set:
 - `vw_ESOLVER_SalesOrderDetail`
 - `vw_ESOLVER_SalesPerson`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
