@@ -187,7 +187,28 @@ process before activating it.
 | Pricebooks | `Price_Books` | 2 | `ExternalKey` → `Commercient_ExternalKey`, `Name` → `Name` |
 | Product Pricebooks | `Products:Price_Books` | 6 | `ItemID` → `Commercient_ExternalKey`, `ItemID` → `PRODUCT_ID`, `PricebookName` → `ZOHO_PriceBookID`, `PriceAmount` → `list_price`, `PricebookName` → `PricebookName` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 55 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 55
+- Default operations: insert on 55, update on 55, delete on 55
+- Marked circular-sync: 0
+- Licence groups they span: 5
+- Destination objects: `Accounts`, `sage50ustozoho__SAGE50US_Address`, `sage50ustozoho__SAGE50US_Customer`, `sage50ustozoho__SAGE50US_SalesInvoiceDeta`, `sage50ustozoho__SAGE50US_SalesInvoiceHead`, `sage50ustozoho__SAGE50US_SalesOrderDetail`, `sage50ustozoho__SAGE50US_SalesOrderHeader`, `sage50ustozoho__SAGE50US_SalesPerson`, `Contacts`, `Products`, `sage50ustozoho__SAGE50US_ARTerm`, `sage50ustozoho__SAGE50US_Item_Master`, `Price_Books`, `Quotes`, `Invoices`, `Sales_Orders`, `Vendors` and 3 custom objects
+- Object display names: SAGE50US Address, SAGE50US Customer, SAGE50US SalesOrderDetail, SAGE50US SalesOrderHeader, SAGE50US SalesPerson, Accounts, Contacts, Products, SAGE50US ARTerm, SAGE50US SalesInvoiceDeta, SAGE50US SalesInvoiceHead, Pricebooks, 11 more and a further template
+- Template groups: CRM Order and Line, Account, CRM Quote and Line
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -217,7 +238,7 @@ The prefixes these templates set:
 - `vw_SAGE50US_DInvoice:`
 - `SalesRep:`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
