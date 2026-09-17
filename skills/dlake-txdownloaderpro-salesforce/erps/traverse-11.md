@@ -2,11 +2,11 @@
 name: dlake-txdownloaderpro-salesforce/erps/traverse-11
 description: >-
   What the shipped default TxDownloaderPro templates set up when Salesforce is the writeback
-  destination and Traverse 11 is the source: the 1 default template the catalogue ships for this
-  pair, the 1 field-process version they are identified by, what each template family delivers,
-  the shape of the query that finds flagged records and the objects and marker columns it reads,
-  the structure of the inbound mapping document, and which `ResultStructure` parts the templates
-  fill for the write back to the CRM.
+  destination and Traverse 11 is the source: the 3 default templates the catalogue ships for
+  this pair, the 3 field-process versions they are identified by, what each template family
+  delivers, the shape of the query that finds flagged records and the objects and marker columns
+  it reads, the structure of the inbound mapping document, and which `ResultStructure` parts the
+  templates fill for the write back to the CRM.
   Use it when importing or reading this pair's template set, when deciding which templates to
   import and activate, or when a process runs and writes nothing and the answer is in the query
   or in the mapping document.
@@ -54,11 +54,13 @@ destination objects are and what the operation flags allow. Operations are the u
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
 | Customer Import | — | — → — | 1 | create |
+| Update Sales Order Import | Salesforce Traverse SalesOrder header to Traverse Update Sales Order | `CommercientSF7__tblSoTransHeader__c` → `Sales Order` | 1 | update |
+| Vendor Import | Salesforce Account to Traverse Vendor | `Account` → `Vendor` | 1 | create |
 
-Across the single default template: 1 carries `IsInsert`, 0 carry `IsUpdate`, 0 carry
-`IsDelete`. A flag decides which operation the process is allowed to perform, not which one it
-performs on a given record. 1 catalogue description was not printed because they are
-placeholders or carry text that is not ours to publish.
+Across the 3 default templates: 2 carry `IsInsert`, 1 carries `IsUpdate`, 0 carry `IsDelete`. A
+flag decides which operation the process is allowed to perform, not which one it performs on a
+given record. 1 catalogue description was not printed because they are placeholders or carry
+text that is not ours to publish.
 
 ## 2. The process rows the import creates
 
@@ -81,18 +83,32 @@ that never matches a run.
 | `IsInsert` / `IsUpdate` / `IsDelete` | the template’s own flags — section 1 |
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
-The field-process versions this pair’s default templates belong to: `TxDownloader_7_1`.
+The field-process versions this pair’s default templates belong to: `TxDownloader_7_1`,
+`TxDownloader_7_5`, `TxDownloader_7_4`.
 
 ## 3. What the query retrieves
 
-`Query` does not have one shape across the product (parent §9). For this pair, 1 carries a
+`Query` does not have one shape across the product (parent §9). For this pair, 3 carry a
 `SELECT` statement in the CRM's own query language. **No query text is reproduced here**; what
 follows is what those queries read and filter on.
 
-- **Objects read:** `Account`.
-- **Marker and key columns the queries name:** `CommercientSF__Commercient_ArCustomerCode__c`.
-  These are the columns a user’s flag lands in and the columns the run writes an outcome back
-  to; which ones are in the `WHERE` is what decides whether a record is in scope at all.
+- **Objects read:** `Account`, `CommercientSF7__Traverse_SalesOrder_Transaction_Detail__r`.
+- **Child collections pulled in the same query:**
+  `CommercientSF7__Traverse_SalesOrder_Transaction_Detail__r`. A header retrieved without its
+  lines is a query that does not name the child collection.
+- **Marker and key columns the queries name:** `CommercientSF__Commercient_ArCustomerCode__c`,
+  `CommercientSF7__TransID__c`, `CommercientSF7__TransType__c`, `CommercientSF7__BatchId__c`,
+  `CommercientSF7__LocId__c`, `CommercientSF7__CustId__c`, `CommercientSF7__CustLevel__c`,
+  `CommercientSF7__ShipToName__c`, `CommercientSF7__ShipToAddr1__c`,
+  `CommercientSF7__ShipToAddr2__c`, `CommercientSF7__ShipToCity__c`,
+  `CommercientSF7__ShipToRegion__c`, `CommercientSF7__ShipToCountry__c`,
+  `CommercientSF7__ShipToPostalCode__c`, `CommercientSF7__ShipVia__c`,
+  `CommercientSF7__TermsCode__c`, `CommercientSF7__DistCode__c`, `CommercientSF7__CustPONum__c`,
+  `CommercientSF7__TransDate__c`, `CommercientSF7__PODate__c`, and 12 more. These are the
+  columns a user’s flag lands in and the columns the run writes an outcome back to; which ones
+  are in the `WHERE` is what decides whether a record is in scope at all.
+- **Operators present:** `!=`, an empty-string test. The parent’s §12 is the authority on the
+  vocabulary; the point here is only which of it these templates use.
 - **Where the filtering happens:** in the query, on the CRM side, before anything reaches the
   source system. Narrowing a template means editing its query — not its mapping.
 
@@ -100,16 +116,23 @@ follows is what those queries read and filter on.
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 1 default template, 0 carry a `DefaultProcessStructure` and 1 carries none.
+pair’s 3 default templates, 2 carry a `DefaultProcessStructure` and 1 carries none. A parseable
+document carries about 22 members.
 
-- **No `Line.` section.** These templates map a single record, with no repeating child
-  collection.
+- **Template path roots used:** `CommercientSF7__tblSoTransHeader__c`, `Account`,
+  `CommercientSF7__Traverse_SalesOrder_Transaction_Detail__r`. A path’s first segment has to
+  match the element the engine emits, and the document root itself is never part of the path.
+- **`Line.` section members present:** `Line.ItemID`, `Line.Description`,
+  `Line.AdditionalDescription`, `Line.QtyOrdSell`, `Line.UnitPrice`, `Line.LocId`,
+  `Line.EntryNum`, `Line.LineReqShipDate`, `Line.mainXml`. 1 template name the collection
+  through `Line.mainXml`; the members beside it are resolved against that collection’s own root
+  rather than through the header.
 
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 1 default template, 0 carry a
-parseable `DefaultResultStructure`, 0 carry none, and 1 do not parse and are counted but not
+system’s response after the write (parent §11). Of this pair’s 3 default templates, 0 carry a
+parseable `DefaultResultStructure`, 2 carry none, and 1 do not parse and are counted but not
 described.
 
 **No default template for this pair fills a part.** Nothing is written back to Salesforce by
