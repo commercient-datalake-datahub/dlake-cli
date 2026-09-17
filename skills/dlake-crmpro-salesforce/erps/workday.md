@@ -128,7 +128,28 @@ process before activating it.
 | Invoice Line | `CommercientSF22__WorkDay_SalesInvoiceLines__c` | 27 | `InvoiceNumber` → `InvoiceNumber`, `Customer_Invoice_ID` → `Customer_Invoice_ID`, `Customer_Invoice_Line_Reference` → `Customer_Invoice_Line_Reference`, `Customer_Invoice_Line_Reference_ID` → `Customer_Invoice_Line_Reference_ID`, `Line_Order` → `CommercientSF22__Line_Order__c` |
 | Address | `CommercientSF22__WorkDay_CustomerAddress__c` | 14 | `Customer_ID` → `CommercientSF22__Customer_ID__c`, `AddressID` → `CommercientSF22__AddressID__c`, `AddressFormatType` → `CommercientSF22__AddressFormatType__c`, `AddressLine1` → `CommercientSF22__AddressLine1__c`, `AddressLine2` → `CommercientSF22__AddressLine2__c` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 16 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 16
+- Default operations: insert on 16, update on 16, delete on 16
+- Marked circular-sync: 0
+- Licence groups they span: 5
+- Destination objects: `Account`, `CommercientSF22__WorkDay_CustomerAddress__c`, `CommercientSF22__WorkDay_CustomerMaster__c`, `CommercientSF22__WorkDay_SalesInvoice__c`, `CommercientSF22__WorkDay_SalesInvoiceLines__c`, `ContentDocument`
+- Object display names: Account Cache, Account Create, Address, Customer, Customer Reverse Lookup, Invoice, Invoice Line and a further template
+- Template groups: Account, Invoice, Customer Multi Ship Addresses
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -148,7 +169,7 @@ The prefixes these templates set:
 - `vw_WORKDAY_Invoice`
 - `vw_WORKDAY_InvoiceLine`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
