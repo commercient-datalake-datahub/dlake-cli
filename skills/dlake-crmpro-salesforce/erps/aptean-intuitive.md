@@ -137,7 +137,28 @@ process before activating it.
 | APTEANINTUITIVE InvoiceLine | `CommercientSF21__InvoiceLine__c` | 83 | `Aptean_Intuitive_Invoice` → `CommercientSF21__Aptean_Intuitive_Invoice__c`, `IVL_IVM_RecordID` → `IVL_IVM_RecordID`, `IVL_DiscPct_1` → `IVL_DiscPct_1__c`, `IVL_RecordID` → `IVL_RecordID`, `IVL_LineSource` → `IVL_LineSource` |
 | Contact | `Contact` | 30 | `CUS_RecordID` → `cus_recordid__c`, `CUS_CustomerID` → `cus_customerid__c`, `CUS_CorpName` → `cus_corpname__c`, `CUS_CreatedDate` → `cus_createddate__c`, `LastOrderDate` → `lastorderdate__c` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 51 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 51
+- Default operations: insert on 51, update on 51, delete on 51
+- Marked circular-sync: 0
+- Licence groups they span: 11
+- Destination objects: `Account`, `CommercientSF21__Customer__c`, `CommercientSF21__Invoice__c`, `Product2`, `CommercientSF21__CustomerShipTo__c`, `CommercientSF21__InvoiceLine__c`, `CommercientSF21__SalesOrder__c`, `CommercientSF21__SalesOrderLine__c`, `CommercientSF21__Item__c`, `PricebookEntry`, `Aptean_Intuitive_AR_Detail__c`, `Aptean_Intuitive_Invoice_Line_Lot_Detail__c`, `CommercientSF21__ACCOUNTMATCHING__c`, `CommercientSF21_BillToAddress__c`, `CommercientSF21_PaymentTerms__c`, `CommercientSF21_ProjectGroup__c`, `CommercientSF21_Shipment__c`, `CommercientSF21_SoldToAddress__c`, `contact`, `Contact`, 2 more and 2 custom objects
+- Object display names: Account, APTEANINTUITIVE Customer, APTEANINTUITIVE CustomerToAccountLookup, APTEANINTUITIVE Invoice, APTEANINTUITIVE InvoiceLine, APTEANINTUITIVE SalesOrder, APTEANINTUITIVE SalesOrderLine, APTEANINTUITIVE ShipToAddress, APTEANINTUITIVE Item, APTEANINTUITIVE ProductToItemReverseLookup, Contact, Product, 16 more and 3 further templates
+- Template groups: Account, Invoice, Product, Customer Multi Ship Addresses, Salesorder, CRM Opportunity and Line
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -159,7 +180,7 @@ The prefixes these templates set:
 - `vw_APTEANINTUITIVE_SalesOrder`
 - `vw_APTEANINTUITIVE_SalesOrderLine`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
