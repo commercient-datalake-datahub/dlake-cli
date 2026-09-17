@@ -38,7 +38,7 @@ described from their `DefaultQuery`, `DefaultProcessStructure` and `DefaultResul
 columns — structure only. **No template text is reproduced.** This page grows as the default
 catalogue does.
 
-The default set ships **79 templates across 18 ERP names, in 47 field-process versions**. Each of
+The default set ships **144 templates across 18 ERP names, in 106 field-process versions**. Each of
 those ERPs has its own page, `dlake-txdownloaderpro-<erp>-dynamicscrm`. The catalogue spells this
 destination's name without an `s`; the product's display name for it is Dynamics CRM.
 
@@ -54,14 +54,14 @@ destination's name without an `s`; the product's display name for it is Dynamics
 | **Product / product price** | Product records become ERP items and prices | create, update |
 | **Job** | An opportunity becomes the ERP's job object, on the ERPs that have one | create, update |
 
-Across the 79 default templates, **61 carry `IsInsert`, 25 carry `IsUpdate` and 4 carry
+Across the 144 default templates, **93 carry `IsInsert`, 50 carry `IsUpdate` and 12 carry
 `IsDelete`**. A flag decides which operation the process is allowed to perform, not which one it
 performs on a given record. 37 of the rows carry a licence-group id, so what a tenant is offered
 is narrower than what the catalogue holds.
 
 **The catalogue carries no `BusinessDescription` on any Dynamics CRM row.** The business language
 on the per-ERP pages is each row's `Message` — direction of travel and two object names, a label
-rather than a specification — and about three quarters of the processes have one that survives
+rather than a specification — and about five sixths of the processes have one that survives
 publication.
 
 ## 2. The process rows the import creates
@@ -80,10 +80,11 @@ field-process version is its identity and supplies the DLL on a create. In-fligh
 
 ## 3. The queries
 
-**This destination is the one where `Query` has two shapes in the default set**: 65 templates
-carry a **FetchXML document** and 14 carry a **`SELECT` statement**. 76 of the 79 carry a filter
-of some kind. Knowing which shape a process holds before editing it is the whole point of this
-section — the parent's §9 is explicit that `Query` is not one format across the product.
+**This destination is the one where `Query` has more than one shape in the default set**: 129
+templates carry a **FetchXML document**, 14 carry a **`SELECT` statement** and one carries a JSON
+object. 140 of the 144 carry a filter of some kind. Knowing which shape a process holds before
+editing it is the whole point of this section — the parent's §9 is explicit that `Query` is not
+one format across the product.
 
 - **Objects the queries read:** `account`, `contact`, `salesorder`, `salesorderdetail`, `quote`,
   `quotedetail`, `opportunity`, `opportunitydetail`, `order`, `orderdetail`, `systemuser`, and a
@@ -93,7 +94,7 @@ section — the parent's §9 is explicit that `Query` is not one format across t
   `order`, `link-entity`. A `link-entity` is how the detail records and the related account or
   salesperson entity are pulled in the same retrieve; a header that arrives with no lines is
   usually a document with no `link-entity` for the detail entity.
-- **Condition operators the default set uses:** `eq`, `null`, `not-null`, and one document
+- **Condition operators the default set uses:** `eq`, `null`, `not-null`, and four documents
   spelling it without the hyphen. That last spelling is worth knowing about, because it is a
   different string from the supported one.
 - **Operators the `SELECT` templates use:** `=`, `!=`, `AND`, `OR`, a null test and an
@@ -119,15 +120,15 @@ its query, and editing it means editing the shape it actually holds.
 ## 4. The inbound mapping document
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
-value is a template resolved against the retrieved record's XML document (parent §11). All 79
+value is a template resolved against the retrieved record's XML document (parent §11). All 144
 default templates carry one; **5 do not parse as JSON** and are counted but not described. A
-parseable document carries about 18 members — the largest average of any destination.
+parseable document carries about 16 members — the largest average of any destination.
 
 - **Path roots the documents use:** `account`, `contact`, `quote`, `quotedetail`, `opportunity`,
   `opportunitydetail`, `salesorder`, `order`, `orderdetail`, `invoice`, and the capitalised
   spellings of several of them. The root has to match what the engine emitted for that retrieve;
   with FetchXML that is the entity name in the document, not the display name of the entity.
-- **38 of the parseable documents carry a `Line.` section, and all 38 name the collection
+- **63 of the parseable documents carry a `Line.` section, and all 63 name the collection
   through `Line.mainXml`** — the tightest correspondence of any destination. The members beside
   it are the item, quantity, unit-price, discount, tax, GL-account and description members in
   each ERP's spelling, resolved against the collection's own root, not through the header.
@@ -138,17 +139,17 @@ parseable document carries about 18 members — the largest average of any desti
 
 ## 5. Result structure — what goes back to Dynamics CRM
 
-Of the 79 default templates, **30 carry a parseable `DefaultResultStructure` and 48 carry none**;
+Of the 144 default templates, **57 carry a parseable `DefaultResultStructure` and 86 carry none**;
 one does not parse.
 
 | Part | Filled by | What it addresses | Members the default set uses |
 |---|---|---|---|
-| `Part1` | 30 templates | the record the run is already working with | a source-path-to-CRM-field map |
-| `Part2` | none (explicitly null on all 30) | the child/line records under it | — |
-| `Part3` | none (explicitly null on all 30) | a **new** record | — |
-| `Part4` | none (explicitly null on all 30) | a **different** record | — |
+| `Part1` | 57 templates | the record the run is already working with | a source-path-to-CRM-field map |
+| `Part2` | none (explicitly null on all 57) | the child/line records under it | — |
+| `Part3` | none (explicitly null on all 57) | a **new** record | — |
+| `Part4` | none (explicitly null on all 57) | a **different** record | — |
 
-**`Part1` and nothing else**, even on the 38 templates that map lines inbound. The line records
+**`Part1` and nothing else**, even on the 63 templates that map lines inbound. The line records
 get nothing back.
 
 - **CRM fields `Part1` writes to:** `comrcint_arcustomercode`, `arcustomercode`,
@@ -197,24 +198,24 @@ writes them beside this file.
 <!-- ERP-TABLE:BEGIN dlake-txdownloaderpro-dynamicscrm -->
 | ERP | Page | What its templates deliver |
 |---|---|---|
-| Epicor 10 | [`erps/epicor-10.md`](erps/epicor-10.md) | 6 default templates in 5 processes, mostly `SELECT` queries; writes back through `Part1` |
-| Infor SyteLine | [`erps/infor-syteline.md`](erps/infor-syteline.md) | 2 default templates in 2 processes, mostly FetchXML queries; writes back through `Part1` |
+| Epicor 10 | [`erps/epicor-10.md`](erps/epicor-10.md) | 7 default templates in 6 processes, mostly `SELECT` queries; writes back through `Part1`; 19 community templates |
+| Infor SyteLine | [`erps/infor-syteline.md`](erps/infor-syteline.md) | 27 default templates in 21 processes, mostly FetchXML queries; writes back through `Part1`; 2 community templates |
 | Microsoft Dynamics GP | [`erps/microsoft-dynamics-gp.md`](erps/microsoft-dynamics-gp.md) | 1 default template in 1 process, mostly FetchXML queries; nothing written back |
 | MYOB AccountRight | [`erps/myob-accountright.md`](erps/myob-accountright.md) | 2 default templates in 1 process, mostly FetchXML queries; writes back through `Part1` |
 | NetSuite | [`erps/netsuite.md`](erps/netsuite.md) | 2 default templates in 1 process, mostly FetchXML queries; writes back through `Part1` |
 | QuickBooks Desktop | [`erps/quickbooks-desktop.md`](erps/quickbooks-desktop.md) | 1 default template in 1 process, mostly FetchXML queries; nothing written back |
-| QuickBooks Online | [`erps/quickbooks-online.md`](erps/quickbooks-online.md) | 2 default templates in 2 processes, mostly FetchXML queries; nothing written back |
-| Sage 100 (US) | [`erps/sage-100-us.md`](erps/sage-100-us.md) | 12 default templates in 6 processes, mostly FetchXML queries; writes back through `Part1` |
+| QuickBooks Online | [`erps/quickbooks-online.md`](erps/quickbooks-online.md) | 16 default templates in 16 processes, mostly FetchXML queries; writes back through `Part1`; 3 community templates |
+| Sage 100 (US) | [`erps/sage-100-us.md`](erps/sage-100-us.md) | 15 default templates in 9 processes, mostly FetchXML queries; writes back through `Part1`; 8 community templates |
 | Sage 100 Contractor | [`erps/sage-100-contractor.md`](erps/sage-100-contractor.md) | 4 default templates in 2 processes, mostly FetchXML queries; writes back through `Part1` |
 | Sage 100 Contractor 2018 | [`erps/sage-100-contractor-2018.md`](erps/sage-100-contractor-2018.md) | 4 default templates in 2 processes, mostly FetchXML queries; writes back through `Part1` |
 | Sage 300 | [`erps/sage-300.md`](erps/sage-300.md) | 1 default template in 1 process, mostly FetchXML queries; nothing written back |
-| Sage 50 Canada | [`erps/sage-50-canada.md`](erps/sage-50-canada.md) | 11 default templates in 4 processes, mostly FetchXML queries; writes back through `Part1` |
-| Sage 50 UK | [`erps/sage-50-uk.md`](erps/sage-50-uk.md) | 5 default templates in 5 processes, mostly `SELECT` queries; writes back through `Part1` |
+| Sage 50 Canada | [`erps/sage-50-canada.md`](erps/sage-50-canada.md) | 13 default templates in 6 processes, mostly FetchXML queries; writes back through `Part1` |
+| Sage 50 UK | [`erps/sage-50-uk.md`](erps/sage-50-uk.md) | 6 default templates in 6 processes, mostly `SELECT` queries; writes back through `Part1` |
 | Sage 50 US | [`erps/sage-50-us.md`](erps/sage-50-us.md) | 13 default templates in 6 processes, mostly FetchXML queries; writes back through `Part1` |
-| Sage Live | [`erps/sage-live.md`](erps/sage-live.md) | 2 default templates in 2 processes, mostly FetchXML queries; nothing written back |
-| SAP B1 | [`erps/sap-b1.md`](erps/sap-b1.md) | 5 default templates in 3 processes, mostly FetchXML queries; writes back through `Part1` |
-| SYSPRO 6 | [`erps/syspro-6.md`](erps/syspro-6.md) | 4 default templates in 2 processes, mostly FetchXML queries; writes back through `Part1` |
-| VAI S2K | [`erps/vai-s2k.md`](erps/vai-s2k.md) | 2 default templates in 1 process, mostly FetchXML queries; writes back through `Part1` |
+| Sage Live | [`erps/sage-live.md`](erps/sage-live.md) | 4 default templates in 4 processes, mostly FetchXML queries; writes back through `Part1` |
+| SAP B1 | [`erps/sap-b1.md`](erps/sap-b1.md) | 6 default templates in 4 processes, mostly FetchXML queries; writes back through `Part1`; 2 community templates |
+| SYSPRO 6 | [`erps/syspro-6.md`](erps/syspro-6.md) | 19 default templates in 17 processes, mostly FetchXML queries; writes back through `Part1` |
+| VAI S2K | [`erps/vai-s2k.md`](erps/vai-s2k.md) | 3 default templates in 2 processes, mostly FetchXML queries; writes back through `Part1` |
 <!-- ERP-TABLE:END -->
 
 **Work out which row applies before reading one.** The source is the ERP the tenant was registered
