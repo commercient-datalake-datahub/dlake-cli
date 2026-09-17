@@ -147,7 +147,28 @@ process before activating it.
 | Infor Visual Receivable Line | `CommercientSF18__InforVisual_RECEIVABLE_LINE__c` | 28 | `Receivable` → `Receivable`, `AMOUNT` → `CommercientSF18__AMOUNT__c`, `COMMISSION_PCT` → `COMMISSION_PCT`, `CUST_ORDER_ID` → `CommercientSF18__CUST_ORDER_ID__c`, `CUST_ORDER_LINE_NO` → `CommercientSF18__CUST_ORDER_LINE_NO__c` |
 | Contact | `Contact` | 10 | `AccountId` → `AccountId`, `InforVisual_Customer` → `InforVisual_Customer__c`, `OwnerId` → `OwnerId`, `LastName` → `LastName`, `FirstName` → `FirstName` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 201 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 201
+- Default operations: insert on 201, update on 201, delete on 201
+- Marked circular-sync: 0
+- Licence groups they span: 15
+- Destination objects: `Account`, `Product2`, `CommercientSF18__InforVisual_CUST_ORDER_LINE__c`, `CommercientSF18__InforVisual_CUSTOMER_ORDER__c`, `CommercientSF18__InforVisual_SALES_REP__c`, `Contact`, `CommercientSF18__InforVisual_ADDRESS__c`, `CommercientSF18__InforVisual_CUSTOMER__c`, `CommercientSF18__InforVisual_PART__c`, `CommercientSF18__InforVisual_RECEIVABLE_LINE__c`, `CommercientSF18__InforVisual_TERMS__c`, `Pricebookentry`, `CommercientSF18__InforVisual_RECEIVABLE__c`, `PriceBookEntry`, `Opportunity`, `CommercientSF18__InforVisual_PART_WAREHOUSE__c`, `OpportunityLineItem`, `User`, `Pricebook2`, `AccountContactRelation`, 14 more and 5 custom objects
+- Object display names: Account, Infor Visual Customer Address, Infor Visual Order, Infor Visual Order Line, Infor Visual SalesPerson, Product, Customer Reverse Lookup Account, Infor Visual Customer, Infor Visual Terms, Item Warehouse, Infor Visual Part, Standard PriceBook Create, 61 more and 7 further templates
+- Template groups: Account, Product, Salesorder, CRM Opportunity and Line, Customer Multi Ship Addresses, Invoice, Opportunity, Purchase Order, CRM Quote and Line
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -171,7 +192,7 @@ The prefixes these templates set:
 - `vw_INFORVISUAL_OrderLine`
 - `vw_INFORVISUAL_SalesPerson`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
