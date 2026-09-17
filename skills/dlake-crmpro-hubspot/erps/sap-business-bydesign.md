@@ -108,7 +108,28 @@ process before activating it.
 | create order | `deal` | 7 | `Total` → `amount`, `OrderDate` → `closedate`, `OrderDate` → `createdate`, `SalesOrderId, BillTo_Name` → `dealname`, `AccountId` → `associate_company` |
 | create orderdetail | `line_item` | 6 | `ListPrice` → `price`, `Qty` → `quantity`, `ProductId` → `hs_product_id`, `ProductDescription` → `name`, `SalesOrderId` → `associate_deal` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 7 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 7
+- Default operations: insert on 7, update on 7, delete on 7
+- Marked circular-sync: 0
+- Licence groups they span: 3
+- Destination objects: `company`, `contact`, `deal`, `line_item`, `products` and a custom object
+- Object display names: upsert contact, upsert customer, upsert item, upsert order, upsert orderdetail and 2 further templates
+- Template groups: Account, Customer Multi Ship Addresses
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -125,7 +146,7 @@ The prefixes these templates set:
 - `HUBSPOT_NEW_DEAL`
 - `HUBSPOT_NEW_LINEITEM`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
