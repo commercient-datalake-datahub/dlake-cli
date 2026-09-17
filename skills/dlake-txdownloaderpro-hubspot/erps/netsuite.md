@@ -57,9 +57,9 @@ destination objects are and what the operation flags allow. Operations are the u
 | Create New Customer | Hubspot companies To Netsuite Customer | `companies` → `Customer` | 2 | create / update |
 | Create New Estimate | Hubspot Deals to NetSuite Estimate | `deals` → `Estimate` | 2 | create / update |
 | Create New Invoice | Hubspot Deals to NetSuite Invoice | `deals` → `Invoice` | 2 | create / update |
+| Create New Opportunity | Hubspot Deals to NetSuite Opportunity | `deals` → `Opportunity` | 2 | create / update |
 | Create New ReturnAuthorization | Hubspot Deals to NetSuite Return Authorization | `deals` → `ReturnAuthorization` | 2 | create / update |
 | Create New SalesOrder | Hubspot Deals to NetSuite SalesOrder | `deals` → `SalesOrder` | 2 | create / update |
-| TxDownloader_9_6 | Hubspot Deals to NetSuite Opportunity | `deals` → `Opportunity` | 2 | create / update |
 
 Across the 14 default templates: 7 carry `IsInsert`, 7 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
