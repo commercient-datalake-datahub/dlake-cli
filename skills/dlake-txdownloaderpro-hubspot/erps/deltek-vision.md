@@ -55,9 +55,9 @@ destination objects are and what the operation flags allow. Operations are the u
 |---|---|---|---|---|
 | Opportunity | HubSpot deals to Deltek Vision Opportunity | `deals` → `Opportunity` | 2 | create / update |
 | Create Contacts | HubSpot contacts to Deltek Vision Contact | `contacts` → `Contacts` | 1 | create |
+| Create New Client | HubSpot companies to Deltek Vision Client | `companies` → `Client` | 1 | create |
 | Projects | HubSpot deals to Deltek Vision Project | `deals` → `Projects` | 1 | create |
-| TxDownloader_29_1 | HubSpot companies to Deltek Vision Client | `companies` → `Client` | 1 | create |
-| TxDownloader_29_2 | HubSpot Update companies to Deltek Vision Update Client | `companies` → `Client` | 1 | update |
+| Update Client | HubSpot Update companies to Deltek Vision Update Client | `companies` → `Client` | 1 | update |
 | Update Contact | HubSpot Update contacts to Deltek Vision Update Contact | `contacts` → `Contacts` | 1 | update |
 
 Across the 7 default templates: 4 carry `IsInsert`, 3 carry `IsUpdate`, 0 carry `IsDelete`. A
