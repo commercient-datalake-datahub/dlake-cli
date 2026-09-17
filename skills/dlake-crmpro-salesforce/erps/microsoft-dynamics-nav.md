@@ -146,7 +146,28 @@ process before activating it.
 | SYNC SHIPMENT HEADER | `CommercientSF9__MSDYNAMICNAV_SHIPMENTHEADERS__c` | 61 | `No` → `CommercientSF9__No__c`, `SelltoCustomerNo` → `SelltoCustomerNo`, `BilltoCustomerNo` → `BilltoCustomerNo`, `BilltoName` → `CommercientSF9__BilltoName__c`, `BilltoAddress` → `CommercientSF9__BilltoAddress__c` |
 | SYNC SHIPMENT DETAIL | `CommercientSF9__MSDYNAMICNAV_SHIPMENTLINES__c` | 58 | `DocumentNo` → `DocumentNo`, `LineNo` → `CommercientSF9__LineNo__c`, `SelltoCustomerNo` → `SelltoCustomerNo`, `Type` → `CommercientSF9__Type__c`, `No` → `CommercientSF9__No__c` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 134 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 134
+- Default operations: insert on 134, update on 134, delete on 134
+- Marked circular-sync: 5
+- Licence groups they span: 14
+- Destination objects: `Account`, `CommercientSF9__MSDYNAMICNAV_CUSTOMER__c`, `CommercientSF9__MSDYNAMICNAV_INVOICEHEADER__c`, `CommercientSF9__MSDYNAMICNAV_ORDERHEADER__c`, `CommercientSF9__MSDYNAMICNAV_INVOICELINES__c`, `CommercientSF9__MSDYNAMICNAV_ORDERLINES__c`, `PricebookEntry`, `Product2`, `Contact`, `CommercientSF9__MSDYNAMICNAV_ADDRESS__c`, `CommercientSF9__MSDYNAMICNAV_SHIPMENTHEADERS__c`, `CommercientSF9__MSDYNAMICNAV_SHIPMENTLINES__c`, `Asset`, `CommercientSF9__MSDYNAMICNAV_Item__c`, `PriceBook2`, `Commercient_MSDYNAMICSNAV_ShipToAddress__c`, `Dimension_Value__c`, `Invoice_Payment__c`, `Opportunity`, `Payment_Terms__c`, 8 more and 9 custom objects
+- Object display names: SYNC ACCOUNT, SYNC CUSTOMER, SYNC CUSTOMER TO ACCOUNT LOOKUP, SYNC INVOICE DETAIL, SYNC INVOICE HEADER, SYNC SALES ORDER DETAIL, SYNC SALES ORDER HEADER, SYNC SHIP TO ADDRESS, SYNC CONTACT, SYNC SHIPMENT DETAIL, SYNC SHIPMENT HEADER, Product, 36 more and a further template
+- Template groups: Account, Product, Customer Multi Ship Addresses, Invoice, Salesorder, CRM Quote and Line, CRM Opportunity and Line, Opportunity, QuoteLine
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -169,7 +190,7 @@ The prefixes these templates set:
 - `vw_MSDYNAMICNAV_SalesOrderHeader`
 - `vw_MSDYNAMICNAV_SalesOrderDetail`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
