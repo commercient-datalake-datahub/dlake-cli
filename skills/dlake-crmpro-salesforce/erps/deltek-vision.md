@@ -111,7 +111,28 @@ process before activating it.
 | Customer Address Sync | `Commercient38__CLAddress__c` | 28 | `Account` → `Account`, `DELTEK_Clients` → `DELTEK_Clients`, `Accounting` → `Accounting`, `Address` → `Commercient38__Address__c`, `Address1` → `Commercient38__Address1__c` |
 | Customer Sync | `Commercient38__CL__c` | 41 | `ClientID` → `Commercient38__ClientID__c`, `Client` → `Commercient38__Client__c`, `Type` → `Commercient38__Type__c`, `Status` → `Commercient38__Status__c`, `ExportInd` → `Commercient38__ExportInd__c` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 40 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 40
+- Default operations: insert on 40, update on 40, delete on 40
+- Marked circular-sync: 4
+- Licence groups they span: 8
+- Destination objects: `Account`, `Contact`, `Commercient38__CL__c`, `Commercient38__CLAddress__c`, `DELTEK_Opportunity__c`, `DELTEK_Opportunity_CustomField__c`, `Commercient38__ACCOUNT__c`, `Commercient38__CONTACTS__c`, `DELTEK_InvoiceLine__c`, `DELTEK_InvoiceMaster__c`, `DELTEK_Project_Code__c`, `DELTEK_Project_Description__c`, `DELTEK_Project_SummarySub__c`, `Opportunity`, `Pricebook2` and 5 custom objects
+- Object display names: Customer Sync, Customer Address Sync, Account, Account Sync, Contact Object, Contact Sync, DELTEK_Opportunity_CustomField, Opportunity, Project Sync, Update ArcustomerCode, CustomerToAccount_ReverseLookup, DELTEK_InvoiceLine, 9 more and 6 further templates
+- Template groups: Account, Opportunity, Customer Multi Ship Addresses, Invoice, CRM Opportunity and Line
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -128,7 +149,7 @@ The prefixes these templates set:
 - `vw_DELTEK_Customer`
 - `vw_DELTEK_CustomerAddress`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
