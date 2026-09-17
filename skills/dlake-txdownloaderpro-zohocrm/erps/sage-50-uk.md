@@ -55,7 +55,7 @@ destination objects are and what the operation flags allow. Operations are the u
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
-| TxDownloader_3_1 | Zoho Account To Sage50UK Customer | `Accounts` → `Customer` | 2 | create / update |
+| Create or Update Customer | Zoho Account To Sage50UK Customer | `Accounts` → `Customer` | 2 | create / update |
 | Create new Contact | Zoho Contact To Sage50UK Contact | `Contacts` → `Contact` | 1 | create |
 | Create New Sales Order | Zoho CRM Quotes to SAGE50UK SalesOrder | `Quotes` → `SalesOrder` | 1 | create |
 | Update Contact | Zoho Contact to Sage50UK Update Contact | `Contacts` → `Contact` | 1 | update |
