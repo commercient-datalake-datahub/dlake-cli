@@ -58,9 +58,9 @@ destination objects are and what the operation flags allow. Operations are the u
 | Import Activity | Salesforce Task to Deltek Vision Activity | `Task` → `Activity` | 2 | create / update |
 | Opportunity | Salesforce Opportunity to Deltek Vision Opportunity | `Opportunity` → `Opportunity` | 2 | create / update |
 | Create Contacts | Salesforce Contact to Deltek Vision Contact | `Contact` → `Contacts` | 1 | create |
+| Create New Client | Salesforce Account to Deltek Vision Client | `Account` → `Client` | 1 | create |
 | Projects | Salesforce Opportunity to Deltek Vision Project | `Opportunity` → `Projects` | 1 | create |
-| TxDownloader_29_1 | Salesforce Account to Deltek Vision Client | `Account` → `Client` | 1 | create |
-| TxDownloader_29_2 | Salesforce Account to Deltek Vision Update Client | `Account` → `Client` | 1 | update |
+| Update Client | Salesforce Account to Deltek Vision Update Client | `Account` → `Client` | 1 | update |
 | Update Contact | Salesforce Contact to Deltek Vision Update Contact | `Contact` → `Contacts` | 1 | update |
 
 Across the 9 default templates: 5 carry `IsInsert`, 4 carry `IsUpdate`, 0 carry `IsDelete`. A
