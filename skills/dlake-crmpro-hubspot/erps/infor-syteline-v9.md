@@ -121,7 +121,28 @@ process before activating it.
 | create order | `deal` | 8 | `site_ref, co_num` → `externalkey`, `close_date` → `closedate`, `order_date` → `createdate`, `price` → `amount`, `site_ref, co_num` → `dealname` |
 | create orderdetail | `line_item` | 6 | `item` → `hs_product_id`, `co_num` → `associate_deal`, `price` → `price`, `qty_ordered` → `quantity`, `item` → `name` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 15 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 15
+- Default operations: insert on 15, update on 15, delete on 15
+- Marked circular-sync: 0
+- Licence groups they span: 4
+- Destination objects: `company`, `deal`, `product`, `CommercientSF18__DEALMATCHING__c`, `CommercientSF18__PRODUCTMATCHING__c`, `contact`, `line_item`
+- Object display names: upsert company, upsert product, ACCOUNTMATCHING, create company, create order, create orderdetail, lookup company, SYNC CONTACTMATCHING, SYNC DEALMATCHING, SYNC PRODUCTMATCHING, update order deal and 2 further templates
+- Template groups: Product, Account, CRM Opportunity and Line
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -138,7 +159,7 @@ The prefixes these templates set:
 - `HUBSPOT_NEW_DEAL`
 - `HUBSPOT_NEW_LINEITEM`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
