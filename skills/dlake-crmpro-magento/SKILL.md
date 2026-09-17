@@ -107,18 +107,21 @@ first colon, which is the prefix boundary whether the key separator is `:` or `:
 
 ## 6. The source ERP’s own page
 
-One row per source ERP the catalogue ships Standard Magento templates for. Each page is a child
-file of this skill, addressed as `dlake-crmpro-magento/erps/<erp>` — `dlake skills show
+One row per source ERP the catalogue carries Magento templates for. Each page is a child file of
+this skill, addressed as `dlake-crmpro-magento/erps/<erp>` — `dlake skills show
 dlake-crmpro-magento/erps/<erp>` prints one, and `dlake skills install` writes them beside this
 file.
 
 <!-- ERP-TABLE:BEGIN dlake-crmpro-magento -->
 | ERP | Page | What its templates deliver |
 |---|---|---|
-| Epicor 10 | [`erps/epicor-10.md`](erps/epicor-10.md) | 1 Standard template in 1 group, pushing `customers`; `:` repository keys |
-| Microsoft Dynamics GP 2017 | [`erps/microsoft-dynamics-gp-2017.md`](erps/microsoft-dynamics-gp-2017.md) | 3 Standard templates in 3 groups, pushing `customers`, `products`; `:` repository keys |
-| Sage 50 UK | [`erps/sage-50-uk.md`](erps/sage-50-uk.md) | 2 Standard templates in 2 groups, pushing `products`, `customers`; `:` repository keys |
-| SYSPRO 7 and above | [`erps/syspro-7-and-above.md`](erps/syspro-7-and-above.md) | 1 Standard template in 1 group, pushing `products`; `:` repository keys |
+| Epicor 10 | [`erps/epicor-10.md`](erps/epicor-10.md) | 1 Standard template in 1 group, pushing `customers`; `:` repository keys; 19 community templates |
+| Microsoft Dynamics GP 2017 | [`erps/microsoft-dynamics-gp-2017.md`](erps/microsoft-dynamics-gp-2017.md) | 3 Standard templates in 3 groups, pushing `customers`, `products`; `:` repository keys; 4 community templates |
+| Sage 100 2017 | [`erps/sage-100-2017.md`](erps/sage-100-2017.md) | no Standard templates; 8 community templates |
+| Sage 100 US (SAGE100US) | [`erps/sage-100-us-sage100us.md`](erps/sage-100-us-sage100us.md) | no Standard templates; 3 community templates |
+| Sage 300 | [`erps/sage-300.md`](erps/sage-300.md) | no Standard templates; 2 community templates |
+| Sage 50 UK | [`erps/sage-50-uk.md`](erps/sage-50-uk.md) | 2 Standard templates in 2 groups, pushing `products`, `customers`; `:` repository keys; 4 community templates |
+| SYSPRO 7 and above | [`erps/syspro-7-and-above.md`](erps/syspro-7-and-above.md) | 1 Standard template in 1 group, pushing `products`; `:` repository keys; 8 community templates |
 <!-- ERP-TABLE:END -->
 
 **Work out which row applies before reading one.** The source is the ERP the tenant was registered
