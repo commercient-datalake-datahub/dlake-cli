@@ -220,7 +220,28 @@ process before activating it.
 | Create PriceBook | `PricebookEntry` | 5 | `PRCLEVEL, ITEMNMBR` → `ExternalKey__c`, `SFDCID` → `Pricebook2Id`, `SFDCID` → `Product2Id`, `IsActive` → `IsActive`, `UOMPRICE` → `UnitPrice` |
 | Update PriceBook | `PricebookEntry` | 3 | `PRCLEVEL, ITEMNMBR` → `ExternalKey__c`, `UOMPRICE` → `UnitPrice`, `IsActive` → `IsActive` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 39 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 39
+- Default operations: insert on 39, update on 39, delete on 39
+- Marked circular-sync: 0
+- Licence groups they span: 10
+- Destination objects: `Account`, `PricebookEntry`, `Product2`, `Contact` and 22 custom objects
+- Object display names: Account, Account Customer Reverse Lookup, Customer, Customer Master Address, Customer Master Summary, Customer Period Summary, Sales Transaction Amounts History, Sales Transaction Amounts Work, Sales Transaction History, Sales Transaction Works, AR Invoice Payments, Create PriceBook and 17 more
+- Template groups: Account, Product, Customer Multi Ship Addresses, AR Invoice Payments, Invoice, Open AR Invoice Header
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -256,7 +277,7 @@ The prefixes these templates set:
 - `SOP30200`
 - `SOP30300`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
