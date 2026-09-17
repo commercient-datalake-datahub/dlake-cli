@@ -58,6 +58,7 @@ destination objects are and what the operation flags allow. Operations are the u
 | Create New Sales Order | Salesforce Quote to Sage 50 UK Sales Order | `Quote`, `Opportunity` → `Order` | 2 | create |
 | Create new Project | Salesforce Project to Sage50UK new Project | `Project` → `Project` | 1 | create / update |
 | Create New Purchase Order | Salesforce Purchase_Order to Sage50Uk New Purchase Order | `PurchaseOrder` → `PurchaseOrder` | 1 | create / update |
+| Create or Update Customer | Salesforce Update Account To Sage50UK Update Customer | `Account` → `Customer` | 1 | update |
 | Create/Update Product | Salesforce Product2 to Sage50UK Update Product | `Product2` → `Product` | 1 | create / update |
 | Delete Customer | Salesforce Account to Sage50UK Delete Customer | `Account` → `Customer` | 1 | delete |
 | Delete Customer Contact | Salesforce Contact to Sage50UK Delete Customer Contact | `Contact` → `Contact` | 1 | delete |
@@ -66,7 +67,6 @@ destination objects are and what the operation flags allow. Operations are the u
 | Delete Purchase Order | Salesforce Purchase_Order__c to Sage50UK Delete Purchase Order | `Opportunity` → `PurchaseOrder` | 1 | delete |
 | Delete Sales Order | Salesforce Quote to Sage 50 Order | `Quote` → `Order` | 1 | delete |
 | Delete Supplier | Salesforce Account to Sage50UK Delete Supplier | `Account` → `Customer` | 1 | delete |
-| TxDownloader_3_1 | Salesforce Update Account To Sage50UK Update Customer | `Account` → `Customer` | 1 | update |
 | Update Contact | Salesforce Contact to Sage50UK Update Contact | `Contact` → `Contact` | 1 | update |
 | Update Customer | — | `Account` → `Customer` | 1 | update |
 
@@ -97,9 +97,9 @@ that never matches a run.
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
 The field-process versions this pair’s default templates belong to: `TxDownloader_3_4`,
-`TxDownloader_3_10`, `TxDownloader_3_2`, `TxDownloader_3_5`, `TxDownloader_3_12`,
-`TxDownloader_3_18`, `TxDownloader_3_14`, `TxDownloader_3_15`, `TxDownloader_3_17`,
-`TxDownloader_3_13`, `TxDownloader_3_16`, `TxDownloader_3_1`, `TxDownloader_3_9`,
+`TxDownloader_3_10`, `TxDownloader_3_2`, `TxDownloader_3_1`, `TxDownloader_3_5`,
+`TxDownloader_3_12`, `TxDownloader_3_18`, `TxDownloader_3_14`, `TxDownloader_3_15`,
+`TxDownloader_3_17`, `TxDownloader_3_13`, `TxDownloader_3_16`, `TxDownloader_3_9`,
 `TxDownloader_3_7`.
 
 3 of these template rows carry a licence-group id, so what a given tenant is offered in the
@@ -112,7 +112,7 @@ picker is narrower than what the catalogue holds.
 follows is what those queries read and filter on.
 
 - **Objects read:** `Project__c`, `Purchase_Order_Products__r`, `QuoteLineItems`,
-  `OpportunityLineItems`, `Product2`, `Account`, `Contact`, `Quote`, `Opportunity`.
+  `OpportunityLineItems`, `Account`, `Product2`, `Contact`, `Quote`, `Opportunity`.
 - **Child collections pulled in the same query:** `Purchase_Order_Products__r`,
   `QuoteLineItems`, `OpportunityLineItems`. A header retrieved without its lines is a query that
   does not name the child collection.
