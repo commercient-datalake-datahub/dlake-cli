@@ -40,8 +40,8 @@ columns. It is a description of structure — which objects and marker columns a
 parts and members are filled, which token names appear. **No template text is reproduced.** This page grows
 as the default catalogue does.
 
-Salesforce is the largest destination in the default set: **295 default templates across 38 ERP
-names, in 149 field-process versions**. The CRM catalogue registers Salesforce with OAuth
+Salesforce is the largest destination in the default set: **532 default templates across 61 ERP
+names, in 345 field-process versions**. The CRM catalogue registers Salesforce with OAuth
 authentication and a loopback callback. Every ERP that ships default templates for Salesforce
 has its own page, `dlake-txdownloaderpro-<erp>-salesforce`.
 
@@ -64,7 +64,7 @@ system. The families the default set covers, and the operations the `IsInsert` /
 | **Job / project / work order / service order** | `WorkOrder`, project and timesheet records become the ERP's job, service-order or payroll object | create, update |
 | **Ship-to address** | A shipping address on the account, or a managed-package ship-to object, becomes an ERP ship-to address | create, update |
 
-Across the 295 default templates, **194 carry `IsInsert`, 109 carry `IsUpdate` and 23 carry
+Across the 532 default templates, **345 carry `IsInsert`, 182 carry `IsUpdate` and 36 carry
 `IsDelete`**. A flag decides which operation a process is *allowed* to perform, not which one it
 performs on a given record. Delete templates are the rare case, and they are the ones whose query
 selects on a deletion marker rather than an import marker — section 3.
@@ -96,7 +96,7 @@ identified by its field-process version, and that version is what supplies the D
 A create against the wrong version produces a row that no run ever matches, and the symptom is a
 process that exists and never moves a record.
 
-63 of the 295 rows carry a licence-group id, so what a given tenant is offered in the picker is
+63 of the 532 rows carry a licence-group id, so what a given tenant is offered in the picker is
 narrower than what the catalogue holds; 22 carry a help-document reference, which is not
 published on these pages.
 
@@ -107,7 +107,7 @@ changes what those states mean.
 ## 3. The queries
 
 **Every Salesforce default template's `Query` is a `SELECT` statement** in the CRM's own query
-language — 295 of 295. 198 of them carry a `WHERE`; the rest retrieve the object unconditionally
+language — 532 of 532. 435 of them carry a `WHERE`; the rest retrieve the object unconditionally
 and rely on the process being pointed at the right records another way.
 
 - **Objects the queries read:** `Account`, `Contact`, `Opportunity`, `Quote`, `Order`,
@@ -121,9 +121,9 @@ and rely on the process being pointed at the right records another way.
   relationships. **A header that reaches the ERP with no lines is nearly always a query that does
   not name the child collection** — the lines were never retrieved, so no mapping could have
   found them.
-- **Operators the default set uses:** `=`, `!=`, `AND`, `LIKE`, `>`, a null test and an
-  empty-string test. The parent's §12 is the authority on the vocabulary; the point here is only
-  which of it these templates use.
+- **Operators the default set uses:** `=`, `!=`, `AND`, `LIKE`, `>`, `IN`, `NOT IN`, a null test
+  and an empty-string test. The parent's §12 is the authority on the vocabulary; the point here is
+  only which of it these templates use.
 
 ### The marker conventions
 
@@ -154,28 +154,28 @@ relies on it.
 ## 4. The inbound mapping document
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side, and its
-value is a template resolved against the retrieved record's XML document (parent §11). Of the 295
-default templates, **279 carry one and 16 do not**; 24 of those 279 do not parse as JSON and are
-counted but not described. A parseable document carries about 15 members.
+value is a template resolved against the retrieved record's XML document (parent §11). Of the 532
+default templates, **516 carry one and 16 do not**; 24 of those 516 do not parse as JSON and are
+counted but not described. A parseable document carries about 14 members.
 
 - **Path roots the documents use:** `Account`, `Contact`, `Opportunity`, `Quote`, `Order`,
   `WorkOrder`, `Product2`, `OrderItems`, `QuoteLineItems`, `OpportunityLineItems`,
   `OrderLineItems`, `OrderSummary` and the per-ERP line relationships. A path's first segment has
   to match the element the engine emits; the document root itself is never part of the path.
-- **Lines live in a `Line.` section, and `Line.mainXml` names the collection.** 105 of the
-  parseable documents carry a `Line.` section and 71 name the collection through `Line.mainXml`.
+- **Lines live in a `Line.` section, and `Line.mainXml` names the collection.** 190 of the
+  parseable documents carry a `Line.` section and 156 name the collection through `Line.mainXml`.
   The members beside it — quantity, unit price, amount, item code, description, discount, tax and
   GL-account members, in each ERP's own spelling — are resolved against that collection's own
   root, not through the header. **An order that arrives with a header and no lines, when the query
   did retrieve the lines, is a `Line.mainXml` that does not resolve, or line members written
   through the header instead of the collection root.**
 - **`$FUN_` value tokens the documents carry:** `$FUN_UNESCAPEXML`, `$FUN_SUBSTR`,
-  `$FUN_ISNULL`, `$FUN_STRREPLACE`, `$FUN_SPLIT`, `$FUN_IF`, `$FUN_NOW`. **The names are all
-  that is stated here, and no semantics are claimed for them.** The parent's §12 is explicit
-  that the platform-side resolver is dotted path substitution only; these tokens are carried in
-  the stored document and evaluated by the TxDownloaderPro service on the customer's own host.
-  Nothing in the Data Lake interprets them, so nothing in the Data Lake can tell you what an
-  argument to one means. See the maintainer notes if you need that contract.
+  `$FUN_ISNULL`, `$FUN_STRREPLACE`, `$FUN_SPLIT`, `$FUN_DATEFORMAT`, `$FUN_IF`, `$FUN_NOW`.
+  **The names are all that is stated here, and no semantics are claimed for them.** The parent's
+  §12 is explicit that the platform-side resolver is dotted path substitution only; these tokens
+  are carried in the stored document and evaluated by the TxDownloaderPro service on the
+  customer's own host. Nothing in the Data Lake interprets them, so nothing in the Data Lake can
+  tell you what an argument to one means. See the maintainer notes if you need that contract.
 
 The silent-empty-string rule from the parent's §11 is the single most common mapping fault on
 this destination: a mistyped path and a genuinely blank CRM field produce byte-identical output.
@@ -184,20 +184,21 @@ Verify a path against a real record's emitted document, never against the CRM's 
 ## 5. Result structure — what goes back to Salesforce
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system's response after the write (parent §11). Of the 295 default templates, **92 carry a
-parseable `DefaultResultStructure` and 187 carry none**; 16 do not parse, and one parses into a
+system's response after the write (parent §11). Of the 532 default templates, **220 carry a
+parseable `DefaultResultStructure` and 296 carry none**; 16 do not parse, and one parses into a
 flat field document rather than the four-part shape at all.
 
 | Part | Filled by | What it addresses | Members the default set uses |
 |---|---|---|---|
-| `Part1` | 89 templates | the record the run is already working with | a source-path-to-CRM-field map |
+| `Part1` | 217 templates | the record the run is already working with | a source-path-to-CRM-field map |
 | `Part2` | 11 templates | the child/line records under it | `ObjectAPIName`, `LoopFieldTagName`, `LoopFieldIDName`, `FieldName` |
 | `Part3` | none | a **new** record, matched on an external id field | — |
 | `Part4` | none | a **different** record, addressed by an id field | — |
 
 So the default Salesforce set writes back to the flagged record, and sometimes to its lines, and
 never creates or addresses a third record. `Part3` and `Part4` are present in the stored document
-as explicit nulls on 91 of the 92 — the shape is always four parts, whether or not they are used.
+as explicit nulls on 219 of the 220 — the shape is always four parts, whether or not they are
+used.
 
 - **CRM fields `Part1` writes to:** `ExternalKey__c`,
   `CommercientSF__Commercient_ArCustomerCode__c`, `CommercientSF8__ExternalKey__c`,
@@ -255,44 +256,75 @@ them beside this file.
 <!-- ERP-TABLE:BEGIN dlake-txdownloaderpro-salesforce -->
 | ERP | Page | What its templates deliver |
 |---|---|---|
-| Acumatica Cloud | [`erps/acumatica-cloud.md`](erps/acumatica-cloud.md) | 3 default templates in 2 processes, mostly `SELECT` queries; writes back through `Part1` |
-| Aptean Made2Manage | [`erps/aptean-made2manage.md`](erps/aptean-made2manage.md) | 1 default template in 1 process, mostly `SELECT` queries; nothing written back |
-| Commercient CPQ | [`erps/commercient-cpq.md`](erps/commercient-cpq.md) | 1 default template in 1 process, mostly `SELECT` queries; nothing written back |
-| Epicor 10 | [`erps/epicor-10.md`](erps/epicor-10.md) | 3 default templates in 1 process, mostly `SELECT` queries; writes back through `Part1` |
-| Epicor 9 and 9.5 | [`erps/epicor-9-and-9-5.md`](erps/epicor-9-and-9-5.md) | 5 default templates in 2 processes, mostly `SELECT` queries; writes back through `Part1` |
-| Epicor Prophet 21 (P21) | [`erps/epicor-prophet-21-p21.md`](erps/epicor-prophet-21-p21.md) | 13 default templates in 6 processes, mostly `SELECT` queries; writes back through `Part1` |
-| Exact MAX | [`erps/exact-max.md`](erps/exact-max.md) | 2 default templates in 1 process, mostly `SELECT` queries; nothing written back |
-| IFS | [`erps/ifs.md`](erps/ifs.md) | 3 default templates in 3 processes, mostly `SELECT` queries; writes back through `Part1` |
-| Infor SXe | [`erps/infor-sxe.md`](erps/infor-sxe.md) | 2 default templates in 2 processes, mostly `SELECT` queries; nothing written back |
-| JD Edwards | [`erps/jd-edwards.md`](erps/jd-edwards.md) | 2 default templates in 2 processes, mostly `SELECT` queries; nothing written back |
-| JobBOSS | [`erps/jobboss.md`](erps/jobboss.md) | 1 default template in 1 process, mostly `SELECT` queries; nothing written back |
-| Macola ES | [`erps/macola-es.md`](erps/macola-es.md) | 2 default templates in 1 process, mostly `SELECT` queries; nothing written back |
-| Microsoft Business Central | [`erps/microsoft-business-central.md`](erps/microsoft-business-central.md) | 22 default templates in 10 processes, mostly `SELECT` queries; nothing written back |
-| Microsoft Dynamics GP | [`erps/microsoft-dynamics-gp.md`](erps/microsoft-dynamics-gp.md) | 7 default templates in 3 processes, mostly `SELECT` queries; writes back through `Part1` |
-| Microsoft Dynamics NAV | [`erps/microsoft-dynamics-nav.md`](erps/microsoft-dynamics-nav.md) | 6 default templates in 4 processes, mostly `SELECT` queries; writes back through `Part1` |
-| MYOB AccountRight | [`erps/myob-accountright.md`](erps/myob-accountright.md) | 6 default templates in 4 processes, mostly `SELECT` queries; writes back through `Part1` |
-| NetSuite | [`erps/netsuite.md`](erps/netsuite.md) | 13 default templates in 5 processes, mostly `SELECT` queries; writes back through `Part1` |
-| QuickBooks Desktop | [`erps/quickbooks-desktop.md`](erps/quickbooks-desktop.md) | 32 default templates in 12 processes, mostly `SELECT` queries; writes back through `Part1` |
-| QuickBooks Online | [`erps/quickbooks-online.md`](erps/quickbooks-online.md) | 5 default templates in 3 processes, mostly `SELECT` queries; nothing written back |
+| Acumatica Cloud | [`erps/acumatica-cloud.md`](erps/acumatica-cloud.md) | 5 default templates in 4 processes, mostly `SELECT` queries; writes back through `Part1`; 15 community templates |
+| Applied Epic | [`erps/applied-epic.md`](erps/applied-epic.md) | 2 default templates in 2 processes, mostly `SELECT` queries; writes back through `Part1` |
+| Aptean Encompix | [`erps/aptean-encompix.md`](erps/aptean-encompix.md) | 1 default template in 1 process, mostly `SELECT` queries; nothing written back |
+| Aptean Made2Manage | [`erps/aptean-made2manage.md`](erps/aptean-made2manage.md) | 7 default templates in 4 processes, mostly `SELECT` queries; nothing written back; 8 community templates |
+| Commercient CPQ | [`erps/commercient-cpq.md`](erps/commercient-cpq.md) | 3 default templates in 3 processes, mostly `SELECT` queries; nothing written back |
+| DELMIAworks | [`erps/delmiaworks.md`](erps/delmiaworks.md) | 1 default template in 1 process, mostly `SELECT` queries; writes back through `Part1` |
+| Deltek Vantagepoint | [`erps/deltek-vantagepoint.md`](erps/deltek-vantagepoint.md) | 3 default templates in 3 processes, mostly `SELECT` queries; writes back through `Part1`; 2 community templates |
+| Deltek Vision | [`erps/deltek-vision.md`](erps/deltek-vision.md) | 9 default templates in 7 processes, mostly `SELECT` queries; writes back through `Part1`; 18 community templates |
+| EBMS | [`erps/ebms.md`](erps/ebms.md) | 6 default templates in 3 processes, mostly `SELECT` queries; writes back through `Part1`; 3 community templates |
+| ECi Spruce | [`erps/eci-spruce.md`](erps/eci-spruce.md) | 2 default templates in 2 processes, mostly `SELECT` queries; writes back through `Part1` |
+| Epicor 10 | [`erps/epicor-10.md`](erps/epicor-10.md) | 4 default templates in 2 processes, mostly `SELECT` queries; writes back through `Part1`; 65 community templates |
+| Epicor 9 and 9.5 | [`erps/epicor-9-and-9-5.md`](erps/epicor-9-and-9-5.md) | 7 default templates in 3 processes, mostly `SELECT` queries; writes back through `Part1`; 7 community templates |
+| Epicor BisTrack | [`erps/epicor-bistrack.md`](erps/epicor-bistrack.md) | 2 default templates in 2 processes, mostly `SELECT` queries; writes back through `Part1` |
+| Epicor Cloud | [`erps/epicor-cloud.md`](erps/epicor-cloud.md) | 9 default templates in 5 processes, mostly `SELECT` queries; writes back through `Part1`; 2 community templates |
+| Epicor Eclipse | [`erps/epicor-eclipse.md`](erps/epicor-eclipse.md) | 1 default template in 1 process, mostly `SELECT` queries; writes back through `Part1` |
+| Epicor Prophet 21 (P21) | [`erps/epicor-prophet-21-p21.md`](erps/epicor-prophet-21-p21.md) | 16 default templates in 9 processes, mostly `SELECT` queries; writes back through `Part1`; 40 community templates |
+| Exact Globe Next | [`erps/exact-globe-next.md`](erps/exact-globe-next.md) | 3 default templates in 3 processes, mostly `SELECT` queries; writes back through `Part1`; 24 community templates |
+| Exact MAX | [`erps/exact-max.md`](erps/exact-max.md) | 2 default templates in 1 process, mostly `SELECT` queries; nothing written back; 2 community templates |
+| GenericDLLs | [`erps/genericdlls.md`](erps/genericdlls.md) | no default templates; 26 community templates |
+| GlobalShop | [`erps/globalshop.md`](erps/globalshop.md) | 5 default templates in 3 processes, mostly `SELECT` queries; writes back through `Part1`; 19 community templates |
+| IFS | [`erps/ifs.md`](erps/ifs.md) | 23 default templates in 23 processes, mostly `SELECT` queries; writes back through `Part1` |
+| IFS 9 | [`erps/ifs-9.md`](erps/ifs-9.md) | 4 default templates in 4 processes, mostly `SELECT` queries; writes back through `Part1`; 4 community templates |
+| IFS Cloud | [`erps/ifs-cloud.md`](erps/ifs-cloud.md) | 5 default templates in 5 processes, mostly `SELECT` queries; writes back through `Part1`; 48 community templates |
+| Infor LN 10 | [`erps/infor-ln-10.md`](erps/infor-ln-10.md) | no default templates; 1 community template |
+| Infor M3 | [`erps/infor-m3.md`](erps/infor-m3.md) | no default templates; 1 community template |
+| Infor SXe | [`erps/infor-sxe.md`](erps/infor-sxe.md) | 2 default templates in 2 processes, mostly `SELECT` queries; nothing written back; 2 community templates |
+| Infor SyteLine | [`erps/infor-syteline.md`](erps/infor-syteline.md) | no default templates; 26 community templates |
+| Infor Visual 9 | [`erps/infor-visual-9.md`](erps/infor-visual-9.md) | no default templates; 3 community templates |
+| Infor XA | [`erps/infor-xa.md`](erps/infor-xa.md) | no default templates; 1 community template |
+| Infor10 Distribution Business | [`erps/infor10-distribution-business.md`](erps/infor10-distribution-business.md) | 1 default template in 1 process, mostly `SELECT` queries; writes back through `Part1` |
+| Infusionsoft | [`erps/infusionsoft.md`](erps/infusionsoft.md) | 1 default template in 1 process, mostly `SELECT` queries; writes back through `Part1` |
+| JD Edwards | [`erps/jd-edwards.md`](erps/jd-edwards.md) | 6 default templates in 4 processes, mostly `SELECT` queries; writes back through `Part1`; 13 community templates |
+| JobBOSS | [`erps/jobboss.md`](erps/jobboss.md) | 5 default templates in 3 processes, mostly `SELECT` queries; writes back through `Part1`; 7 community templates |
+| Macola ES | [`erps/macola-es.md`](erps/macola-es.md) | 2 default templates in 1 process, mostly `SELECT` queries; nothing written back; 1 community template |
+| Maconomy | [`erps/maconomy.md`](erps/maconomy.md) | 4 default templates in 2 processes, mostly `SELECT` queries; writes back through `Part1` |
+| Microsoft Business Central | [`erps/microsoft-business-central.md`](erps/microsoft-business-central.md) | 26 default templates in 13 processes, mostly `SELECT` queries; writes back through `Part1`; 11 community templates |
+| Microsoft Dynamics AX | [`erps/microsoft-dynamics-ax.md`](erps/microsoft-dynamics-ax.md) | 4 default templates in 4 processes, mostly `SELECT` queries; writes back through `Part1` |
+| Microsoft Dynamics GP | [`erps/microsoft-dynamics-gp.md`](erps/microsoft-dynamics-gp.md) | 9 default templates in 5 processes, mostly `SELECT` queries; writes back through `Part1`; 4 community templates |
+| Microsoft Dynamics NAV | [`erps/microsoft-dynamics-nav.md`](erps/microsoft-dynamics-nav.md) | 16 default templates in 9 processes, mostly `SELECT` queries; writes back through `Part1`; 49 community templates |
+| MYOB AccountRight | [`erps/myob-accountright.md`](erps/myob-accountright.md) | 8 default templates in 6 processes, mostly `SELECT` queries; writes back through `Part1`; 17 community templates |
+| NetSuite | [`erps/netsuite.md`](erps/netsuite.md) | 20 default templates in 9 processes, mostly `SELECT` queries; writes back through `Part1`; 21 community templates |
+| Plex | [`erps/plex.md`](erps/plex.md) | no default templates; 51 community templates |
+| Print EPS | [`erps/print-eps.md`](erps/print-eps.md) | 3 default templates in 3 processes, mostly `SELECT` queries; writes back through `Part1`; 2 community templates |
+| QAD | [`erps/qad.md`](erps/qad.md) | 2 default templates in 2 processes, mostly `SELECT` queries; writes back through `Part1`; 2 community templates |
+| QuickBooks Desktop | [`erps/quickbooks-desktop.md`](erps/quickbooks-desktop.md) | 45 default templates in 20 processes, mostly `SELECT` queries; writes back through `Part1`; 74 community templates |
+| QuickBooks Online | [`erps/quickbooks-online.md`](erps/quickbooks-online.md) | 19 default templates in 17 processes, mostly `SELECT` queries; writes back through `Part1`; 15 community templates |
 | QuickBooks POS | [`erps/quickbooks-pos.md`](erps/quickbooks-pos.md) | 1 default template in 1 process, mostly `SELECT` queries; nothing written back |
-| Sage 100 (US) | [`erps/sage-100-us.md`](erps/sage-100-us.md) | 32 default templates in 11 processes, mostly `SELECT` queries; writes back through `Part1`, `Part2` |
-| Sage 100 Contractor | [`erps/sage-100-contractor.md`](erps/sage-100-contractor.md) | 14 default templates in 6 processes, mostly `SELECT` queries; writes back through `Part1`, `Part2` |
+| Sage 100 (US) | [`erps/sage-100-us.md`](erps/sage-100-us.md) | 41 default templates in 19 processes, mostly `SELECT` queries; writes back through `Part1`, `Part2`; 151 community templates |
+| Sage 100 Contractor | [`erps/sage-100-contractor.md`](erps/sage-100-contractor.md) | 16 default templates in 8 processes, mostly `SELECT` queries; writes back through `Part1`, `Part2`; 22 community templates |
 | Sage 100 Contractor 2018 | [`erps/sage-100-contractor-2018.md`](erps/sage-100-contractor-2018.md) | 8 default templates in 3 processes, mostly `SELECT` queries; writes back through `Part1` |
-| Sage 200 UK | [`erps/sage-200-uk.md`](erps/sage-200-uk.md) | 2 default templates in 1 process, mostly `SELECT` queries; nothing written back |
-| Sage 300 | [`erps/sage-300.md`](erps/sage-300.md) | 8 default templates in 4 processes, mostly `SELECT` queries; nothing written back |
-| Sage 50 Canada | [`erps/sage-50-canada.md`](erps/sage-50-canada.md) | 11 default templates in 4 processes, mostly `SELECT` queries; writes back through `Part1` |
-| Sage 50 UK | [`erps/sage-50-uk.md`](erps/sage-50-uk.md) | 13 default templates in 12 processes, mostly `SELECT` queries; writes back through `Part1` |
-| Sage 50 US | [`erps/sage-50-us.md`](erps/sage-50-us.md) | 34 default templates in 18 processes, mostly `SELECT` queries; writes back through `Part1` |
-| Sage 500 | [`erps/sage-500.md`](erps/sage-500.md) | 3 default templates in 2 processes, mostly `SELECT` queries; writes back through `Part1` |
+| Sage 200 UK | [`erps/sage-200-uk.md`](erps/sage-200-uk.md) | 4 default templates in 3 processes, mostly `SELECT` queries; writes back through `Part1`; 2 community templates |
+| Sage 300 | [`erps/sage-300.md`](erps/sage-300.md) | 11 default templates in 7 processes, mostly `SELECT` queries; nothing written back; 11 community templates |
+| Sage 50 Canada | [`erps/sage-50-canada.md`](erps/sage-50-canada.md) | 16 default templates in 8 processes, mostly `SELECT` queries; writes back through `Part1`; 8 community templates |
+| Sage 50 UK | [`erps/sage-50-uk.md`](erps/sage-50-uk.md) | 15 default templates in 14 processes, mostly `SELECT` queries; writes back through `Part1`; 21 community templates |
+| Sage 50 US | [`erps/sage-50-us.md`](erps/sage-50-us.md) | 42 default templates in 27 processes, mostly `SELECT` queries; writes back through `Part1`; 76 community templates |
+| Sage 500 | [`erps/sage-500.md`](erps/sage-500.md) | 5 default templates in 4 processes, mostly `SELECT` queries; writes back through `Part1` |
 | Sage BusinessWorks 2013/2015 | [`erps/sage-businessworks-2013-2015.md`](erps/sage-businessworks-2013-2015.md) | 1 default template in 1 process, mostly `SELECT` queries; nothing written back |
-| Sage Intacct | [`erps/sage-intacct.md`](erps/sage-intacct.md) | 3 default templates in 3 processes, mostly `SELECT` queries; nothing written back |
-| Sage Live | [`erps/sage-live.md`](erps/sage-live.md) | 5 default templates in 2 processes, mostly `SELECT` queries; nothing written back |
-| SAP B1 | [`erps/sap-b1.md`](erps/sap-b1.md) | 10 default templates in 3 processes, mostly `SELECT` queries; writes back through `Part1` |
-| SYSPRO 6 | [`erps/syspro-6.md`](erps/syspro-6.md) | 5 default templates in 2 processes, mostly `SELECT` queries; writes back through `Part1` |
-| Traverse 11 | [`erps/traverse-11.md`](erps/traverse-11.md) | 1 default template in 1 process, mostly `SELECT` queries; nothing written back |
-| VAI S2K | [`erps/vai-s2k.md`](erps/vai-s2k.md) | 7 default templates in 4 processes, mostly `SELECT` queries; writes back through `Part1`, `Part2` |
-| Workday | [`erps/workday.md`](erps/workday.md) | 4 default templates in 3 processes, mostly `SELECT` queries; writes back through `Part1`, `Part2` |
-| Xero | [`erps/xero.md`](erps/xero.md) | 4 default templates in 3 processes, mostly `SELECT` queries; writes back through `Part1` |
+| Sage Intacct | [`erps/sage-intacct.md`](erps/sage-intacct.md) | 9 default templates in 9 processes, mostly `SELECT` queries; writes back through `Part1`; 10 community templates |
+| Sage Live | [`erps/sage-live.md`](erps/sage-live.md) | 7 default templates in 4 processes, mostly `SELECT` queries; writes back through `Part1` |
+| Sage X3 | [`erps/sage-x3.md`](erps/sage-x3.md) | 1 default template in 1 process, mostly `SELECT` queries; writes back through `Part1` |
+| SAP B1 | [`erps/sap-b1.md`](erps/sap-b1.md) | 11 default templates in 4 processes, mostly `SELECT` queries; writes back through `Part1`; 15 community templates |
+| SAP Business ByDesign | [`erps/sap-business-bydesign.md`](erps/sap-business-bydesign.md) | 6 default templates in 3 processes, mostly `SELECT` queries; writes back through `Part1` |
+| SouthWare | [`erps/southware.md`](erps/southware.md) | 2 default templates in 2 processes, mostly `SELECT` queries; nothing written back; 2 community templates |
+| SQLConnector | [`erps/sqlconnector.md`](erps/sqlconnector.md) | no default templates; 4 community templates |
+| SYSPRO 6 | [`erps/syspro-6.md`](erps/syspro-6.md) | 20 default templates in 17 processes, mostly `SELECT` queries; writes back through `Part1`; 34 community templates |
+| Traverse 11 | [`erps/traverse-11.md`](erps/traverse-11.md) | 3 default templates in 3 processes, mostly `SELECT` queries; nothing written back; 3 community templates |
+| VAI S2K | [`erps/vai-s2k.md`](erps/vai-s2k.md) | 8 default templates in 5 processes, mostly `SELECT` queries; writes back through `Part1`, `Part2`; 8 community templates |
+| Workday | [`erps/workday.md`](erps/workday.md) | 7 default templates in 5 processes, mostly `SELECT` queries; writes back through `Part1`, `Part2`; 14 community templates |
+| Xero | [`erps/xero.md`](erps/xero.md) | 5 default templates in 4 processes, mostly `SELECT` queries; writes back through `Part1`; 5 community templates |
 <!-- ERP-TABLE:END -->
 
 **Work out which row applies before reading one.** The source is the ERP the tenant was registered
