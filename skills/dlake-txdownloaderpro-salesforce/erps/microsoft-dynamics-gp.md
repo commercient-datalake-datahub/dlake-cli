@@ -2,8 +2,8 @@
 name: dlake-txdownloaderpro-salesforce/erps/microsoft-dynamics-gp
 description: >-
   What the shipped default TxDownloaderPro templates set up when Salesforce is the writeback
-  destination and Microsoft Dynamics GP is the source: the 7 default templates the catalogue
-  ships for this pair, the 3 field-process versions they are identified by, what each template
+  destination and Microsoft Dynamics GP is the source: the 9 default templates the catalogue
+  ships for this pair, the 5 field-process versions they are identified by, what each template
   family delivers, the shape of the query that finds flagged records and the objects and marker
   columns it reads, the structure of the inbound mapping document, and which `ResultStructure`
   parts the templates fill for the write back to the CRM.
@@ -55,9 +55,11 @@ destination objects are and what the operation flags allow. Operations are the u
 |---|---|---|---|---|
 | Create New Customer | Salesforce Account to MSDynamicGP Customer | `Account` → `Customer` | 3 | create / update |
 | TxDownloader_13_2 | Salesforce Order to Microsoft GP Sales Order | `Opportunity` → `Order` | 3 | create |
+| Create a Cash Receipt | Salesforce Order to Microsoft GP Cash Receipt | `Order` → `RMCashReceipt` | 1 | create |
+| Create a Payment | Salesforce Order to Microsoft GP Payment | `Order` → `Payment` | 1 | create |
 | Create a Product | Salesforce Product to Dynamic GP Items | `Product2` → — | 1 | create |
 
-Across the 7 default templates: 6 carry `IsInsert`, 1 carries `IsUpdate`, 0 carry `IsDelete`. A
+Across the 9 default templates: 8 carry `IsInsert`, 1 carries `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
 given record. 1 catalogue description was not printed because they are placeholders or carry
 text that is not ours to publish.
@@ -84,18 +86,18 @@ that never matches a run.
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
 The field-process versions this pair’s default templates belong to: `TxDownloader_13_2`,
-`TxDownloaderPro_13_3`, `TxDownloader_13_1`.
+`TxDownloaderPro_13_5`, `TxDownloaderPro_13_4`, `TxDownloaderPro_13_3`, `TxDownloader_13_1`.
 
 2 of these template rows carry a licence-group id, so what a given tenant is offered in the
 picker is narrower than what the catalogue holds.
 
 ## 3. What the query retrieves
 
-`Query` does not have one shape across the product (parent §9). For this pair, 7 carry a
+`Query` does not have one shape across the product (parent §9). For this pair, 9 carry a
 `SELECT` statement in the CRM's own query language. **No query text is reproduced here**; what
 follows is what those queries read and filter on.
 
-- **Objects read:** `OrderItems`, `QuoteLineItems`, `OpportunityLineItems`, `Product2`,
+- **Objects read:** `OrderItems`, `QuoteLineItems`, `OpportunityLineItems`, `Order`, `Product2`,
   `Account`.
 - **Child collections pulled in the same query:** `OrderItems`, `QuoteLineItems`,
   `OpportunityLineItems`. A header retrieved without its lines is a query that does not name the
@@ -103,8 +105,8 @@ follows is what those queries read and filter on.
 - **Marker and key columns the queries name:** `CommercientSF__Commercient_ArCustomerCode__c`.
   These are the columns a user’s flag lands in and the columns the run writes an outcome back
   to; which ones are in the `WHERE` is what decides whether a record is in scope at all.
-- **Operators present:** `!=`, a null test, `=`, an empty-string test. The parent’s §12 is the
-  authority on the vocabulary; the point here is only which of it these templates use.
+- **Operators present:** `!=`, a null test, `=`, `AND`, an empty-string test. The parent’s §12
+  is the authority on the vocabulary; the point here is only which of it these templates use.
 - **Where the filtering happens:** in the query, on the CRM side, before anything reaches the
   source system. Narrowing a template means editing its query — not its mapping.
 
@@ -112,8 +114,8 @@ follows is what those queries read and filter on.
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 7 default templates, 7 carry a `DefaultProcessStructure`. A parseable document carries
-about 16 members.
+pair’s 9 default templates, 9 carry a `DefaultProcessStructure`. A parseable document carries
+about 14 members.
 
 - **Template path roots used:** `Account`, `Order`, `Quote`, `Opportunity`, `OrderItems`,
   `QuoteItems`, `OpportunityItems`, `Product2`. A path’s first segment has to match the element
@@ -126,8 +128,8 @@ about 16 members.
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 7 default templates, 2 carry a
-parseable `DefaultResultStructure`, 5 carry none.
+system’s response after the write (parent §11). Of this pair’s 9 default templates, 2 carry a
+parseable `DefaultResultStructure`, 7 carry none.
 
 | Part | Filled by | What it addresses | Members present |
 |---|---|---|---|
