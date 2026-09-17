@@ -135,7 +135,28 @@ process before activating it.
 | Order History Header | `CommercientSF18__HSHED__c` | 252 | `Account` → `Account`, `INFORA_SalesRep_Master` → `CommercientSF18__INFORA_SalesRep_Master__c`, `INFORA_Customer_Master` → `INFORA_Customer_Master`, `OAHSSQ` → `CommercientSF18__OAHSSQ__c`, `OACSNO` → `OACSNO` |
 | Order History Detail | `CommercientSF18__HSDET__c` | 151 | `Product` → `CommercientSF18__product__c`, `INFORA_Item_Master` → `CommercientSF18__infora_item_master__c`, `INFORA_Order_History_Header` → `CommercientSF18__infora_order_history_header__c`, `OBCONO` → `CommercientSF18__obcono__c`, `OBCSNO` → `CommercientSF18__obcsno__c` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 47 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 47
+- Default operations: insert on 47, update on 47, delete on 47
+- Marked circular-sync: 0
+- Licence groups they span: 9
+- Destination objects: `Account`, `Product2`, `Pricebookentry`, `CommercientSF18__ADDR__c`, `CommercientSF18__CUSMS__c`, `CommercientSF18__HSDET__c`, `CommercientSF18__HSHED__c`, `CommercientSF18__ORDET__c`, `CommercientSF18__ORHED__c`, `CommercientSF18__REPMS__c`, `Opportunity`, `OpportunityLineItem`, `Pricebook2`, `User` and 3 custom objects
+- Object display names: Account, Account To Customer Reverse Lookup, Customer, Item Master, Open Order Detail, Order History Detail, Order History Header, Product, Product To Item Reverse Lookup, Salesperson, Ship To Address, Open Order Header, 8 more and 3 further templates
+- Template groups: Product, Account, Salesorder, CRM Opportunity and Line, Customer Multi Ship Addresses
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -157,7 +178,7 @@ The prefixes these templates set:
 - `vw_INFORA_OrderHistoryDetail`
 - `vw_INFORA_Salesperson`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
