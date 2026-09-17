@@ -162,7 +162,28 @@ process before activating it.
 | TRAVERSE Quote Header | `CommercientSF7_QuoteHeader__c` | 77 | `TransId` → `ExternalKey__c`, `TransId` → `Name`, `TransType` → `TransType`, `TransType` → `TransType_Name`, `BatchId` → `BatchId` |
 | TRAVERSE Quote Details | `CommercientSF7_QuoteDetail__c` | 74 | `TransID, EntryNum` → `ExternalKey__c`, `TransID, EntryNum` → `Name`, `TransID` → `TransId`, `EntryNum` → `EntryNum`, `ItemJob` → `ItemJob` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 65 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 65
+- Default operations: insert on 65, update on 65, delete on 65
+- Marked circular-sync: 2
+- Licence groups they span: 14
+- Destination objects: `Account`, `CommercientSF7__tblArCust__c`, `CommercientSF7__tblArHistDetail__c`, `CommercientSF7__tblArHistHeader__c`, `CommercientSF7__tblArOpenInvoice__c`, `CommercientSF7__tblArShipTo__c`, `CommercientSF7__tblSoTransDetail__c`, `CommercientSF7__tblSoTransHeader__c`, `CommercientSF7_ArSalesPerson__c`, `Contact`, `Order`, `PricebookEntry`, `Product2`, `CommercientSF7__ACCOUNTMATCHING__c`, `CommercientSF7__CONTACTMATCHING__c`, `CommercientSF7__VWTRAVERSE11ACCOUNTMATCHING__c`, `CommercientSF7_QuoteDetail__c`, `CommercientSF7_QuoteHeader__c`, `CommercientSF7_TRAVERSE_In_Item__c`, `CommercientSF7_TRAVERSE_ITEMWAREHOUSE__c`, 3 more and 7 custom objects
+- Object display names: TRAVERSE Account, TRAVERSE ArHist Details, TRAVERSE ArHist Header, TRAVERSE ArOpenInvoice, TRAVERSE Customer, TRAVERSE Customer Reverse Lookup, TRAVERSE ShipTpAddress, TRAVERSE SoTrans Details, TRAVERSE SoTrans Header, TRAVERSE SalesPerson, TRAVERSE Contacts, TRAVERSE Service Repair Orders Lines, 20 more and a further template
+- Template groups: Account, Product, Invoice, Customer Multi Ship Addresses, Opportunity, CRM Order and Line, Salesorder, Invoice History Headers, QuoteLine
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -188,7 +209,7 @@ The prefixes these templates set:
 - `vw_TRAVERSE_SoTransDetail`
 - `vw_TRAVERSE_SalesPerson`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
