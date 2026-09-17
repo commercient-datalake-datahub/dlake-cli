@@ -61,26 +61,24 @@ destination objects are and what the operation flags allow. Operations are the u
 | Delete Quote | Salesforce Quote to Sage 50 US Quote - Delete Quote | `Quote`, `Order`, `Opprtunity` → `Quote` | 3 | delete |
 | Update SalesInvoice | Salesforce Opportunity to Sage50US Sales Invoice - Update Invoice | `Opprtunity`, `Order`, `Quote` → `Invoice` | 3 | update |
 | Create New Customer | Salesforce Account to Sage50US Customer | `Account` → `Customer` | 2 | create / update |
+| Create New Vendor | Salesforce Account to Sage 50 US Vendor | `Account` → `Vendor` | 2 | create |
 | Delete SalesInvoice | Salesforce Quote to Sage 50 US Invoice - Delete Invoice | — → — | 2 | delete |
 | Delete SalesOrder | Salesforce Order to Sage 50 US Sales Order - Delete Sales Order | — → — | 2 | delete |
+| Update Vendor | Salesforce Account to Sage 50 US Vendor | `Account` → `Vendor` | 2 | update |
 | Create CustomerContact | Salesforce Contact to Sage50US Contact | `Contact` → `Contact` | 1 | create |
 | Create New Product | Salesforce Product/Item to Sage50US Product | `Product` → `Item` | 1 | create |
 | Create New Purchase Entry | Salesforce Order to Sage 50 US Purchase Entry | `Order` → `Purchase Order Entry` | 1 | create |
 | Create New PurchaseOrder | Salesforce Order to Sage 50 US Purchase Order | `Order` → `Purchase Order` | 1 | create |
 | Create New Quote | Salesforce Quote to Sage 50 US Quote | `Quote` → `Quote` | 1 | create |
-| Create New Vendor | Salesforce Account to Sage 50 US Vendor | `Account` → `Vendor` | 1 | create |
 | Create/Update Ship To Customer Address | — | `CommercientSF8__SAGE50US_Address` → `ShipToAddress` | 1 | create / update |
 | Delete Customer | Salesforce Customer to Sage 50 US Account - Delete Customer | — → — | 1 | delete |
 | Delete Product | Salesforce Product to Sage 50 US item - Delete Item | `Product` → `Item` | 1 | delete |
 | Delete PurchaseOrder | Salesforce Order to Sage 50 US Purchase Order - Delete Purchase Order | `Order` → `Purchase Order` | 1 | delete |
 | Delete Vendor | Delete Salesforce Account to Delete Sage 50 US Vendor | `Account` → `Vendor` | 1 | delete |
-| TxDownloader_1_33 | Salesforce Account to Sage 50 US Vendor | `Account` → `Vendor` | 1 | create |
-| TxDownloader_1_34 | Salesforce Update Account to Sage 50 US Update Vendor | `Account` → `Vendor` | 1 | update |
 | Update Customer | Salesforce Account to Sage50US Customer - Update Customer | `Account` → `Customer` | 1 | update |
 | Update Product | Salesforce Product/Item to Sage50US Product - Update Product | `Product` → `Item` | 1 | update |
 | Update PurchaseOrder | Salesforce Update Order to Sage 50 US Update Purchase Order | `Order` → `Purchase Order` | 1 | update |
 | Update Quote | Salesforce Update Quote to Sage 50 US Update Quote | `Quote` → `Quote` | 1 | update |
-| Update Vendor | Salesforce Account to Sage 50 US Vendor | `Account` → `Vendor` | 1 | update |
 
 Across the 42 default templates: 16 carry `IsInsert`, 16 carry `IsUpdate`, 11 carry `IsDelete`.
 A flag decides which operation the process is allowed to perform, not which one it performs on a
@@ -109,12 +107,12 @@ that never matches a run.
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
 The field-process versions this pair’s default templates belong to: `TxDownloader_1_27`,
-`TxDownloader_1_33`, `TxDownloader_1_1`, `TxDownloader_1_19`, `TxDownloader_1_36`,
-`TxDownloader_1_21`, `TxDownloader_1_22`, `TxDownloader_1_3`, `TxDownloader_1_2`,
-`TxDownloader_1_20`, `TxDownloader_1_28`, `TxDownloader_1_6`, `TxDownloader_1_11`,
+`TxDownloader_1_1`, `TxDownloader_1_19`, `TxDownloader_1_36`, `TxDownloader_1_21`,
+`TxDownloader_1_22`, `TxDownloader_1_3`, `TxDownloader_1_2`, `TxDownloader_1_20`,
+`TxDownloader_1_33`, `TxDownloader_1_28`, `TxDownloader_1_6`, `TxDownloader_1_11`,
 `TxDownloader_1_9`, `TxDownloader_1_24`, `TxDownloader_1_8`, `TxDownloader_1_7`,
-`TxDownloader_1_10`, `TxDownloader_1_12`, `TxDownloader_1_34`, `TxDownloader_1_15`,
-`TxDownloader_1_18`, `TxDownloader_1_23`, `TxDownloader_1_16`, and 3 more.
+`TxDownloader_1_10`, `TxDownloader_1_12`, `TxDownloader_1_15`, `TxDownloader_1_18`,
+`TxDownloader_1_23`, `TxDownloader_1_16`, `TxDownloader_1_5`, and 3 more.
 
 3 of these template rows carry a licence-group id, so what a given tenant is offered in the
 picker is narrower than what the catalogue holds.
@@ -140,7 +138,7 @@ follows is what those queries read and filter on.
   `Commercient_Import__c`, `Commercient_Message__c`. These are the columns a user’s flag lands
   in and the columns the run writes an outcome back to; which ones are in the `WHERE` is what
   decides whether a record is in scope at all.
-- **Operators present:** `!=`, an empty-string test, `=`, `AND`, a null test, `>`. The parent’s
+- **Operators present:** `=`, an empty-string test, `!=`, `AND`, a null test, `>`. The parent’s
   §12 is the authority on the vocabulary; the point here is only which of it these templates
   use.
 - **Where the filtering happens:** in the query, on the CRM side, before anything reaches the
@@ -184,7 +182,7 @@ parseable `DefaultResultStructure`, 30 carry none.
   `ExternalKey__c`, `CommercientSF8__AddressTypeNumber__c`. These are the fields on the flagged
   record that carry the source system’s key or outcome once the write has happened — the names
   only; what lands in them is the response, per record.
-- **Response fields it reads them from:** `VendorId`, `CustomerID`, `PO_Number`, `Quote_Number`,
+- **Response fields it reads them from:** `CustomerID`, `VendorId`, `PO_Number`, `Quote_Number`,
   `InvoiceNumber`, `SequenceNumber`. The map is written **source-path first, CRM-field second**
   (parent §11); the wrong way round resolves to the same silent empty string as a mistyped path.
 
@@ -230,12 +228,12 @@ of every shape above is empty.
   (1), and 12 more.
 - **Names not reproduced:** 8 of these templates carry a name that is not a product artefact
   name, and it is not printed here.
-- **Field-process versions they belong to:** `TxDownloader_1_27`, `TxDownloader_1_33`,
-  `TxDownloader_1_1`, `TxDownloader_1_29`, `TxDownloader_1_25`, `TxDownloader_1_32`,
-  `TxDownloader_1_19`, `TxDownloader_1_36`, `TxDownloader_1_21`, `TxDownloader_1_22`,
-  `TxDownloader_1_38`, `TxDownloader_1_3`, `TxDownloader_1_2`, `TxDownloader_1_20`,
+- **Field-process versions they belong to:** `TxDownloader_1_27`, `TxDownloader_1_1`,
+  `TxDownloader_1_29`, `TxDownloader_1_25`, `TxDownloader_1_32`, `TxDownloader_1_19`,
+  `TxDownloader_1_36`, `TxDownloader_1_21`, `TxDownloader_1_22`, `TxDownloader_1_38`,
+  `TxDownloader_1_3`, `TxDownloader_1_2`, `TxDownloader_1_20`, `TxDownloader_1_33`,
   `TxDownloader_1_28`, `TxDownloader_1_12`, `TxDownloader_1_30`, `TxDownloader_1_17`,
-  `TxDownloader_1_34`, `TxDownloader_1_15`, `TxDownloader_1_13`, `TxDownloader_1_14`.
+  `TxDownloader_1_15`, `TxDownloader_1_13`, `TxDownloader_1_14`, `TxDownloader_1_34`.
 
 Importing one of these writes the same `TxDownloaderPro` row that importing a default template
 writes (parent §9); what differs is where the template came from, not how it is stored. What any
