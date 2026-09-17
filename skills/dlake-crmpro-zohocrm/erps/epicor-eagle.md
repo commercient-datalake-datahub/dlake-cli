@@ -198,7 +198,28 @@ process before activating it.
 | Sales_Orders | `Sales_Orders` | 18 | `DocNo, Store` → `Commercient_ExternalKey__c`, `Customer, JobNumber` → `Account_Name`, `DocNo` → `Name`, `DocNo` → `SO_Number`, `DocDate` → `ERP_Created_Date__c` |
 | Invoices | `Invoices` | 19 | `DocNo, Store` → `Commercient_ExternalKey__c`, `Customer, JobNumber` → `Account_Name`, `DocNo` → `Name`, `DocNo` → `Invoice_Number`, `DocDate` → `Invoice_Date` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 19 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 19
+- Default operations: insert on 19, update on 19, delete on 19
+- Marked circular-sync: 0
+- Licence groups they span: 4
+- Destination objects: `Accounts`, `commercientepicoreagle__EpicorEagle_Customer`, `commercientepicoreagle__EpicorEagle_Inventory`, `commercientepicoreagle__EpicorEagle_InvoiceDetail`, `commercientepicoreagle__EpicorEagle_InvoiceHeader`, `commercientepicoreagle__EpicorEagle_InvtryStore`, `commercientepicoreagle__EpicorEagle_SalesPerson`, `commercientepicoreagle__EpicorEagle_SODetail`, `commercientepicoreagle__EpicorEagle_SOHeader`, `commercientepicoreagle__EpicorEagle_TermsCode`, `Contacts`, `EpicorEagle_SerialNumber`, `Invoices`, `Price_Books`, `Products`, `Sales_Orders` and 3 custom objects
+- Object display names: Account, Contacts, EpicorEagle Customer, EpicorEagle Inventory, EpicorEagle InvoiceDetail, EpicorEagle InvoiceHeader, EpicorEagle OpenInvoice, EpicorEagle OpenInvoiceDetail, EpicorEagle SalesOrderDetail, EpicorEagle SalesOrderHeader, EpicorEagle Salesperson, EpicorEagle SerialNumber and 7 more
+- Template groups: Account, CRM Order and Line
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -229,7 +250,7 @@ The prefixes these templates set:
 - `vw_EPICOREAGLE_DSalesOrder:`
 - `vw_EPICOREAGLE_DInvoice:`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
