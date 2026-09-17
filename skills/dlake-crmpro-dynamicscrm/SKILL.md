@@ -104,15 +104,33 @@ first colon, which is the prefix boundary whether the key separator is `:` or `:
 
 ## 6. The source ERP’s own page
 
-One row per source ERP the catalogue ships Standard Dynamics CRM templates for. Each page is a
-child file of this skill, addressed as `dlake-crmpro-dynamicscrm/erps/<erp>` — `dlake skills show
+One row per source ERP the catalogue carries Dynamics CRM templates for. Each page is a child file
+of this skill, addressed as `dlake-crmpro-dynamicscrm/erps/<erp>` — `dlake skills show
 dlake-crmpro-dynamicscrm/erps/<erp>` prints one, and `dlake skills install` writes them beside
 this file.
 
 <!-- ERP-TABLE:BEGIN dlake-crmpro-dynamicscrm -->
 | ERP | Page | What its templates deliver |
 |---|---|---|
-| Epicor 10 | [`erps/epicor-10.md`](erps/epicor-10.md) | 10 Standard templates in 10 groups, pushing `salesorder`, `salesorderdetail`, `invoice`, `invoicedetail` and more; `:` repository keys |
+| Aptean Made2Manage | [`erps/aptean-made2manage.md`](erps/aptean-made2manage.md) | no Standard templates; 33 community templates |
+| Baan | [`erps/baan.md`](erps/baan.md) | no Standard templates; 14 community templates |
+| Epicor 10 | [`erps/epicor-10.md`](erps/epicor-10.md) | 10 Standard templates in 10 groups, pushing `salesorder`, `salesorderdetail`, `invoice`, `invoicedetail` and more; `:` repository keys; 23 community templates |
+| Epicor Eagle | [`erps/epicor-eagle.md`](erps/epicor-eagle.md) | no Standard templates; 21 community templates |
+| IFS | [`erps/ifs.md`](erps/ifs.md) | no Standard templates; 21 community templates |
+| Infor A+ | [`erps/infor-a.md`](erps/infor-a.md) | no Standard templates; 13 community templates |
+| Infor CSD | [`erps/infor-csd.md`](erps/infor-csd.md) | no Standard templates; 14 community templates |
+| Infor SXe | [`erps/infor-sxe.md`](erps/infor-sxe.md) | no Standard templates; 43 community templates |
+| Infor SyteLine V9 | [`erps/infor-syteline-v9.md`](erps/infor-syteline-v9.md) | no Standard templates; 29 community templates |
+| Macola ES | [`erps/macola-es.md`](erps/macola-es.md) | no Standard templates; 25 community templates |
+| MYOB Advanced | [`erps/myob-advanced.md`](erps/myob-advanced.md) | no Standard templates; 8 community templates |
+| QuickBooks Online | [`erps/quickbooks-online.md`](erps/quickbooks-online.md) | no Standard templates; 11 community templates |
+| Sage 100 (US) | [`erps/sage-100-us.md`](erps/sage-100-us.md) | no Standard templates; 7 community templates |
+| Sage 100 2017 | [`erps/sage-100-2017.md`](erps/sage-100-2017.md) | no Standard templates; 42 community templates |
+| Sage 100 US (SAGE100US) | [`erps/sage-100-us-sage100us.md`](erps/sage-100-us-sage100us.md) | no Standard templates; 18 community templates |
+| Sage 50 US | [`erps/sage-50-us.md`](erps/sage-50-us.md) | no Standard templates; 11 community templates |
+| Sage X3 | [`erps/sage-x3.md`](erps/sage-x3.md) | no Standard templates; 33 community templates |
+| SAP B1 | [`erps/sap-b1.md`](erps/sap-b1.md) | no Standard templates; 7 community templates |
+| SYSPRO 7 and above | [`erps/syspro-7-and-above.md`](erps/syspro-7-and-above.md) | no Standard templates; 24 community templates |
 <!-- ERP-TABLE:END -->
 
 **Work out which row applies before reading one.** The source is the ERP the tenant was registered
