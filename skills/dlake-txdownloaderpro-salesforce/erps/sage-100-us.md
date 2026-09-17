@@ -2,8 +2,8 @@
 name: dlake-txdownloaderpro-salesforce/erps/sage-100-us
 description: >-
   What the shipped default TxDownloaderPro templates set up when Salesforce is the writeback
-  destination and Sage 100 (US) is the source: the 32 default templates the catalogue ships for
-  this pair, the 11 field-process versions they are identified by, what each template family
+  destination and Sage 100 (US) is the source: the 41 default templates the catalogue ships for
+  this pair, the 19 field-process versions they are identified by, what each template family
   delivers, the shape of the query that finds flagged records and the objects and marker columns
   it reads, the structure of the inbound mapping document, and which `ResultStructure` parts the
   templates fill for the write back to the CRM.
@@ -62,10 +62,18 @@ destination objects are and what the operation flags allow. Operations are the u
 | Create and Update Contact | Sage100 Account(child) To Sage100 Contact | `Account`, `Contact` → `Conact`, `Contact` | 2 | create |
 | Create New Customer | Salesforce Account To Update Sage100 Customer | `Account` → `Customer` | 2 | create / update |
 | Create new Product | Salesforce Product2 To Update Product Sage100 | `Product2` → `CI_ITEM` | 2 | create / update |
+| Create Purchase Order | Salesforce Order to Sage 100 Purchase Order | `Order` → `Purchase Order` | 2 | create / update |
 | Create New Ship To Address | Salesforce Account(shipping Address) To Sage100 shipToAddress | `Account` → `ShipToAddress` | 1 | create |
+| Create RMA | Salesforce Order to Sage 100 RMA | `Order` → `RMA` | 1 | create |
+| Create Service Order | Salesforce WorkOrder to Sage 100 Service Order | `WorkOrder` → `Service Order` | 1 | create |
 | Create Vendor | Salesforce Account to Sage 100 Vendor | `Account` → `Vendor` | 1 | create |
+| Delete Product | Salesforce Product to Sage 100 Item - Delete Item | `Product2` → `Item` | 1 | delete |
+| Delete Purchase Order | Salesforce Order to Sage 100 Purchase Order - Delete Purchase Order | `Order` → `Purchase Order` | 1 | delete |
+| Delete Ship To Address | Salesforce Account to Sage 100 Ship To Address - Delete Ship To Address | `Account` → `ShipToAddress` | 1 | delete |
+| TxDownloaderPro_2_25 | Salesforce Order to Sage 100 AP Invoice | `Order` → `AP_INVOICE` | 1 | create |
+| Update Ship To Address | Salesforce Account to Sage 100 Ship To Address - Update Ship To Address | `Account` → `ShipToAddress` | 1 | update |
 
-Across the 32 default templates: 16 carry `IsInsert`, 10 carry `IsUpdate`, 6 carry `IsDelete`. A
+Across the 41 default templates: 20 carry `IsInsert`, 12 carry `IsUpdate`, 9 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
 given record. 1 catalogue description was not printed because they are placeholders or carry
 text that is not ours to publish.
@@ -92,25 +100,27 @@ that never matches a run.
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
 The field-process versions this pair’s default templates belong to: `TxDownloader_2_4`,
-`TxDownloaderPro_2_26`, `TxDownloader_2_1`, `TxDownloader_2_7`, `TxDownloader_2_3`,
-`TxDownloader_2_2`, `TxDownloader_2_19`, `TxDownloaderPro_2_13`, `TxDownloader_2_11`,
-`TxDownloader_2_10`, `TxDownloader_2_23`.
+`TxDownloaderPro_2_25`, `TxDownloaderPro_2_26`, `TxDownloader_2_1`, `TxDownloader_2_7`,
+`TxDownloader_2_3`, `TxDownloader_2_2`, `TxDownloader_2_19`, `TxDownloader_2_16`,
+`TxDownloader_2_8`, `TxDownloader_2_22`, `TxDownloaderPro_2_13`, `TxDownloader_2_12`,
+`TxDownloader_2_18`, `TxDownloader_2_11`, `TxDownloader_2_10`, `TxDownloader_2_21`,
+`TxDownloader_2_23`, `TxDownloader_2_20`.
 
 9 of these template rows carry a licence-group id, so what a given tenant is offered in the
 picker is narrower than what the catalogue holds.
 
 ## 3. What the query retrieves
 
-`Query` does not have one shape across the product (parent §9). For this pair, 32 carry a
+`Query` does not have one shape across the product (parent §9). For this pair, 41 carry a
 `SELECT` statement in the CRM's own query language. **No query text is reproduced here**; what
 follows is what those queries read and filter on.
 
-- **Objects read:** `Account`, `contact`, `OpportunityLineItems`, `QuoteLineItems`,
-  `OrderItems`, `Product2`, `WorkOrderLineItems`, `OrderLineItems`, `Order`, `Quote`,
+- **Objects read:** `Account`, `contact`, `OrderItems`, `OpportunityLineItems`,
+  `QuoteLineItems`, `Product2`, `WorkOrderLineItems`, `OrderLineItems`, `Order`, `Quote`,
   `Opportunity`.
-- **Child collections pulled in the same query:** `OpportunityLineItems`, `QuoteLineItems`,
-  `OrderItems`, `WorkOrderLineItems`, `OrderLineItems`. A header retrieved without its lines is
-  a query that does not name the child collection.
+- **Child collections pulled in the same query:** `OrderItems`, `OpportunityLineItems`,
+  `QuoteLineItems`, `WorkOrderLineItems`, `OrderLineItems`. A header retrieved without its lines
+  is a query that does not name the child collection.
 - **Marker and key columns the queries name:** `CommercientSF__Commercient_ArCustomerCode__c`,
   `ExternalKey__c`, `CommercientSF__ExternalKey__c`, `Commercient_ExternalKey`. These are the
   columns a user’s flag lands in and the columns the run writes an outcome back to; which ones
@@ -124,19 +134,20 @@ follows is what those queries read and filter on.
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 32 default templates, 32 carry a `DefaultProcessStructure`; 2 of those do not parse as
-JSON and are counted but not described. A parseable document carries about 16 members.
+pair’s 41 default templates, 41 carry a `DefaultProcessStructure`; 2 of those do not parse as
+JSON and are counted but not described. A parseable document carries about 15 members.
 
 - **Template path roots used:** `Order`, `Opportunity`, `Quote`, `Account`,
-  `OpportunityLineItems`, `QuoteLineItems`, `OrderLineItems`, `WorkOrder`, `OrderItems`,
-  `contact`, `Product2`, `WorkOrderLineItems`, `ExternalKey__c`. A path’s first segment has to
+  `OpportunityLineItems`, `OrderItems`, `QuoteLineItems`, `WorkOrder`, `OrderLineItems`,
+  `WorkOrderLineItems`, `contact`, `Product2`, `ExternalKey__c`. A path’s first segment has to
   match the element the engine emits, and the document root itself is never part of the path.
 - **`Line.` section members present:** `Line.mainXml`, `Line.ItemCode`, `Line.ItemCodeDesc`,
-  `Line.QuantityOrdered`, `Line.UnitPrice`, `Line.Discount`, `Line.CommentText`, `Line.LineNo`,
-  `Line.Quantity`, `Line.Price`, `Line.Cost`, `Line.ExtensionAmt`, `Line.QuantityShipped`,
-  `Line.LineDiscountPercent`, `Line.SalesAcctKey`. 13 templates name the collection through
-  `Line.mainXml`; the members beside it are resolved against that collection’s own root rather
-  than through the header.
+  `Line.QuantityOrdered`, `Line.CommentText`, `Line.UnitPrice`, `Line.Discount`, `Line.LineNo`,
+  `Line.Quantity`, `Line.Price`, `Line.Cost`, `Line.UnitCost`, `Line.ExtensionAmt`,
+  `Line.QuantityShipped`, `Line.LineDiscountPercent`, `Line.QuantityDistributed`,
+  `Line.DistributionAmt`, `Line.SalesAcctKey`, `Line.QuantityReturned`, `Line.InvoiceUnitPrice`,
+  and 4 more. 18 templates name the collection through `Line.mainXml`; the members beside it are
+  resolved against that collection’s own root rather than through the header.
 - **`$FUN_` value tokens the documents carry:** `$FUN_UNESCAPEXML`, `$FUN_SUBSTR`,
   `$FUN_STRREPLACE`, `$FUN_IF`. The names are what the templates carry; **no semantics are
   claimed for them here** — the parent’s §12 is explicit that the platform-side resolver is
@@ -145,15 +156,15 @@ JSON and are counted but not described. A parseable document carries about 16 me
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 32 default templates, 16 carry a
-parseable `DefaultResultStructure`, 16 carry none.
+system’s response after the write (parent §11). Of this pair’s 41 default templates, 20 carry a
+parseable `DefaultResultStructure`, 21 carry none.
 
 | Part | Filled by | What it addresses | Members present |
 |---|---|---|---|
-| `Part1` | 16 templates | the record the run is already working with | a source-path-to-CRM-field map |
-| `Part2` | 6 templates (10 explicitly null) | the child/line records under it | `ObjectAPIName`, `LoopFieldTagName`, `LoopFieldIDName`, `FieldName` |
-| `Part3` | 0 templates (16 explicitly null) | a **new** record, matched on an external id field | — |
-| `Part4` | 0 templates (16 explicitly null) | a **different** record, addressed by an id field | — |
+| `Part1` | 20 templates | the record the run is already working with | a source-path-to-CRM-field map |
+| `Part2` | 6 templates (14 explicitly null) | the child/line records under it | `ObjectAPIName`, `LoopFieldTagName`, `LoopFieldIDName`, `FieldName` |
+| `Part3` | 0 templates (20 explicitly null) | a **new** record, matched on an external id field | — |
+| `Part4` | 0 templates (20 explicitly null) | a **different** record, addressed by an id field | — |
 
 - **CRM fields `Part1` writes to:** `ExternalKey__c`,
   `CommercientSF__Commercient_ArCustomerCode__c`, `External_Key__c`, `External_Key`,
@@ -161,9 +172,9 @@ parseable `DefaultResultStructure`, 16 carry none.
   on the flagged record that carry the source system’s key or outcome once the write has
   happened — the names only; what lands in them is the response, per record.
 - **Response fields it reads them from:** `InvoiceNo`, `SalesOrderNo`, `CustomerNo`,
-  `ARDivisionNo`, `ItemCode`, `ShipToCode`. The map is written **source-path first, CRM-field
-  second** (parent §11); the wrong way round resolves to the same silent empty string as a
-  mistyped path.
+  `ARDivisionNo`, `ItemCode`, `ShipToCode`, `PurchaseOrderNo`, `RMANo`, `ServiceOrderNo`. The
+  map is written **source-path first, CRM-field second** (parent §11); the wrong way round
+  resolves to the same silent empty string as a mistyped path.
 - **Child objects named by `ObjectAPIName`:** `OpportunityLineItems`, `OrderLineItems`,
   `QuoteLineItem`.
 - **Fields the child `FieldName` maps target:** `ExternalKey__c`.
