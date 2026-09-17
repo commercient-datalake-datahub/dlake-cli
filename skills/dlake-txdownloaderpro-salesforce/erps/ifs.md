@@ -2,8 +2,8 @@
 name: dlake-txdownloaderpro-salesforce/erps/ifs
 description: >-
   What the shipped default TxDownloaderPro templates set up when Salesforce is the writeback
-  destination and IFS is the source: the 3 default templates the catalogue ships for this pair,
-  the 3 field-process versions they are identified by, what each template family delivers, the
+  destination and IFS is the source: the 16 default templates the catalogue ships for this pair,
+  the 16 field-process versions they are identified by, what each template family delivers, the
   shape of the query that finds flagged records and the objects and marker columns it reads, the
   structure of the inbound mapping document, and which `ResultStructure` parts the templates
   fill for the write back to the CRM.
@@ -52,11 +52,23 @@ destination objects are and what the operation flags allow. Operations are the u
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
+| Update Customer | Salesforce Account to Update IFS Customer | `Account` → `Customer` | 2 | update |
+| Create Customer Contact | Salesforce Contact to IFS Customer Contact | `Contact` → `Contact` | 1 | create |
+| Create New Customer | Salesforce Account to IFS Customer | `Account` → `Customer` | 1 | create |
+| Create New Customer Order | Salesforce Order to IFS Customer Order | `Order` → `CustomerOrder` | 1 | create |
 | Create New Customer with Address | Salesforce Account to IFS Customer WIth Address | — → — | 1 | create |
+| Create New Customer With Address With Tax | Salesforce Account to IFS Customer with Address and Tax | `Account` → `Customer` | 1 | create |
+| Create New Order | Salesforce Order to IFS Customer Order | `Order` → `Order` | 1 | create |
+| Create Order with Customer Tax | Salesforce Order to IFS Customer Order with Customer Tax | `Order` → `Order` | 1 | create |
+| TxDownloader_116_7 | Salesforce Contact to IFS Person, Address and Customer Contact | `Contact` → `Contact` | 1 | create |
 | TxDownloaderPro_116_23 | Salesforce Account to IFS Contact | — → — | 1 | create |
+| TxDownloaderPro_116_27 | Salesforce Account to IFS Customer with Address | `Account` → `Customer` | 1 | create |
+| TxDownloaderPro_116_34 | Salesforce Account to IFS Customer with Address and Tax | `Account` → `Customer` | 1 | create |
+| Update Contact with Address | Salesforce Contact to Update IFS Customer Contact with Address | `Contact` → `Contact` | 1 | update |
+| Update Customer Contact | Salesforce Contact to Update IFS Customer Contact | `Contact` → `Contact` | 1 | update |
 | Update Customer with Address | Salesforce Account to Update IFS Customer | — → — | 1 | update |
 
-Across the 3 default templates: 2 carry `IsInsert`, 1 carries `IsUpdate`, 0 carry `IsDelete`. A
+Across the 16 default templates: 11 carry `IsInsert`, 5 carry `IsUpdate`, 0 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
 given record.
 
@@ -81,20 +93,26 @@ that never matches a run.
 | `IsInsert` / `IsUpdate` / `IsDelete` | the template’s own flags — section 1 |
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
-The field-process versions this pair’s default templates belong to: `TxDownloaderPro_116_23`,
-`TxDownloaderPro_116_3`, `TxDownloaderPro_116_19`.
+The field-process versions this pair’s default templates belong to: `TxDownloader_116_4`,
+`TxDownloaderPro_116_23`, `TxDownloaderPro_116_1`, `TxDownloaderPro_116_22`,
+`TxDownloaderPro_116_3`, `TxDownloaderPro_116_27`, `TxDownloaderPro_116_34`,
+`TxDownloaderPro_116_30`, `TxDownloader_116_6`, `TxDownloader_116_7`, `TxDownloaderPro_116_28`,
+`TxDownloaderPro_116_24`, `TxDownloader_116_2`, `TxDownloaderPro_116_33`,
+`TxDownloaderPro_116_20`, `TxDownloaderPro_116_19`.
 
 ## 3. What the query retrieves
 
-`Query` does not have one shape across the product (parent §9). For this pair, 3 carry a
+`Query` does not have one shape across the product (parent §9). For this pair, 16 carry a
 `SELECT` statement in the CRM's own query language. **No query text is reproduced here**; what
 follows is what those queries read and filter on.
 
-- **Objects read:** `Contact`, `Account`.
+- **Objects read:** `Contact`, `Account`, `OrderItems`.
+- **Child collections pulled in the same query:** `OrderItems`. A header retrieved without its
+  lines is a query that does not name the child collection.
 - **Marker and key columns the queries name:** `CommercientSF__Commercient_ArCustomerCode__c`,
-  `ExternalKey__c`. These are the columns a user’s flag lands in and the columns the run writes
-  an outcome back to; which ones are in the `WHERE` is what decides whether a record is in scope
-  at all.
+  `ExternalKey__c`, `CommercientSF__ExternalKey__c`. These are the columns a user’s flag lands
+  in and the columns the run writes an outcome back to; which ones are in the `WHERE` is what
+  decides whether a record is in scope at all.
 - **Operators present:** `!=`, `=`, `AND`, a null test, an empty-string test. The parent’s §12
   is the authority on the vocabulary; the point here is only which of it these templates use.
 - **Where the filtering happens:** in the query, on the CRM side, before anything reaches the
@@ -104,34 +122,37 @@ follows is what those queries read and filter on.
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 3 default templates, 3 carry a `DefaultProcessStructure`. A parseable document carries
-about 30 members.
+pair’s 16 default templates, 16 carry a `DefaultProcessStructure`. A parseable document carries
+about 22 members.
 
-- **Template path roots used:** `Contact`, `Account`. A path’s first segment has to match the
-  element the engine emits, and the document root itself is never part of the path.
-- **No `Line.` section.** These templates map a single record, with no repeating child
-  collection.
+- **Template path roots used:** `Account`, `Contact`, `Order`, `OrderItems`. A path’s first
+  segment has to match the element the engine emits, and the document root itself is never part
+  of the path.
+- **`Line.` section members present:** `Line.CatalogNo`, `Line.CatalogDesc`, `Line.BuyQtyDue`,
+  `Line.SaleUnitPrice`, `Line.mainXml`. 3 templates name the collection through `Line.mainXml`;
+  the members beside it are resolved against that collection’s own root rather than through the
+  header.
 
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 3 default templates, 2 carry a
-parseable `DefaultResultStructure`, 1 carries none.
+system’s response after the write (parent §11). Of this pair’s 16 default templates, 11 carry a
+parseable `DefaultResultStructure`, 5 carry none.
 
 | Part | Filled by | What it addresses | Members present |
 |---|---|---|---|
-| `Part1` | 2 templates | the record the run is already working with | a source-path-to-CRM-field map |
-| `Part2` | 0 templates (2 explicitly null) | the child/line records under it | — |
-| `Part3` | 0 templates (2 explicitly null) | a **new** record, matched on an external id field | — |
-| `Part4` | 0 templates (2 explicitly null) | a **different** record, addressed by an id field | — |
+| `Part1` | 11 templates | the record the run is already working with | a source-path-to-CRM-field map |
+| `Part2` | 0 templates (11 explicitly null) | the child/line records under it | — |
+| `Part3` | 0 templates (11 explicitly null) | a **new** record, matched on an external id field | — |
+| `Part4` | 0 templates (11 explicitly null) | a **different** record, addressed by an id field | — |
 
 - **CRM fields `Part1` writes to:** `ExternalKey__c`,
   `CommercientSF__Commercient_ArCustomerCode__c`. These are the fields on the flagged record
   that carry the source system’s key or outcome once the write has happened — the names only;
   what lands in them is the response, per record.
-- **Response fields it reads them from:** `PERSON_PersonId`, `Cust_CustomerId`. The map is
-  written **source-path first, CRM-field second** (parent §11); the wrong way round resolves to
-  the same silent empty string as a mistyped path.
+- **Response fields it reads them from:** `Cust_CustomerId`, `OrderNo`, `PERSON_PersonId`,
+  `PersonId`, `CustomerId`. The map is written **source-path first, CRM-field second** (parent
+  §11); the wrong way round resolves to the same silent empty string as a mistyped path.
 
 ## 6. Verifying
 
