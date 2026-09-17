@@ -176,7 +176,28 @@ process before activating it.
 | SalesOrder | `Sales_Orders` | 17 | `RECNUM` → `Commercient_ExternalKey__c`, `SFDCID` → `Account_Name`, `SFDCID` → `Quote_Name`, `RECNUM` → `Name`, `RECNUM` → `SO_Number` |
 | Invoice | `Invoices` | 16 | `RECNUM` → `Commercient_ExternalKey__c`, `SFDCID` → `Account_Name`, `SFDCID` → `Sales_Order`, `RECNUM` → `Name`, `RECNUM` → `Invoice_Number` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 14 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 14
+- Default operations: insert on 14, update on 14, delete on 14
+- Marked circular-sync: 0
+- Licence groups they span: 5
+- Destination objects: `Accounts`, `Contacts`, `Invoices`, `Products`, `Quotes`, `sage100contractor__SAGE100CNTR_AR_Payment`, `sage100contractor__SAGE100CNTR_ARInvoice`, `sage100contractor__SAGE100CNTR_ARInvoiceLine`, `sage100contractor__SAGE100CNTR_Customer`, `sage100contractor__SAGE100CNTR_InventoryHist`, `sage100contractor__SAGE100CNTR_Job`, `sage100contractor__SAGE100CNTR_Parts`, `sage100contractor__SAGE100CNTR_Salesperson`, `Sales_Orders`
+- Object display names: Accounts, Contacts, Invoice, Products, Quote, Sage AR Invoice, Sage AR InvoiceLine, Sage AR Payments, Sage Customer, Sage Inventory History, Sage Job, Sage Parts and 2 more
+- Template groups: Account, CRM Order and Line, CRM Quote and Line
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -204,7 +225,7 @@ The prefixes these templates set:
 - `vw_SAGE100CONTRACTOR2018_DInvoice:`
 - `vw_Users:`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
