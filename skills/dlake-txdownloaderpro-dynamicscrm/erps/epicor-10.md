@@ -56,9 +56,9 @@ destination objects are and what the operation flags allow. Operations are the u
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
 | Create/Update Contact | Salesforce Contact to EPICOR10 Create Contact | — → — | 2 | create / update |
+| Create or Update Contact | Salesforce Contact to EPICOR 10 Create Contact | — → — | 1 | create / update |
 | Create ShipTo Address | Dynamics Account to Epicor 10 ShipTo | `accounts` → `ShipTo` | 1 | create |
 | Create/Update SalesOrder | Salesforce Account to EPICOR10 Create Customer | — → — | 1 | create / update |
-| TxDownloader_19_3 | Salesforce Contact to EPICOR 10 Create Contact | — → — | 1 | create / update |
 | TxDownloaderPro_19_7_1 | Salesforce Opportunity to EPICOR10 Create Quote | — → — | 1 | create / update |
 | Update Task | Salesforce to EPICOR10 Update Task | — → — | 1 | create / update |
 
