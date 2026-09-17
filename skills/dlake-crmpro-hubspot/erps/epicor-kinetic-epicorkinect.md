@@ -88,7 +88,28 @@ process before activating it.
 |---|---|---|---|
 | create contact | `contact` | 11 | `Company, CustNum, ShipToNum, ConNum` → `externalkey`, `FirstName` → `firstname`, `LastName` → `lastname`, `EMailAddress` → `email`, `PhoneNum` → `phone` |
 
-## 6. Verifying
+## 6. Community templates
+
+The catalogue carries 60 community templates for this pair. A community template is authored in a
+tenant rather than shipped with the product, and it imports the same way as any other. Its own
+names, notes, field mapping and SQL are tenant content, so what this section states is what the
+set amounts to: how many templates there are, what they default to doing, which destination
+objects they write and which groups they fall in. They are not part of the shipped set described
+above.
+
+- Templates: 60
+- Default operations: insert on 60, update on 60, delete on 60
+- Marked circular-sync: 0
+- Licence groups they span: 5
+- Destination objects: `deal`, `line_item`, `company`, `contact`, `product`, `ACCOUNTMATCHING__c`, `CONTACTMATCHING__c`, `DEALMATCHING__c`, `invoice`, `PRODUCTMATCHING__c` and 2 custom objects
+- Object display names: upsert company, upsert contact, upsert product, SYNC ACCOUNTMATCHING, create contact, SYNC CONTACTMATCHING, SYNC DEALMATCHING, SYNC PRODUCTMATCHING, upsert Invoice Header, upsert Invoice Line, Upsert Quote, create order Line, 16 more and 10 further templates
+- Template groups: Account, CRM Opportunity and Line, Product
+
+A community template is imported the way a shipped one is, and the same rules apply to what it
+creates: read the process it creates with `crmpro_get_process`, its mapping with
+`crmpro_field_mapping`, and the view it selects from, before activating it.
+
+## 7. Verifying
 
 ```bash
 # per-prefix counts; every synced record carries its destination id
@@ -102,7 +123,7 @@ The prefixes these templates set:
 
 - `HUBSPOT_NEW_CONTACT`
 
-## 7. Where this sits
+## 8. Where this sits
 
 `dlake-crmpro` is the general operating surface — the `crmpro_*` tools, the setup and transaction
 tables, field mapping, and the source-view contract that applies to every destination. This page
