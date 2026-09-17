@@ -2,11 +2,11 @@
 name: dlake-txdownloaderpro-salesforce/erps/syspro-6
 description: >-
   What the shipped default TxDownloaderPro templates set up when Salesforce is the writeback
-  destination and SYSPRO 6 is the source: the 5 default templates the catalogue ships for this
-  pair, the 2 field-process versions they are identified by, what each template family delivers,
-  the shape of the query that finds flagged records and the objects and marker columns it reads,
-  the structure of the inbound mapping document, and which `ResultStructure` parts the templates
-  fill for the write back to the CRM.
+  destination and SYSPRO 6 is the source: the 13 default templates the catalogue ships for this
+  pair, the 10 field-process versions they are identified by, what each template family
+  delivers, the shape of the query that finds flagged records and the objects and marker columns
+  it reads, the structure of the inbound mapping document, and which `ResultStructure` parts the
+  templates fill for the write back to the CRM.
   Use it when importing or reading this pair's template set, when deciding which templates to
   import and activate, or when a process runs and writes nothing and the answer is in the query
   or in the mapping document.
@@ -55,10 +55,19 @@ destination objects are and what the operation flags allow. Operations are the u
 |---|---|---|---|---|
 | Create New Sales Order | Salesforce Opportunity to Syspro Sales Order | — → — | 3 | create |
 | Create New Customer | Salesforce Account to Syspro Customer | `Account` → `Customer` | 2 | create / update |
+| Create New Quote | Salesforce Quote to Syspro Quote | `Quote` → `Quote` | 1 | create |
+| Create New Sales Invoice | Salesforce Order to Syspro Sales Invoice | `Order` → `Sales Invoice` | 1 | create |
+| Delete Customer | Salesforce Account to Syspro Delete Customer | `Account` → `Customer` | 1 | delete |
+| Delete Quote | Salesforce Quote to Syspro Delete Quote | `Quote` → `Quote` | 1 | delete |
+| Delete Sales Order | Salesforce Order to Syspro Delete Sales Order | `Order` → `Sales Order` | 1 | delete |
+| TxDownloaderPro_6_10 | Salesforce Contact to Syspro Contact | `Contact` → `Contact` | 1 | create |
+| TxDownloaderPro_6_7 | Salesforce Update Account to Syspro Update Customer | `Account` → `Customer` | 1 | update |
+| TxDownloaderPro_6_9 | — | `Order` → `Sales Order` | 1 | update |
 
-Across the 5 default templates: 4 carry `IsInsert`, 1 carries `IsUpdate`, 0 carry `IsDelete`. A
+Across the 13 default templates: 7 carry `IsInsert`, 3 carry `IsUpdate`, 3 carry `IsDelete`. A
 flag decides which operation the process is allowed to perform, not which one it performs on a
-given record.
+given record. 1 catalogue description was not printed because they are placeholders or carry
+text that is not ours to publish.
 
 ## 2. The process rows the import creates
 
@@ -81,27 +90,31 @@ that never matches a run.
 | `IsInsert` / `IsUpdate` / `IsDelete` | the template’s own flags — section 1 |
 | the DLL and `erpProcessId` | the field-process version, not the template |
 
-The field-process versions this pair’s default templates belong to: `TxDownloaderPro_6_1`,
-`TxDownloaderPro_6_2`.
+The field-process versions this pair’s default templates belong to: `TxDownloaderPro_6_7`,
+`TxDownloaderPro_6_9`, `TxDownloaderPro_6_10`, `TxDownloaderPro_6_1`, `TxDownloaderPro_6_29`,
+`TxDownloaderPro_6_3`, `TxDownloaderPro_6_2`, `TxDownloaderPro_6_11`, `TxDownloaderPro_6_30`,
+`TxDownloaderPro_6_12`.
 
 1 of these template rows carry a licence-group id, so what a given tenant is offered in the
 picker is narrower than what the catalogue holds.
 
 ## 3. What the query retrieves
 
-`Query` does not have one shape across the product (parent §9). For this pair, 5 carry a
+`Query` does not have one shape across the product (parent §9). For this pair, 13 carry a
 `SELECT` statement in the CRM's own query language. **No query text is reproduced here**; what
 follows is what those queries read and filter on.
 
-- **Objects read:** `Account`, `OpportunityLineItems`, `OrderItems`, `QuoteLineItems`.
-- **Child collections pulled in the same query:** `OpportunityLineItems`, `OrderItems`,
-  `QuoteLineItems`. A header retrieved without its lines is a query that does not name the child
+- **Objects read:** `Account`, `Order`, `Contact`, `QuoteLineItems`, `OpportunityLineItems`,
+  `OrderItems`, `Quote`.
+- **Child collections pulled in the same query:** `QuoteLineItems`, `OpportunityLineItems`,
+  `OrderItems`. A header retrieved without its lines is a query that does not name the child
   collection.
-- **Marker and key columns the queries name:** `CommercientSF__Commercient_ArCustomerCode__c`.
-  These are the columns a user’s flag lands in and the columns the run writes an outcome back
-  to; which ones are in the `WHERE` is what decides whether a record is in scope at all.
-- **Operators present:** `!=`, an empty-string test, a null test. The parent’s §12 is the
-  authority on the vocabulary; the point here is only which of it these templates use.
+- **Marker and key columns the queries name:** `CommercientSF__Commercient_ArCustomerCode__c`,
+  `ExternalKey__c`. These are the columns a user’s flag lands in and the columns the run writes
+  an outcome back to; which ones are in the `WHERE` is what decides whether a record is in scope
+  at all.
+- **Operators present:** `!=`, an empty-string test, `=`, `AND`, a null test. The parent’s §12
+  is the authority on the vocabulary; the point here is only which of it these templates use.
 - **Where the filtering happens:** in the query, on the CRM side, before anything reaches the
   source system. Narrowing a template means editing its query — not its mapping.
 
@@ -109,18 +122,20 @@ follows is what those queries read and filter on.
 
 `ProcessStructure` is a flat JSON object: each member names a field on the source side and its
 value is a template resolved against the retrieved record’s XML document (parent §11). Of this
-pair’s 5 default templates, 5 carry a `DefaultProcessStructure`. A parseable document carries
-about 45 members.
+pair’s 13 default templates, 13 carry a `DefaultProcessStructure`. A parseable document carries
+about 24 members.
 
-- **Template path roots used:** `Account`, `Order`, `Opportunity`, `Quote`, `OpportunityItems`,
-  `OrderItems`, `QuoteLineItems`. A path’s first segment has to match the element the engine
-  emits, and the document root itself is never part of the path.
-- **`Line.` section members present:** `Line.LineActionType`, `Line.StockCode`,
+- **Template path roots used:** `Account`, `Quote`, `Order`, `Contact`, `Opportunity`,
+  `QuoteLineItems`, `OpportunityItems`, `OrderItems`. A path’s first segment has to match the
+  element the engine emits, and the document root itself is never part of the path.
+- **`Line.` section members present:** `Line.StockCode`, `Line.mainXml`, `Line.LineActionType`,
   `Line.StockDescription`, `Line.LineWarehouse`, `Line.OrderQty`, `Line.OrderUom`, `Line.Price`,
   `Line.PriceUom`, `Line.LineAlwaysUsePriceEntered`, `Line.LineDiscPercent1`,
-  `Line.LineAllocationAction`, `Line.mainXml`. 3 templates name the collection through
-  `Line.mainXml`; the members beside it are resolved against that collection’s own root rather
-  than through the header.
+  `Line.LineAllocationAction`, `Line.StockType`, `Line.LineAction`, `Line.Description`,
+  `Line.QL_OfferNumber1_OfferAction`, `Line.QL_OfferNumber1_Quantity`,
+  `Line.QL_OfferNumber1_Price`. 4 templates name the collection through `Line.mainXml`; the
+  members beside it are resolved against that collection’s own root rather than through the
+  header.
 - **`$FUN_` value tokens the documents carry:** `$FUN_SUBSTR`, `$FUN_STRREPLACE`. The names are
   what the templates carry; **no semantics are claimed for them here** — the parent’s §12 is
   explicit that the platform-side resolver is dotted path substitution only, and these tokens
@@ -129,23 +144,23 @@ about 45 members.
 ## 5. Result structure — what goes back to the CRM
 
 `ResultStructure` is the outbound half: up to four parts, each optional, filled from the source
-system’s response after the write (parent §11). Of this pair’s 5 default templates, 4 carry a
-parseable `DefaultResultStructure`, 1 carries none.
+system’s response after the write (parent §11). Of this pair’s 13 default templates, 6 carry a
+parseable `DefaultResultStructure`, 7 carry none.
 
 | Part | Filled by | What it addresses | Members present |
 |---|---|---|---|
-| `Part1` | 4 templates | the record the run is already working with | a source-path-to-CRM-field map |
-| `Part2` | 0 templates (4 explicitly null) | the child/line records under it | — |
-| `Part3` | 0 templates (4 explicitly null) | a **new** record, matched on an external id field | — |
-| `Part4` | 0 templates (4 explicitly null) | a **different** record, addressed by an id field | — |
+| `Part1` | 6 templates | the record the run is already working with | a source-path-to-CRM-field map |
+| `Part2` | 0 templates (6 explicitly null) | the child/line records under it | — |
+| `Part3` | 0 templates (6 explicitly null) | a **new** record, matched on an external id field | — |
+| `Part4` | 0 templates (6 explicitly null) | a **different** record, addressed by an id field | — |
 
-- **CRM fields `Part1` writes to:** `Syspro_Order_Number__c`,
+- **CRM fields `Part1` writes to:** `Syspro_Order_Number__c`, `ExternalKey__c`,
   `CommercientSF__Commercient_ArCustomerCode__c`. These are the fields on the flagged record
   that carry the source system’s key or outcome once the write has happened — the names only;
   what lands in them is the response, per record.
-- **Response fields it reads them from:** `NewSalesOrderNumber`, `NewCustomerCode`. The map is
-  written **source-path first, CRM-field second** (parent §11); the wrong way round resolves to
-  the same silent empty string as a mistyped path.
+- **Response fields it reads them from:** `NewSalesOrderNumber`, `NewContactFullName`,
+  `NewCustomerCode`, `Quote`. The map is written **source-path first, CRM-field second** (parent
+  §11); the wrong way round resolves to the same silent empty string as a mistyped path.
 
 ## 6. Verifying
 
