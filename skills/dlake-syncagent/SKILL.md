@@ -264,7 +264,8 @@ This is what "the agent is installed but nothing happens" usually turns out to b
 platform side, with a tenant API key whose user holds the Admin role:
 
 ```bash
-# What is registered, and what names `add` will accept
+# What is registered, what names `add` will accept, and whether the customer's
+# installer access is granted
 dlake registration products list --profile <tenant>
 
 # Register one, by id or by its exact name. Idempotent — re-running changes nothing.
@@ -299,7 +300,8 @@ Four rules worth knowing before you use it:
   refuses the customer. Requesting an install grants it and reports it back — the verb prints
   `Installer access is granted.`, or a warning when the install was requested and the grant was
   not — and `allow-sync-agent on|off` sets or clears it on its own. It is the only way to revoke
-  it, and it needs the customer's wizard to have reached step 5.
+  it, and it needs the customer's wizard to have reached step 5. `products list` reports where the
+  grant currently stands, as `Installer access: granted` or `Installer access: not granted`.
 - **A registered product with no processes does nothing.** Registering says what to run; the Phase 1
   and Phase 2 configuration (`dlake-crmpro`, `dlake-txdownloaderpro`) says what it runs ON.
 
