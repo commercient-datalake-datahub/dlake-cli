@@ -1,5 +1,13 @@
 # dlake release notes
 
+## 0.5.38 (2026-09-18)
+
+- **`dlake registration products list` now shows whether the customer's Sync Agent installer
+  access is granted.** The listing reports where that access stands alongside the registered
+  products, so it no longer has to be inferred from the last call that set it.
+- Upgrade: `npm install -g @commercient/dlake` (or `npm install -g datalake`), then run
+  `dlake skills install` to refresh the bundled agent skills.
+
 ## 0.5.37 (2026-09-17)
 
 - **New: `dlake registration products allow-sync-agent on|off`.** Grants or revokes a customer's
