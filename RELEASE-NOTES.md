@@ -1,5 +1,17 @@
 # dlake release notes
 
+## 0.5.37 (2026-09-17)
+
+- **New: `dlake registration products allow-sync-agent on|off`.** Grants or revokes a customer's
+  access to the customer portal and the Sync Agent installer. Until it is granted the installer
+  will not run for that customer; this verb also withdraws it. It accepts `on`/`off`, `true`/
+  `false` and `yes`/`no`, and needs the customer's sign-up to have reached step 5.
+- **`dlake registration products request-install` now grants that access too.** Asking for the
+  agent install no longer leaves the installer refusing the customer: the request grants the
+  access in the same call and the verb says so, or says so when the grant did not go through.
+- Upgrade: `npm install -g @commercient/dlake` (or `npm install -g datalake`), then run
+  `dlake skills install` to refresh the bundled agent skills.
+
 ## 0.5.36 (2026-09-17)
 
 - **Skills: community templates are now part of every page.** Each destination skill's source-system
