@@ -277,11 +277,15 @@ dlake registration products add 22 --profile <tenant> --request-install
 # Ask for the agent without registering anything
 dlake registration products request-install --profile <tenant>
 
+# Grant or revoke the customer's portal and installer access on its own
+dlake registration products allow-sync-agent on --profile <tenant>
+dlake registration products allow-sync-agent off --profile <tenant>
+
 # Remove a registration. Soft — the row stays, marked removed.
 dlake registration products remove 11 --profile <tenant>
 ```
 
-Three rules worth knowing before you use it:
+Four rules worth knowing before you use it:
 
 - **Product names are lookup keys, and several are misspelled in the estate on purpose.** The
   installer matches them literally, so a name that differs by one character creates a SECOND row for
@@ -291,6 +295,11 @@ Three rules worth knowing before you use it:
 - **`--request-install` is a REQUEST, not an install.** It arms the switch the installer reads;
   somebody still has to run the installer on the customer's ERP server. Nothing in this skill's
   first nine sections happens by itself.
+- **The installer also checks the customer's own access.** Until that is granted the installer
+  refuses the customer. Requesting an install grants it and reports it back — the verb prints
+  `Installer access is granted.`, or a warning when the install was requested and the grant was
+  not — and `allow-sync-agent on|off` sets or clears it on its own. It is the only way to revoke
+  it, and it needs the customer's wizard to have reached step 5.
 - **A registered product with no processes does nothing.** Registering says what to run; the Phase 1
   and Phase 2 configuration (`dlake-crmpro`, `dlake-txdownloaderpro`) says what it runs ON.
 
