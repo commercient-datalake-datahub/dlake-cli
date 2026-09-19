@@ -1,5 +1,16 @@
 # dlake release notes
 
+## 0.5.39 (2026-09-19)
+
+- **New: `dlake registration hosting show` and `dlake registration hosting set express|standard`.**
+  A Data Lake's gateway database lives either on a dedicated container host (`express`) or on the
+  shared SQL instance (`standard`). `show` reports which one applies, whether it was chosen or
+  followed from the sign-up — a Data Lake only sign-up gets `express`, an integration `standard` —
+  whether the choice is still open, and, for an express Data Lake, where its container stands.
+  `set` makes the choice yours. It is fixed once the Data Lake is seeded.
+- Upgrade: `npm install -g @commercient/dlake` (or `npm install -g datalake`), then run
+  `dlake skills install` to refresh the bundled agent skills.
+
 ## 0.5.38 (2026-09-18)
 
 - **`dlake registration products list` now shows whether the customer's Sync Agent installer
