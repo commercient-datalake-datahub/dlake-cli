@@ -131,25 +131,23 @@ Leaving this until after expiry creates a chicken-and-egg: minting a key require
 
 ```bash
 dlake registration hosting show
-dlake registration hosting set express          # or: standard
+dlake registration hosting set express
 ```
 
-Every tenant's gateway database lives in one of two places. **`express`** is a SQL Server 2025
-Express container dedicated to that tenant on a container host; **`standard`** is the shared SQL
-instance. When nobody chooses, the sign-up decides: a **Data Lake only** sign-up — no CRM selected
-and no integration product registered — defaults to `express`, and an **integration** — a CRM
-selected, or an integration product registered — defaults to `standard`. An integration is
-therefore a `standard` tenant unless somebody says otherwise.
+**`express`** is the hosting: a SQL Server 2025 Express container dedicated to that tenant on a
+container host, provisioned when the tenant is seeded. **It is the default** — a registration that
+records nothing is express, so this step confirms rather than decides.
 
-`show` prints the value, whether it was chosen (`explicit`) or implied (`default`, naming which of
-the two rules applied), whether the choice is still open, and — for an express tenant — the
-container's state, one of `provisioning`, `ready`, `failed` or `removed`, with the host and port it
-answers on once it has them.
+`show` prints the value, whether it was chosen (`explicit`) or is the default (`default`), whether
+the choice is still open, and — for an express tenant — the container's state, one of
+`provisioning`, `ready`, `failed` or `removed`, with the host and port it answers on once it has
+them.
 
 **The choice is locked once the tenant is seeded.** After that `set` is refused with
-`hosting_locked` and `show` reports `Locked: yes`. `set` takes `express` or `standard` and nothing
-else, and an installation without container hosting refuses `express` with `hosting_unavailable`.
-The same pair is on the admin plane as `registration_hosting_get` / `registration_hosting_set`.
+`hosting_locked` and `show` reports `Locked: yes`. An installation without container hosting
+refuses `express` with `hosting_unavailable`, and a value the installation does not accept comes
+back as `hosting_invalid`. The same pair is on the admin plane as `registration_hosting_get` /
+`registration_hosting_set`.
 
 ## 4. Wizard step 3 — capture the server IP
 
@@ -408,7 +406,7 @@ API key — so the two are independent and you rarely need both.
 | `registration_state` | any | Full wizard state — always the first call when resuming |
 | `registration_status` | any | Account verification and provisioning progress |
 | `registration_hosting_get` | any | Where the gateway database lives, and whether the choice is still open |
-| `registration_hosting_set` | pre-seed | Choose `express` or `standard` |
+| `registration_hosting_set` | pre-seed | Record the hosting — `express` |
 | `registration_capture_server_ip` | 3 | Record the customer's server IP |
 | `registration_crm_catalog` | 4 | CRMs, their auth modes and fields |
 | `registration_crm_select` | 4 | Choose the CRM |
