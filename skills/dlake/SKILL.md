@@ -133,6 +133,11 @@ dlake admin restart_dab --confirm true                             # ← REQUIRE
    is guarded on it); catalogs are read tools; `registration_crm_connect` /
    `registration_connector_submit` take `fields` as a JSON OBJECT (never a pre-encoded string), and
    `registration_connector_submit` accepts an optional `erpName` to override the registration's ERP.
+   `registration_hosting_get` / `registration_hosting_set` (`dlake registration hosting show|set`)
+   carry the HOSTING choice — where the tenant's gateway database lives: `express` (a SQL Server
+   2025 Express container dedicated to the tenant) or `standard` (the shared SQL instance). A Data
+   Lake only sign-up defaults to `express`, an integration to `standard`, and the choice is locked
+   once the tenant is seeded (`hosting_locked`).
    The same rule applies: CRM/ERP credentials inside `fields` are the user's to supply — never
    invent or reuse values from elsewhere.
 
