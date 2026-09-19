@@ -1,5 +1,14 @@
 # dlake release notes
 
+## 0.5.40 (2026-09-19)
+
+- **Hosting now defaults to `express` for every registration.** A Data Lake's gateway database
+  lives on a SQL Server 2025 Express container dedicated to it, provisioned when the Data Lake is
+  seeded, and `dlake registration hosting set express` records that choice explicitly. The command
+  reference, the help pages and the bundled skills describe it that way.
+- Upgrade: `npm install -g @commercient/dlake` (or `npm install -g datalake`), then run
+  `dlake skills install` to refresh the bundled agent skills.
+
 ## 0.5.39 (2026-09-19)
 
 - **New: `dlake registration hosting show` and `dlake registration hosting set express|standard`.**
