@@ -1,5 +1,16 @@
 # dlake release notes
 
+## 0.5.41 (2026-09-22)
+
+- **`dlake registration hosting show` now reports the engine's run-state.** An express Data
+  Lake's gateway database runs on a container of its own, and the new `Engine:` line says
+  whether that container is `running`, `stopped` or `missing`. A stopped engine is a resting
+  state rather than a fault — it stands down while nothing is using it and comes back on the
+  next request — and the line says so, so there is nothing to restart by hand. The line
+  appears for express hosting only.
+- Upgrade: `npm install -g @commercient/dlake` (or `npm install -g datalake`), then run
+  `dlake skills install` to refresh the bundled agent skills.
+
 ## 0.5.40 (2026-09-19)
 
 - **Hosting now defaults to `express` for every registration.** A Data Lake's gateway database
