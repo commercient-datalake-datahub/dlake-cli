@@ -566,12 +566,12 @@ The one trap: the endpoint-config save writes **either** the configuration JSON 
 
 **Install** — download the self-contained binary for your platform (no runtime needed) and put it on your `PATH`:
 
-- [Windows (win-x64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.41/win-x64/dlake.exe)
-- [Linux x64](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.41/linux-x64/dlake)
-- [Linux ARM64 (linux-arm64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.41/linux-arm64/dlake)
-- [macOS Apple Silicon (osx-arm64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.41/osx-arm64/dlake)
-- [macOS Intel (osx-x64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.41/osx-x64/dlake)
-- [SHA256 checksums](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.41/SHA256SUMS) · or `npm install -g @commercient/dlake`
+- [Windows (win-x64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.43/win-x64/dlake.exe)
+- [Linux x64](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.43/linux-x64/dlake)
+- [Linux ARM64 (linux-arm64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.43/linux-arm64/dlake)
+- [macOS Apple Silicon (osx-arm64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.43/osx-arm64/dlake)
+- [macOS Intel (osx-x64)](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.43/osx-x64/dlake)
+- [SHA256 checksums](https://datalake-ms-dab.commercient.com/downloads/dlake/0.5.43/SHA256SUMS) · or `npm install -g @commercient/dlake`
 
 **macOS — sign the binary once after downloading.** The Mac builds ship unsigned, so run `xattr -dr com.apple.quarantine ./dlake` then `codesign --force --sign - ./dlake` (then `chmod +x ./dlake`). On Apple Silicon this is required for reliability, not just for Gatekeeper: an unsigned binary is validated page-by-page as it runs and can abort **intermittently at startup** — `System.AccessViolationException ... at Thread+StartHelper.InitializeCulture()`, typically on rapid back-to-back invocations, where a retry succeeds. Ad-hoc signing removes it. (The `InitializeCulture` frame is misleading: `dlake` runs with invariant globalization on every platform, so there is no culture data involved.)
 
@@ -811,6 +811,72 @@ versa).
 ## Audit Logs
 
 Every DDL/SQL operation is logged (user, role, statement, target, success/error). The Audit Logs page (requires `audit.view`, Admin by default) filters by operation, user, date, and success. Auth events (logins, key exchanges, revocations) are logged separately by the Auth API.
+
+### DML audit retention
+
+Row changes are recorded separately from operations. When a table carries the DML audit triggers, every insert, update and delete adds a row holding a full JSON image of the affected row — before and after — so that trail grows with how much is **written**, not with how much is done.
+
+**What is kept.** The daily retention sweep removes row-change entries older than the window and nothing else. The default window is **90 days**. You can set anything from **7 to 3650 days**, and **`0` turns the purge off** entirely — rows are then kept indefinitely, which is worth choosing deliberately rather than by accident.
+
+**How to change it.** Settings → *DML audit retention*, or `dlake audit retention set <days>`. Viewing the window needs `audit.view`; changing it needs the same permission as the other tenant settings. A change applies on the next daily sweep — nothing is deleted at the moment you save it, and a large backlog is removed over several nights rather than in one long transaction.
+
+**What is never audited.** Tables the platform itself owns (users, API keys, settings, the sync pipeline's own tables) and tables fed by a connector are never given audit triggers at all. A sync run rewrites thousands of rows at a time and the connector's own run history already records what changed and when, so a second, much larger copy of it would be cost without an answer. Tables that already record their own history — change logging, or audit stamping — are left alone for the same reason. Retention therefore governs your own tables' row history, and the setting has no effect on what a sync writes.
+
+**Purge now.** You do not have to wait for the nightly sweep. Settings → *DML audit retention* → **Report what would be purged** counts the rows older than your window and the megabytes of row images they hold, and deletes nothing; after a report, **Purge now** (it asks once) removes them straight away, using the same batches and the same time limit as the nightly sweep, and says how many rows went, whether the time limit stopped it early, and how long it took. From the CLI it is `dlake audit purge` (report) and `dlake audit purge --run` (purge). A purge is refused while the purge is off (`0`), because that setting means "keep this history"; a report still works and counts against the platform default window, and says so. Both need the same permission as changing the window, and every run is recorded in the audit trail with the name of whoever asked for it. Removing rows frees space *inside* the database file — see *Database storage* below for how that space is given back.
+
+## Database storage
+
+Your Data Lake is billed per gigabyte of database storage, and deleting rows does not make a database smaller: SQL Server keeps the space the rows used inside the file, where it stays billable until it is released. The platform runs a weekly **storage sweep** across every Data Lake that measures each database file and releases the space that is genuinely free.
+
+**What is measured.** For every file: its name, whether it holds data or the transaction log, its size, how much of it is in use, how much is free, and its autogrowth setting — plus the database's recovery model. The latest measurement is shown in Settings → *Storage*, with when it was taken and, file by file, what a sweep would do. `dlake storage show` prints the same picture.
+
+**What qualifies, and what happens.**
+
+- **Data files** are trimmed when they hold at least **1 GB** of free space **and** that is at least **10 %** of the file. The sweep first releases any free space at the end of the file (cheap — nothing moves); if the file still qualifies it is shrunk to what it holds plus **10 %** headroom, rounded up to the next **64 MB**, so it does not immediately grow back. A shrink moves data to the front of the file, which fragments indexes, so it is followed by a rebuild of every index it left more than **30 %** fragmented (indexes under 1,000 pages are left alone — fragmentation does not matter at that size).
+- **The transaction log** is shrunk whenever it is larger than **128 MB**, back to **64 MB**. This is deliberately firm: Data Lake databases use the *simple* recovery model, so the log is scratch space that holds no recoverable history, and a log that once grew for one large operation would otherwise be billed at that size forever. If the log cannot be released on the first attempt the sweep checkpoints and tries once more, and reports it if it still would not shrink.
+- **Autogrowth is never changed** — it is reported so you can see it.
+
+Each database gets a time limit per sweep; anything it did not reach is picked up the following week.
+
+**Report first.** The sweep runs in **report mode** unless the platform has been armed for it: it measures, records what it *would* release, and changes nothing. Settings → *Storage* → **Report what would be reclaimed** (or `dlake storage sweep`) runs that report for your Data Lake on demand. Arming the sweep to actually release space is a platform-wide setting, not a per-tenant one; a request to shrink before it is armed is refused with an explanation.
+
+**Opting out.** Settings → *Storage* → *Include this database in the storage sweep*, or `dlake storage shrink-enabled on|off`. It is on by default. Turning it off stops the sweep from ever releasing space in your database — it is still measured, so you can see what it is holding — and the unused space stays billable. Viewing storage needs the same permission as viewing the Data Engine settings; running a report or changing the opt-out needs the same permission as the other tenant settings. Every sweep that finds something to do, or would, is recorded in the audit trail.
+
+## Backups
+
+The platform makes restorable backups of your Data Lake's **DLO schema** — the schema that holds everything you build here.
+
+**What a backup is.** A native SQL Server backup file (`.bak`) of a database that contains **only your DLO schema**. It is made by copying the schema into a temporary database, backing that database up, and removing it again, so nothing outside DLO is ever in the file. Each backup has a manifest (what it holds, how many rows per table, any warnings) and a SHA-256 checksum, and is stored in the platform's backup storage.
+
+**What is included.** Every table in DLO with its data (connector-fed tables keep their schema only unless you include them — see below), columns exactly as declared (types and sizes, nullability, identity with its current value, defaults, computed columns), primary keys, unique, check and foreign key constraints, and indexes (including filtered indexes and included columns); views, functions, stored procedures and triggers, exactly as written; row-level-security policies and their predicates; sequences (resuming where yours left off); synonyms; and the platform's own DLO tables — users, permissions and settings — as data. A Time Travel table is stored as a plain table next to its history table, also as a plain table, so every past version is in the file; re-enable Time Travel after a restore if you want it back. Anything that cannot be carried — for example a view that reads a table outside DLO — is listed in the backup's warnings rather than stopping the backup. The platform's own **log tables** — the audit logs, notifications, run history and event queues — are always backed up as **schema only**, whatever the setting below: their rows are the platform's record of what happened, not your data, and they start empty after a restore (the backup's details list them separately, with the rows each held).
+
+**Connector-fed tables: schema only, by default.** Tables that a connector sync writes — the tables your import/sync setup targets, and tables in a connector's name prefix (such as `hs_`, `sf_`, `st_`, `odbc_` or `sql_`) — are rebuilt from their source systems by the sync, and they are usually most of a Data Lake's volume. So by default a backup keeps their **schema** (columns, keys, indexes, constraints and triggers) but **not their rows**. Your own tables, views, procedures and functions are backed up in full, including views and procedures that read connector-fed tables. The backup's details list every schema-only table with the number of rows it held, so you know what to re-sync after a restore. If you need a **self-contained** copy — one that holds the connector data too — turn on *Include connector-fed tables* in Settings → *Backups* (or `dlake backup settings --include-sync-tables on`); the backups, and the free space they need on the server, grow accordingly. After restoring a backup made without them, run the sync to refill those tables.
+
+**Space check.** Before a backup starts, the platform checks that the SQL server's data volume has room for the temporary database (the size of the data being copied), the `.bak` (about a third of that where the SQL Server edition compresses backups, as large again where it does not) and 10% headroom. If it has not, the backup is refused with those three figures, so you can see what the room is needed for.
+
+**Restoring.** Download the `.bak`, then on your own SQL Server:
+
+```sql
+RESTORE DATABASE [MyRestoredLake]
+  FROM DISK = N'C:\Backups\202609200300-mylake-dlo.bak'
+  WITH MOVE N'<logical data file>' TO N'C:\Data\MyRestoredLake.mdf',
+       MOVE N'<logical log file>'  TO N'C:\Data\MyRestoredLake_log.ldf',
+       RECOVERY;
+```
+
+The two logical file names, and this statement already filled in, are in the backup's details (Settings → *Backups*, or `dlake backup show <id>`). After the restore the objects are in schema **DLO** of the restored database. A backup can be restored on the same SQL Server version or a later one.
+
+**Schedule and retention.** Backups are made **weekly** by default, early on Sunday morning (UTC). Settings → *Backups* lets you choose **daily**, **weekly** or **off** (no scheduled backups — you can still make one whenever you like), or turn backups off entirely. Backups are kept for **30 days** and then deleted automatically.
+
+**Making and downloading one.** Settings → *Backups* → **Back up now** starts a backup; it runs in the background and appears in the list when it finishes. **Download** gives you the file through a link that is valid for 15 minutes; only an admin with the same permission as the other tenant settings may download, because the file is a complete copy of your data, and each download is recorded in the audit trail. From the CLI: `dlake backup run`, `dlake backup list`, `dlake backup show <id>`, `dlake backup download <id> --out <folder>` (which checks the SHA-256 for you) and `dlake backup settings` (`--enabled`, `--schedule`, `--include-sync-tables`). Viewing backups needs the same permission as viewing the audit trail; starting a backup, downloading one or changing the schedule needs the same permission as the other tenant settings.
+
+**Who creates the temporary database.** On shared SQL servers the platform uses a separate **backup creator login** for the part of a backup that needs server rights: it creates the temporary database, lets your Data Lake's own login into it, backs it up and removes it. It may create databases and nothing else — it has no access to your Data Lake's database and never reads your data; the copy of your DLO schema is always made by your Data Lake's own login. On a dedicated (express) engine your own login does all of it.
+
+**Where the backup file goes.** On a dedicated (express) engine the backup file is written inside your engine and then uploaded to the platform's backup storage by the host that runs the engine. On a shared SQL server running SQL Server 2022 or later, the server writes the backup file directly to the platform's backup storage: no copy is kept on the server's own disk, so the space check counts only the temporary database. These backups are checked by SQL Server itself (page checksums while writing, then a full read-back of the stored file), so they show no SHA-256 and `dlake backup download` skips that check. On a shared server running an older version of SQL Server, backups are not available until the server is upgraded to SQL Server 2022 or later.
+
+**If a backup says "insufficient rights".** One of the platform's database logins on your server is missing a right the backup needs, and the message says which: the backup creator login, or your Data Lake's own login. Nothing is wrong with your data; ask your platform administrator to grant it.
+
+**If a backup says "s3 credential missing".** Your server can write backups directly to the platform's backup storage, but the one-time setup that lets it do so has not been done on that server yet. Nothing is wrong with your data; ask your platform administrator to complete it, and the next backup runs normally.
 
 ## Notifications
 
