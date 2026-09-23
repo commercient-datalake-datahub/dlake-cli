@@ -1,5 +1,60 @@
 # dlake release notes
 
+## 0.5.43 (2026-09-22)
+
+- **New: `dlake backup`.** Restorable backups of your Data Lake's DLO schema: a native SQL
+  Server backup file of a database holding only DLO — tables and their data, views, functions,
+  procedures, triggers, row-level security, sequences and synonyms. `backup run` makes one now,
+  `backup list` and `backup show <id>` list and inspect them (object counts, warnings and the
+  restore statement), `backup download <id> [--out <path>]` downloads one and checks its SHA-256,
+  and `backup settings [--enabled on|off] [--schedule weekly|daily|off] [--include-sync-tables on|off]`
+  chooses whether and how often they are made, and what they hold. Weekly by default; backups are
+  kept 30 days.
+- On shared SQL servers the temporary backup database is created, backed up and removed by a
+  dedicated backup creator login that may create databases and nothing else; your Data Lake's own
+  login still makes the copy of your data, so the creator never reads it. An "insufficient
+  rights" result now says which of the two logins is missing a right.
+- **Connector-fed tables are backed up as schema only by default.** Tables a connector sync
+  writes are rebuilt from their source systems and are usually most of a Data Lake's volume, so a
+  backup now keeps their structure (columns, keys, indexes, constraints) without their rows; your
+  own tables, views and procedures are backed up in full. `backup show` lists the schema-only
+  tables with the rows each held. `backup settings --include-sync-tables on` includes their rows
+  for a self-contained copy.
+- **Platform log tables are always backed up as schema only.** The platform's own audit logs,
+  notifications, run history and event queues keep their structure in the backup but not their
+  rows, whatever `--include-sync-tables` says: they record what happened rather than hold your
+  data, and they start empty after a restore. `backup show` lists them separately.
+- The pre-backup space check now counts only the data that will be copied, and a refusal shows
+  what the room is for: the temporary database, the backup file and headroom, with the connector
+  data and the platform log data left out reported as separate figures.
+- Upgrade: `npm install -g @commercient/dlake` (or `npm install -g datalake`), then run
+  `dlake skills install` to refresh the bundled agent skills.
+
+## 0.5.42 (2026-09-22)
+
+- **New: `dlake audit retention show` and `dlake audit retention set <days>`.** Row-change
+  history is recorded by the DML audit triggers, which store a full copy of every affected
+  row, so it grows with how much is written. Retention gives it a floor: **90 days by
+  default**, anything from 7 to 3650 days, and `0` to turn the purge off and keep rows
+  indefinitely. `show` says which window is in force and whether it was chosen or is the
+  default. A change applies on the next daily sweep, and sync-fed and platform tables are
+  never audited at all, so it governs your own tables' history.
+- **New: `dlake audit purge` and `dlake audit purge --run`.** A bare `purge` reports how many
+  row-change entries are outside your retention window and how many megabytes they hold, and
+  deletes nothing; `--run` removes them now instead of waiting for the nightly sweep, with the
+  same batches and time limit. A purge is refused while retention is `0`.
+- **New: `dlake storage show`, `dlake storage sweep [--shrink]` and
+  `dlake storage shrink-enabled on|off`.** Deleting rows does not make a database smaller, and
+  storage is billed per gigabyte, so a weekly storage sweep now measures every database file and
+  releases the free space: data files are trimmed to what they hold plus headroom (and the
+  indexes a trim fragments are rebuilt), and the transaction log is shrunk firmly because Data
+  Lake databases use simple recovery. `show` prints each file's size, used and free space,
+  autogrowth and what a sweep would do; `sweep` measures now and reports, and `--shrink` releases
+  the space once the platform has armed the sweep; `shrink-enabled off` excludes your database.
+  The sweep reports by default and never changes autogrowth.
+- Upgrade: `npm install -g @commercient/dlake` (or `npm install -g datalake`), then run
+  `dlake skills install` to refresh the bundled agent skills.
+
 ## 0.5.41 (2026-09-22)
 
 - **`dlake registration hosting show` now reports the engine's run-state.** An express Data
