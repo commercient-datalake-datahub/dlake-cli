@@ -32,7 +32,7 @@ exists). Follow the sequence and rules below and it goes smoothly.
 
 ```
 dlake login --domain <tenant>                 # auth with a dlk_ API key: env DLAKE_API_KEY | --api-key-stdin | no-echo prompt
-dlake status                                  # tenant + service health
+dlake status                                  # MCP-host health + key check (admin + data, or data plane only)
 dlake admin list                              # every control-plane tool your key can use (DDL, keys, exposure, DAB, RLS, events, registration wizard)
 dlake admin <tool> --help                     # argument schema for one tool
 dlake admin <tool> [--arg value ...]          # invoke it (schema/keys/exposure/etc.)
@@ -43,6 +43,10 @@ dlake guide api | guide help | guide cli      # live API + platform docs, and th
 
 Two planes: **`admin`** = control plane (define & expose schema, manage keys, restart DAB).
 **`tool`** = data plane (read/write rows, run queries) — and it only sees *exposed* entities.
+Every command after sign-in goes through the MCP host on the composite key, so the CLI works from
+any network. The curated `keys`, `projects`, `s3` and `view show/create/alter/drop` verbs ride the
+admin plane (full-scope Admin key); `query`, `export`, `docs` and `view list` (exposed views only)
+ride the data plane (scoped keys work).
 
 ## The canonical build sequence
 
