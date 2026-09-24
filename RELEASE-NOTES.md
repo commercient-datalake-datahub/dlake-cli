@@ -27,6 +27,42 @@
 - The pre-backup space check now counts only the data that will be copied, and a refusal shows
   what the room is for: the temporary database, the backup file and headroom, with the connector
   data and the platform log data left out reported as separate figures.
+- **Every command after sign-in now goes through the MCP host.** `keys`, `projects`, `query`,
+  `export`, `docs`, `s3`, `view`, `login` and `status` no longer need any other Commercient host,
+  so the CLI works from any network. `dlake login` checks your key with one call before it saves
+  anything: a key that is valid but not a full-scope Admin key is saved for the data plane, and a
+  rejected key saves nothing. No sign-in token is cached any more; the old token cache is removed
+  on first run.
+- **`dlake s3` and `dlake view show|create|alter|drop` now need a full-scope key owned by an Admin
+  user**, as `dlake keys` and `dlake projects` do. Scoped keys and non-admin users can still use
+  `query`, `export`, `docs`, `tool` and `view list`. This is a temporary restriction for `s3` and
+  the view changes, until they have data-plane equivalents.
+- `dlake view list` now lists the views exposed through the Data API that your key can see, with
+  each one's type and field count; `dlake admin list_views` still lists every view for admins.
+- **Document uploads are capped at 10 MB.** `dlake docs upload` refuses a larger file before
+  sending anything.
+- `dlake s3 put` and `dlake s3 get` move files over 8 MB straight between your machine and your
+  bucket through a short-lived link. `dlake s3 ls` pages with `--token`.
+- **Changed JSON output.** `dlake status --json`, `dlake login --json` and
+  `dlake profiles list --json` no longer carry `authUrl` or `apiUrl`. `status --json` reports the
+  MCP host, the Registration host and whether your key was accepted and on which planes;
+  `profiles list` shows each profile's MCP URL. `--auth-url` and `--api-url` on `dlake login`
+  are accepted and ignored for this release.
+- `dlake watch` checks the MCP host, the sign-up catalog and the published downloads (plus, with
+  `--profile`, a live query); `--tenant-host` is accepted and ignored for this release.
+- Fixed: `-o <file>` on `dlake export` and `dlake docs get` now writes to the file you name.
+- **Portable backups.** `backup settings --format portable|native|both` adds a portable package
+  (a .bacpac) that restores onto any SQL Server 2016 or later, including Express and Azure SQL,
+  while the native file stays exact for same-or-newer servers; `backup show` reports the formats a
+  backup holds and the oldest server each restores to, and `backup download --format` picks one.
+  With `both`, a portable half that cannot be produced does not fail the backup: the native file
+  is kept and the reason is recorded.
+- **Choose what a backup holds.** `backup scope` sets, per table, full data, schema only or
+  excluded, and switches code objects (views, procedures, functions, triggers) on or off; platform
+  tables keep a protected floor. Portable packages take the tables their foreign keys need.
+- **Backups are consistent to a moment.** On SQL Server editions that support it, the copy is taken
+  from a database snapshot, so every table reflects the same instant; `backup show` reports
+  `point-in-time` or `per-table` and why. Only one backup runs per Data Lake at a time.
 - Upgrade: `npm install -g @commercient/dlake` (or `npm install -g datalake`), then run
   `dlake skills install` to refresh the bundled agent skills.
 
