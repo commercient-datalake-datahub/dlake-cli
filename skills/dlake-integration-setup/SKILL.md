@@ -188,6 +188,8 @@ For a **credentials/apikey** CRM, submit the fields the catalog lists for it:
 
 ```bash
 dlake admin registration_crm_connect --crmName <Crm> --fields @fields.json
+# or one field at a time; Name=@file.txt reads that value from a file
+dlake admin registration_crm_connect --crmName <Crm> --field <Name>=<value> --field <Name>=@file.txt
 ```
 
 For an **OAuth** CRM, either connect now (below) or **defer it** and come back — see the next
@@ -239,12 +241,17 @@ wrong provider it fails only after the customer is already staring at an error:
 dlake registration oauth --crm <Crm> --no-browser         # website leg: print the URL, poll, complete
 dlake registration oauth --crm <Crm>                      # loopback leg: listen on 127.0.0.1, complete
 dlake registration oauth --crm <Crm> --fields @start.json # when the CRM needs start inputs
+dlake registration oauth --crm <Crm> --field <Name>=<value> # ...or one input at a time
+dlake registration pin --crm <Crm>                        # PIN providers: confirm the e-mailed PIN
 ```
 
 **On a `both` CRM, `--no-browser` selects the website leg** — the start call sends no redirect URI, so
 the platform authorizes against its own public callback and the code is delivered server-side. The
 consent can happen in any browser, on any network — right for HubSpot (above) and whenever the person
-authorizing is not sitting at the machine running `dlake`; the CLI picks the result up by polling.
+authorizing is not sitting at the machine running `dlake`; the CLI picks the result up by polling
+`registration_crm_oauth_status` and runs `registration_crm_oauth_complete` itself the moment the code
+arrives. It then says what comes next: connected (finalize), a selection to make (`registration
+action`), or the e-mailed PIN (`dlake registration pin --crm <Crm>`).
 
 **On the loopback leg** the same command without `--no-browser` binds the listener on 127.0.0.1:8801
 (falling back to 8802 then 8803), starts the flow against the port it actually bound, opens the
@@ -277,8 +284,9 @@ dlake admin registration_crm_oauth_start --crmName <Crm>
 #     is read from the parked attempt (status never returns it).
 dlake admin registration_crm_oauth_complete --crmName <Crm> --state <state> [--code <code>]
 
-# 3b. …then, for providers whose flow ends in a PIN, confirm it
-dlake admin registration_crm_oauth_confirm_pin --crmName <Crm> --pin <pin>
+# 3b. …then, for providers whose flow ends in a PIN, confirm it. The verb calls
+#     registration_crm_oauth_confirm_pin and reads the PIN hidden (or from --pin-stdin).
+dlake registration pin --crm <Crm>
 ```
 
 `registration_crm_oauth_status` is safe to call at any time, and its `nextAction` names the next call:
@@ -286,8 +294,9 @@ dlake admin registration_crm_oauth_confirm_pin --crmName <Crm> --pin <pin>
 (pin_required, with `pinDelivery` `email`). **There is no `connected` status** — a finished handshake
 reads `none`, the same as one never started — so a missing connection shows up at
 `registration_crm_finalize`, which refuses `crm_pin_pending` or `crm_not_connected`. On the website
-leg the status is also how you learn the browser leg finished: poll until it reports `code_received`,
-then run `oauth_complete`. Which of
+leg the status is also how you learn the browser leg finished: `dlake registration oauth` polls it and
+runs `oauth_complete` itself; with the individual tools, poll until it reports `code_received`, then
+run `oauth_complete`. Which of
 `oauth_complete` / `oauth_confirm_pin` applies is visible in the CRM's `stages` in the catalog — a
 `pin` stage means the flow ends with a PIN.
 
@@ -304,8 +313,10 @@ the registration account's email address; nothing shows it on screen, and no ema
 complete call runs. Do not go looking for it on the callback page — that page only says the
 authorization was recorded — and do not go looking for a "send/resend PIN" command: **there is none.**
 PIN delivery is a side effect of `oauth_complete`, which answers `pin_required` with `nextAction`
-`confirm_pin` and `pinRecipient` "registration email address"; the only step after it is
-`oauth_confirm_pin --pin <pin>` with the code from the email. While it is outstanding the status reads
+`confirm_pin` and `pinRecipient` "registration email address"; the only step after it is confirming
+the PIN from that e-mail with `dlake registration pin --crm <Crm>` (the `oauth_confirm_pin` tool). The
+verb reads the PIN from a hidden prompt, or from stdin with `--pin-stdin`, and refuses a plain `--pin`
+value, which would be kept in shell history. Ask the customer for the PIN; never guess or reuse one. While it is outstanding the status reads
 `pin_required`. A wrong PIN is refused with `invalid_pin` and the parked tokens stay, so the right one
 can still be confirmed.
 
@@ -341,6 +352,7 @@ dlake registration action --crm Salesforce --action SalesforceSetup
 # Monday: list the workspaces, then pick one.
 dlake registration action --crm Monday --action MondayListWorkspaces
 dlake registration action --crm Monday --action MondayPickWorkspace --fields @workspace.json
+dlake registration action --crm Monday --action MondayPickWorkspace --field workspaceId=<id>
 ```
 
 The server validates the action by name; only those three exist. The same call is
@@ -362,7 +374,10 @@ dlake admin registration_connector_submit \
 sync-agent choice and the Connection Manager record all follow the declared ERP.
 
 `--fields` takes a JSON **object**, not a JSON string. On Windows write it to a file and pass
-`@fields.json` rather than fighting shell quoting. For `SQL2008ABOVE` the fields are
+`@fields.json` rather than fighting shell quoting, or pass the values one at a time with a repeated
+`--field <Name>=<value>`, set over any `--fields` JSON; a value written `<Name>=@file.txt` is read from
+that file, which is the safest way to pass a Windows path, or a value that should stay out of the
+command line. A name given twice is refused. For `SQL2008ABOVE` the fields are
 `SqlServerName`, `DataBaseName`, `SqlUserName`, `SqlPassword`.
 
 Step 5 is guarded on step 4 being finalized — same 409 shape as before.
@@ -468,7 +483,7 @@ API key — so the two are independent and you rarely need both.
 | `registration_crm_connect` | 4 | Submit credential/apikey fields |
 | `registration_crm_oauth_start` | 4/any | Begin an OAuth handshake |
 | `registration_crm_oauth_complete` | 4/any | Finish with the provider's `code`/`state` |
-| `registration_crm_oauth_confirm_pin` | 4/any | Confirm the PIN e-mailed to the registration address |
+| `registration_crm_oauth_confirm_pin` | 4/any | Confirm the PIN e-mailed to the registration address (CLI: `dlake registration pin --crm <Crm>`) |
 | `registration_crm_oauth_status` | 4/any | Where a handshake stands, and the `nextAction` |
 | `registration_crm_action` | 4/any | Provider sub-actions: `SalesforceSetup`, `MondayListWorkspaces`, `MondayPickWorkspace` |
 | `registration_crm_finalize` | 4 | Close step 4 |
@@ -498,7 +513,7 @@ API key — so the two are independent and you rarely need both.
   in your summary.
 - **Reading a completed provisioning run as proof the ERP connection works.** It isn't; the
   credentials are exercised when data syncs.
-- **`--fields` as a JSON string.** It takes an object; use `@file.json`.
+- **`--fields` as a JSON string.** It takes an object; use `@file.json`, or a repeated `--field <Name>=<value>`.
 - **Treating a deferred OAuth connection as a blocked setup.** For a CRM without a credential check it
   isn't — finish the rest and connect the CRM when the customer is ready. Salesforce, Zoho, HubSpot
   and Klaviyo are the exception: finalize waits for their connection.
