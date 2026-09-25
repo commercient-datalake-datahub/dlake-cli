@@ -144,6 +144,15 @@ For `crmpro_update_process` and `crmpro_create_process`, take the exact field na
 `dlake admin crmpro_update_process --help` (and from a `crmpro_get_process` read of the row you are
 about to change) rather than from memory.
 
+`crmpro_update_process` also takes a repeated `--field <name>=<value>` in place of, or on top of,
+the `--fields` JSON: each one sets one field, and a name given twice is refused. The values are sent
+as strings, so use it for text fields and keep booleans and numbers in `--fields`. A value written
+`<name>=@file` is read from that file, which suits a long query:
+
+```bash
+dlake admin crmpro_update_process --profile <tenant> --recordId 123 --field sqL_Query=@query.sql
+```
+
 ### Reading the sync log without drowning in it
 
 `crmpro_errors` reads a shared error database and `crmpro_agent_info` is the agent's own
@@ -868,6 +877,10 @@ as `Contact.Email` is not an external id.
 
 ## 8. Things that bite
 
+- **A PIN CRM is not connected until its PIN is confirmed.** For Salesforce, Zoho, HubSpot and
+  Klaviyo the wizard's OAuth handshake ends with a PIN e-mailed to the registration e-mail address;
+  until `dlake registration pin --crm <Crm>` confirms it the tokens stay parked and CRMPro cannot push
+  to the CRM. The handshake itself is in `dlake-integration-setup`.
 - **The `crmpro_*` tools are Admin-only.** The calling key must belong to a tenant user holding the
   **Admin** role; anything else gets a `403` naming that role. Keys inherit the user's roles, so the
   fix is a key minted from an Admin account — not a scope change, not a retry. Same for the
