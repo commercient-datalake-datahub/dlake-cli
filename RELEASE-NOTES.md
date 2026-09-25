@@ -1,5 +1,35 @@
 # dlake release notes
 
+## 0.5.45 (2026-09-25)
+
+- **`--help` works without a profile.** Every command prints its help without `--profile`,
+  including `dlake admin <tool> --help`, `dlake tool <tool> --help`, `view list`, `s3 ls`,
+  `docs list`, `export` and `status`. For the `admin` and `tool` passthroughs, a tool's live
+  argument schema comes from the MCP host, so it is shown when a profile is given; without one
+  you get the generic help for the verb and a line saying so.
+- **Windows install notes.** The README has a Windows PowerShell section: the one-time
+  execution-policy setting npm's command wrappers need, the install line that allows the
+  package's download step (`npm install -g --allow-scripts=@commercient/dlake @commercient/dlake`),
+  and quoting `@file` arguments (`--columns "@columns.json"`), since a bare leading `@` is
+  PowerShell's splatting operator.
+- **A clearer message when the binary is missing.** If npm skipped the package's download step,
+  the first command now says so and names the fix: the allow-scripts install line above, or
+  `npm rebuild @commercient/dlake`.
+- **`create_table` refuses column properties it does not use.** A column property outside the
+  table column shape used to be ignored, so a `maxLength` became an unbounded column. It is now
+  refused with the column, the allowed properties and the one you probably meant (`maxLength`
+  and `length` are `size`, `dataType` is `type`, `isNullable` is `nullable`). A `size` on a
+  numeric type, or `precision`/`scale` on a string type, is refused the same way. `add_column`
+  and `alter_column` follow the same rules. The README's app walkthrough now lists the full
+  column shape with a worked `columns.json`, and labels the procedure-parameter example as
+  such.
+- **Scoped keys remind you to restart DAB.** `create_api_key` with a `scope` now ends its
+  message with the same restart guidance `create_table` gives, and returns
+  `restartNeeded: true`: the key's per-key role takes effect after `restart_dab`.
+- Upgrade: `npm install -g @commercient/dlake` (or `npm install -g datalake`; add
+  `--allow-scripts=@commercient/dlake` if your npm skips install scripts), then run
+  `dlake skills install` to refresh the bundled agent skills.
+
 ## 0.5.44 (2026-09-25)
 
 - **New: `dlake registration pin --crm <name>`.** For CRMs whose connection ends in a PIN, the PIN
