@@ -110,7 +110,9 @@ dlake admin restart_dab --confirm true                             # ← REQUIRE
 6. **Stored-procedure parameters:** each is `{ name, dataType, maxLength?, direction? }` — the type
    key is **`dataType`**, not `type` (only `create_table --columns` uses `type`), and the **name must
    start with `@`** (`{"name":"@CartJson","dataType":"NVARCHAR","maxLength":-1}`; `"CartJson"` is
-   rejected with *"must start with '@'"*). Also avoid **reserved T-SQL keywords as column names** —
+   rejected with *"must start with '@'"*). Table columns are the other shape — `{ name, type, size?,
+   precision?, scale?, nullable?, … }`, a string length is `size` — and `create_table` refuses any
+   column property outside it, naming the one meant. Also avoid **reserved T-SQL keywords as column names** —
    `LineNo` fails because `LINENO` is reserved, as are `Key`, `Order`, `User`, `Percent`, `Public`;
    rename to `LineNumber` / `SeqNo`.
 
