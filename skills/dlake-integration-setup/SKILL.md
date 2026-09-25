@@ -32,6 +32,7 @@ register start → [human clicks email link] → seed + bootstrap key
     → step 3  capture server IP
     → step 4  choose CRM   (connect now, or connect later — both supported)
     → step 5  declare ERP connector → provision
+    → step 6  register the products the agent runs → request the install → run the installer on the ERP server
 ```
 
 Steps 3–5 are **admin-plane tools** (`dlake admin registration_*`). They authenticate with the
@@ -105,8 +106,8 @@ page, needs no sign-in, and is safe to click twice. There is no CLI verify comma
 dlake register status --watch
 ```
 
-Progression is `emailVerified` → `isProvisioned` → `dataLakeSeeded`, typically a couple of minutes
-after the click. On the first poll **after** seeding the response carries a **once-only bootstrap API
+Progression is `emailVerified` → `isProvisioned` → `dataLakeSeeded`; allow up to 15 minutes after
+the click. `--watch` keeps polling, so a wait inside that window is not a fault. On the first poll **after** seeding the response carries a **once-only bootstrap API
 key**, which the CLI prints and saves to a profile automatically. It is never shown again.
 
 A second "welcome" email also arrives carrying the tenant owner's temporary **web app** password.
@@ -135,12 +136,14 @@ dlake registration hosting set express
 ```
 
 **`express`** is the hosting: a SQL Server 2025 Express container dedicated to that tenant on a
-container host, provisioned when the tenant is seeded. **It is the default** — a registration that
-records nothing is express, so this step confirms rather than decides.
+container host, provisioned when the tenant is seeded. **It is the default** unless the
+installation configures another, so this step usually confirms rather than decides. A registration
+seeded before the hosting choice existed reports `standard`, the shared instance its Data Lake was
+already seeded onto. `show` is a read and records nothing.
 
 `show` prints the value, whether it was chosen (`explicit`) or is the default (`default`), whether
-the choice is still open, and — for an express tenant — the container's state, one of
-`provisioning`, `ready`, `failed` or `removed`, with the host and port it answers on once it has
+the choice is still open, and — for an express tenant — the container's state (the steps of its
+seed, `provisioning` through `ready`, or `failed`), with the host and port it answers on once it has
 them.
 
 **The choice is locked once the tenant is seeded.** After that `set` is refused with
@@ -157,9 +160,13 @@ dlake admin registration_capture_server_ip --ipAddress <ip>
 ```
 
 `registration_state` is the authoritative answer to where a registration got to, and the right first call
-whenever you resume. Step 3 is a **prerequisite for the CRM step** — attempt step 4 first and the
-server answers `"Please complete step 3 first. [registration status 409]"`. That 409 is the wizard
-telling you the order; satisfy it rather than working around it.
+whenever you resume. Route on its **`NextStep`**, the step to work on next; `CurrentStep` is the last
+step *completed* and never goes down. Step 3 is a **prerequisite for the CRM step** — attempt step 4
+first and the server answers `"Please complete step 3 first. [registration status 409]"`. That 409 is
+the wizard telling you the order; satisfy it rather than working around it.
+
+Re-running the capture after a later step records the new address and leaves the wizard where it is
+(the message says so); it never moves the wizard back.
 
 ## 5. Wizard step 4 — choose the CRM
 
@@ -190,14 +197,22 @@ section. Then close the step:
 dlake admin registration_crm_finalize
 ```
 
+Finalize checks the connection before it closes the step. It refuses, with a 409, `crm_not_selected`
+(no CRM chosen), `crm_pin_pending` (the e-mailed PIN has not been confirmed) or `crm_not_connected`
+(the CRM's credentials are not stored). `crm_not_connected` applies to the CRMs with a credential
+check — Salesforce, Zoho, HubSpot and Klaviyo; any other CRM finalizes as before.
+
 ## 6. Connecting an OAuth CRM — now or later
 
 **Deferring the OAuth handshake is fully supported — but it is the user's decision, not yours.** The
 customer may not have their CRM admin available, or the authorizing person may be someone else
 entirely. Offer the handshake first; defer only when the user chooses to. If deferring: select the
 CRM, finalize step 4, carry on to step 5, and complete the authorization whenever the customer is
-ready — the tenant remembers the CRM choice. A deferred handshake must be named in your summary:
-CRMPro cannot push to the CRM until it is completed.
+ready — the tenant remembers the CRM choice. That holds for a CRM without a credential check.
+Salesforce, Zoho, HubSpot and Klaviyo carry one, so finalize refuses them with `crm_not_connected`
+until the handshake and its PIN are done: deferring their handshake holds the wizard at step 4, and
+step 5 waits behind it. A deferred handshake must be named in your summary: CRMPro cannot push to
+the CRM until it is completed.
 
 **There are two legs, and the difference is where the provider sends the callback.** Check the CRM's
 `callbackMode` in the catalog:
@@ -243,7 +258,7 @@ the terminal are on different machines. To connect at any point, including long 
 finalized:
 
 ```bash
-# 1. Where does this CRM's handshake stand? (none / pending / awaiting PIN / connected)
+# 1. Where does this CRM's handshake stand? (none / pending / code_received / error / pin_required)
 dlake admin registration_crm_oauth_status --crmName <Crm>
 
 # 2. Begin — returns the authorization URL for the customer to open in a browser,
@@ -266,9 +281,13 @@ dlake admin registration_crm_oauth_complete --crmName <Crm> --state <state> [--c
 dlake admin registration_crm_oauth_confirm_pin --crmName <Crm> --pin <pin>
 ```
 
-`registration_crm_oauth_status` is safe to call at any time and is the right way to check whether a
-deferred connection has since been completed. On the website leg it is also how you learn the browser
-leg finished: poll until it reports `code_received`, then run `oauth_complete`. Which of
+`registration_crm_oauth_status` is safe to call at any time, and its `nextAction` names the next call:
+`start` (none), `wait` (pending), `complete` (code_received), `restart` (error) or `confirm_pin`
+(pin_required, with `pinDelivery` `email`). **There is no `connected` status** — a finished handshake
+reads `none`, the same as one never started — so a missing connection shows up at
+`registration_crm_finalize`, which refuses `crm_pin_pending` or `crm_not_connected`. On the website
+leg the status is also how you learn the browser leg finished: poll until it reports `code_received`,
+then run `oauth_complete`. Which of
 `oauth_complete` / `oauth_confirm_pin` applies is visible in the CRM's `stages` in the catalog — a
 `pin` stage means the flow ends with a PIN.
 
@@ -276,15 +295,19 @@ leg finished: poll until it reports `code_received`, then run `oauth_complete`. 
 parked and waiting, and provider codes are single-use and expire within minutes. Run `oauth_complete`
 **immediately**; do not finalize the step, move on to other wizard work, or wait for anything first.
 A code left sitting expires, the exchange then fails, and the only recovery is a full re-authorize —
-the customer has to consent all over again. The handshake is done only at `connected`.
+the customer has to consent all over again. The handshake is done when `oauth_complete` answers
+`connected`, or, for a PIN provider, when `oauth_confirm_pin` succeeds.
 
 **The PIN is emailed, not displayed — and only `oauth_complete` sends it.** For the four PIN providers
 (Salesforce, Zoho, HubSpot, Klaviyo) `oauth_complete` parks the tokens and sends a confirmation PIN to
 the registration account's email address; nothing shows it on screen, and no email exists until the
 complete call runs. Do not go looking for it on the callback page — that page only says the
 authorization was recorded — and do not go looking for a "send/resend PIN" command: **there is none.**
-PIN delivery is a side effect of `oauth_complete`; the only step after it is
-`oauth_confirm_pin --pin <pin>` with the code from the email.
+PIN delivery is a side effect of `oauth_complete`, which answers `pin_required` with `nextAction`
+`confirm_pin` and `pinRecipient` "registration email address"; the only step after it is
+`oauth_confirm_pin --pin <pin>` with the code from the email. While it is outstanding the status reads
+`pin_required`. A wrong PIN is refused with `invalid_pin` and the parked tokens stay, so the right one
+can still be confirmed.
 
 **Two different refusals, in this order.** Read the code, not the prose:
 
@@ -300,8 +323,10 @@ the provider's configuration.
 
 On `provider_app_not_configured`: report it, carry on with the rest of the setup, and complete the
 authorization later with the same commands. Nothing about the integration is lost by finishing that
-part afterwards — and you do **not** need to substitute a different CRM to close step 4. Selecting the
-CRM and running `crm_finalize` completes the step with the handshake still at `status: none`.
+part afterwards, and you do **not** need to substitute a different CRM. For a CRM without a credential
+check, selecting it and running `crm_finalize` completes step 4 with the handshake still at
+`status: none`. Salesforce, Zoho, HubSpot and Klaviyo carry the check, so for them `crm_finalize`
+answers `crm_not_connected` and step 4 stays open until the authorization is completed.
 
 ## 6b. Provider sub-actions — Salesforce package install, Monday workspace
 
@@ -373,19 +398,49 @@ dlake admin registration_connector_submit \
     --connectorType SQL2008ABOVE --erpName SYSPRO7 --fields @real-fields.json
 ```
 
-Re-submitting is accepted at any point, including after provisioning has completed. `erpChanged`
-reports whether the **ERP itself** changed, so it is `false` when you re-submit the same ERP with
-corrected connection values — that is success, not a rejection.
+Re-submitting is accepted at any point, including after provisioning has completed; it writes only the
+connector configuration and never moves the wizard. `erpChanged` reports whether the **ERP itself**
+changed, so it is `false` when you re-submit the same ERP with corrected connection values — that is
+success, not a rejection.
+
+## 7b. After provisioning — products and the agent install
+
+Provisioning configures the tenant; it does not register every product the on-prem Sync Agent runs.
+**CRMPro (Phase 1, product `11`, `CommercientCRMPro`) is not registered automatically.** Check what is
+there, then add it and request the install:
+
+```bash
+dlake registration products list                      # what is registered, and whether installer access is granted
+dlake registration products add 11 --request-install  # register CRMPro and request the agent install
+```
+
+`dlake registration products add 11` followed by `dlake registration products request-install` does the
+same in two calls. Requesting the install also grants the customer's installer access; if the output
+warns that the grant did not land, set it on its own:
+
+```bash
+dlake registration products allow-sync-agent on
+```
+
+Then the human runs the Sync Agent installer on the customer's ERP server — nothing is installed from
+here, and `dlake-syncagent` covers that machine — and completes the product's setup steps. Wait for
+them to confirm before you go on. A registered product with no processes still does nothing; the
+Phase 1 processes are `dlake-crmpro`.
+
+Product ids are written without leading zeros. A product for a different ERP than the tenant's is
+registered with a warning rather than refused — confirm with the user that it was intended.
 
 ## 8. Resuming later
 
 The wizard is stateful server-side, so a setup can span days. To pick up:
 
 ```bash
-dlake admin registration_state        # authoritative: current step, ERP, CRM, IP
+dlake admin registration_state        # authoritative: NextStep, current step, ERP, CRM, IP, provisioning
 ```
 
-That needs only a valid API key — which is why minting a durable one at step 3 matters.
+Route on `NextStep`. `ProvisioningStatus` reads `none`, `queued`, `running|<stage>`, `completed`,
+`failed` or `unknown`, and `ConnectorSubmitted` / `SubmittedConnectorType` show a step-5 configuration
+parked awaiting provisioning. That needs only a valid API key — which is why minting a durable one at step 3 matters.
 
 If the local registration token has lapsed (72h) and you need `register status` or `register resend`
 again, mint a fresh one with the password from step 1:
@@ -413,14 +468,19 @@ API key — so the two are independent and you rarely need both.
 | `registration_crm_connect` | 4 | Submit credential/apikey fields |
 | `registration_crm_oauth_start` | 4/any | Begin an OAuth handshake |
 | `registration_crm_oauth_complete` | 4/any | Finish with the provider's `code`/`state` |
-| `registration_crm_oauth_confirm_pin` | 4/any | Confirm an out-of-band PIN |
-| `registration_crm_oauth_status` | 4/any | Where a handshake stands |
+| `registration_crm_oauth_confirm_pin` | 4/any | Confirm the PIN e-mailed to the registration address |
+| `registration_crm_oauth_status` | 4/any | Where a handshake stands, and the `nextAction` |
 | `registration_crm_action` | 4/any | Provider sub-actions: `SalesforceSetup`, `MondayListWorkspaces`, `MondayPickWorkspace` |
 | `registration_crm_finalize` | 4 | Close step 4 |
 | `registration_connector_catalog` | 5 | ERP connectors and their fields |
 | `registration_connector_submit` | 5 | Submit config; `--erpName` declares the ERP |
 | `registration_connector_provision` | 5 | Start provisioning |
 | `registration_provisioning_status` | 5 | Poll the provisioning run |
+| `registration_products_list` | 6 | Products registered for the agent, with licence status and warnings |
+| `registration_products_add` | 6 | Register a product (`11` = CRMPro); `requestInstall` also requests the install |
+| `registration_products_remove` | 6 | Soft-remove a product registration |
+| `registration_products_request_install` | 6 | Request the agent install and grant installer access |
+| `registration_products_allow_sync_agent` | 6 | Grant or revoke installer access on its own |
 
 ## Things that bite
 
@@ -439,5 +499,11 @@ API key — so the two are independent and you rarely need both.
 - **Reading a completed provisioning run as proof the ERP connection works.** It isn't; the
   credentials are exercised when data syncs.
 - **`--fields` as a JSON string.** It takes an object; use `@file.json`.
-- **Treating a deferred OAuth connection as a blocked setup.** It isn't — finish the rest and
-  connect the CRM when the customer is ready.
+- **Treating a deferred OAuth connection as a blocked setup.** For a CRM without a credential check it
+  isn't — finish the rest and connect the CRM when the customer is ready. Salesforce, Zoho, HubSpot
+  and Klaviyo are the exception: finalize waits for their connection.
+- **Waiting for a `connected` status.** `registration_crm_oauth_status` never reports one; a finished
+  handshake reads `none`, and finalize is where a missing connection shows.
+- **Assuming provisioning registered CRMPro.** It is not registered automatically: add `11` and
+  request the install (§7b), then the human runs the installer.
+- **Calling a seed wait of several minutes a fault.** Allow up to 15 minutes after the click.
