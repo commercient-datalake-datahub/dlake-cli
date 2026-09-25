@@ -75,7 +75,10 @@ dlake login --domain mycompany --api-key dlk_...
 ```
 
 The package downloads the platform-matched binary on install and exposes it as
-the `dlake` command.
+the `dlake` command. That download is the package's install script: if your npm
+only runs install scripts for packages you allow, install with
+`npm install -g --allow-scripts=@commercient/dlake @commercient/dlake` (see
+[Windows PowerShell](#windows-powershell) for the details, which apply on any OS).
 
 ### Direct download
 
@@ -91,6 +94,36 @@ verify it against `SHA256SUMS`, and put it on your `PATH`.
 | Linux arm64 | `dlake-linux-arm64` |
 | macOS Apple Silicon | `dlake-osx-arm64` |
 | macOS Intel | `dlake-osx-x64` |
+
+## Windows PowerShell
+
+Two one-time steps on a fresh Windows machine, then one habit:
+
+1. **Let PowerShell run npm's command wrappers.** The default execution policy
+   blocks the `.ps1` wrapper npm installs for global commands ("running scripts
+   is disabled on this system"). Allow local and signed scripts for your own
+   account:
+
+   ```powershell
+   Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+   ```
+
+2. **Install with the package's download step allowed.** The binary is fetched
+   by the package's install script, and newer npm versions skip install scripts
+   for packages you have not allowed, leaving only an npm warning:
+
+   ```powershell
+   npm install -g --allow-scripts=@commercient/dlake @commercient/dlake
+   dlake --version
+   ```
+
+   If a command answers "dlake binary not found" after an install, the download
+   step did not run: repeat the install line above, or run
+   `npm rebuild @commercient/dlake`.
+
+3. **Quote `@file` arguments.** A bare leading `@` is PowerShell's splatting
+   operator, so `--columns @columns.json` fails with `SplattingNotPermitted`.
+   Write `--columns "@columns.json"` (see [Argument conventions](#argument-conventions)).
 
 ## Quickstart
 
@@ -136,7 +169,10 @@ dlake admin list_schemas            # call one directly — no `call` sub-verb
 dlake admin create_table --help     # every tool self-documents its arguments
 ```
 
-Run `dlake --help` or `dlake <command> --help` for the full surface.
+Run `dlake --help` or `dlake <command> --help` for the full surface. Help needs
+no profile. For the passthroughs, `dlake admin <tool> --help` and
+`dlake tool <tool> --help` show the tool's live argument schema when a profile is
+given (`--profile <name>`); without one they print the generic help for the verb.
 
 ### Scoped keys need a DAB restart
 
@@ -158,7 +194,8 @@ dlake admin restart_dab --confirm true      # <-- REQUIRED, see below
 > restarts are always user-initiated. The restart must be driven by a
 > **full-scope admin** key: a scoped key cannot reach the admin plane, so it can
 > never restart DAB for itself. (Revoking a key is the one exception — it
-> regenerates immediately.)
+> regenerates immediately.) The `create_api_key` response for a scoped key says
+> so too, with `restartNeeded: true`.
 
 A scope entry is `{ "entityName": "<table/view/proc>" }` plus one or more action
 booleans — `canRead`, `canCreate`, `canUpdate`, `canDelete`, `canExecute` — with
@@ -199,6 +236,41 @@ dlake admin restart_dab --confirm true                   # publishes the key's r
 Two restarts, not one: the first publishes the **entities**, the second the new
 key's **role**, and the key can only be minted after the entities exist.
 
+`--columns` is a list of column objects in the **table column shape**:
+
+| Property | Meaning |
+|---|---|
+| `name` | Column name (required). |
+| `type` | SQL type (required): `INT`, `BIGINT`, `NVARCHAR`, `DECIMAL`, `DATETIME2`, `BIT`, ... |
+| `size` | Length for `CHAR`/`VARCHAR`/`NCHAR`/`NVARCHAR`/`BINARY`/`VARBINARY`; `-1` or omitted = MAX. |
+| `precision`, `scale` | Digits for `DECIMAL`/`NUMERIC`; `scale` also sets `DATETIME2`/`TIME` fractional seconds. |
+| `nullable` | Allows NULL (default `true`). Omit it on primary-key and identity columns. |
+| `default` | A DEFAULT, sent as the plain value (`standard`, `0`). |
+| `isExpression` | Treat `default` as a SQL function such as `SYSUTCDATETIME()`. |
+| `identity` | `IDENTITY(1,1)`. |
+| `unique` | A UNIQUE constraint. |
+| `primaryKey` | Part of the primary key (or list the names in the top-level `--primaryKey`). |
+| `computed`, `computedExpression`, `persisted` | A computed column and its expression (optionally stored). |
+
+A worked `menu_items.json` for the table above:
+
+```json
+[
+  { "name": "Sku",       "type": "NVARCHAR", "size": 40 },
+  { "name": "Name",      "type": "NVARCHAR", "size": 200, "nullable": false },
+  { "name": "Price",     "type": "DECIMAL",  "precision": 10, "scale": 2, "nullable": false },
+  { "name": "Active",    "type": "BIT",      "default": "1" },
+  { "name": "CreatedAt", "type": "DATETIME2", "default": "SYSUTCDATETIME()", "isExpression": true }
+]
+```
+
+Any other property is refused with a hint naming the one meant. This is not the
+REST or procedure-parameter shape: a string length is `size` (not `maxLength`),
+the type is `type` (not `dataType`), and NULL-ability is `nullable` (not
+`isNullable`). A `size` on a numeric type, or `precision`/`scale` on a string
+type, is refused the same way. `add_column` and `alter_column` take one object in
+this shape.
+
 Three things that bite on the way through:
 
 - **The data plane sees only *exposed* entities.** `create_table` /
@@ -213,9 +285,12 @@ Three things that bite on the way through:
   there is no `set_active_schema` tool and no `use` verb. Qualify raw SQL with it
   (`FROM DLO.pizza_menu_items`), and prefix object names per app to keep several
   apps tidy in one schema.
-- **Stored-procedure parameter names must start with `@`.**
-  `create_procedure --parameters` rejects `{"name":"CustomerName"}` with *"must
-  start with '@'"* — use `{"name":"@CustomerName","dataType":"NVARCHAR","maxLength":100}`.
+- **Procedure parameters are a different shape from table columns, and their
+  names must start with `@`.** A `create_procedure --parameters` entry is
+  `{ name, dataType, maxLength }`, and `{"name":"CustomerName"}` is rejected
+  with *"must start with '@'"*. A procedure-parameter example:
+  `{"name":"@CustomerName","dataType":"NVARCHAR","maxLength":100}`. Do not reuse
+  it for `--columns`, which takes the table column shape above.
 
 Two more small ones: **`ingest_table` needs a natural-key PK** — it refuses a
 table whose primary key is an `IDENTITY` column (*"Row-by-row upsert needs a key
@@ -250,10 +325,16 @@ Tool arguments (`dlake admin <tool>` / `dlake tool <tool>`) accept three forms:
   naming the argument.
 - **`@file`** — read the value from a file: `--columns @columns.json`. `@@`
   escapes a literal leading `@`. This is the reliable form on Windows, where
-  quoted JSON is mangled by the shell before the program sees it.
+  quoted JSON is mangled by the shell before the program sees it. **In
+  PowerShell, quote it** — `--columns "@columns.json"` — because a bare leading
+  `@` is the splatting operator (`SplattingNotPermitted`).
 
 ```bash
 dlake admin create_table --tableName Invoice --columns @columns.json --primaryKey Id
+```
+
+```powershell
+dlake admin create_table --tableName Invoice --columns "@columns.json" --primaryKey Id
 ```
 
 `dlake admin <tool> --help` documents these forms for every tool that takes an
