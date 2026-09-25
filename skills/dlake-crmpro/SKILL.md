@@ -758,10 +758,12 @@ enough for the connection test to pass and not enough to sync.
 
 ## 7c. Further rules for HubSpot processes
 
-**Keep `SFDCID` to `Sync_Operation_Type = 1`.** The upsert path removes `SFDCID` from the posted
-properties; the create paths do not, and HubSpot rejects the record with `Invalid names: [SFDCID]`. A
-view built to §7b therefore belongs to an `upsert` process. Use `Sync_Operation_Type = 1` for the
-work and let the upsert path handle both new and existing records.
+**Keep `SFDCID` to `Sync_Operation_Type = 1`, including for a create-only view.** The upsert path
+removes `SFDCID` from the posted properties; the create paths do not, and HubSpot rejects the record
+with `Invalid names: [SFDCID]`. Every view built to §7b emits `SFDCID`, so every one of them —
+insert-only included — belongs to an `upsert` process: the insert-only `WHERE` is what makes a view
+create-only, not the operation type. `dlake-crmpro-hubspot` builds its create-once seed process this
+way, as `Sync_Operation_Type '1'` beside the upsert process on the same object.
 
 **Point association joins at the prefix that holds the parent's id.** An association resolves through
 the parent's `SFDCID` in `TimeStampRepository`, so the join must use the prefix the id was stored
@@ -804,16 +806,20 @@ them in order.
    configuration row** — `Prefix_OF_Field_OR_Object`, `Postfix_OF_Field_OR_Object`,
    `Developer_Comment`, `Document_Source_Path`, `File_Search_Pattern`, `File_Name_Separator`,
    `Delete_SQL_Query`, `Get_SOQL_Query` and the rest — throws `Object reference not set` inside the
-   engine, which catches it. And a **NULL `SFDCID` in the view** stops the object outright. Template
-   inserts use `''` everywhere; a hand-built row must too, and the view must emit
-   `ISNULL(repo.SFDCID, '')`.
+   engine, which catches it. And a **NULL `SFDCID` in a view that emits the column** stops the
+   object outright. Template inserts use `''` everywhere; a hand-built row must too, and a view that
+   emits `SFDCID` must emit it as `ISNULL(repo.SFDCID, '')`. A view that emits no `SFDCID` column at
+   all, as the Shopify create legs do (`dlake-crmpro-shopify`), is not affected by this rule.
 3. **`CRM_Object_API_Name` fails dispatch.** It is matched **case-sensitively** against a baked-in
    per-CRM dictionary, and a wrong name or wrong case is skipped in silence. Trust a working
    install's value over the template catalogue — at least one shipped template carries a misspelled
    object name.
 4. **`CRM_FieldList` has no rows for that `Object_Name`.** An object with an empty field map syncs
-   nothing, silently. Template imports populate the table; a hand-built process must populate it too,
-   one row per pushed view column, with `Object_Name` equal to the `CRM_Object_API_Name` value.
+   nothing, silently. A template import does not fill it — the import copies the process row and
+   creates the view, nothing more — so an imported process needs its rows exactly as a hand-built one
+   does: one row per pushed view column, with `Object_Name` equal to the `CRM_Object_API_Name` value.
+   The template's `MappingJson` (`crmpro_templates`) is the intended list; check
+   `crmpro_field_mapping` on the process before activating it.
 5. **Case anywhere else**: `SQL_Query` against the actual view name, and `TimeStamp_Prefix` against
    the literal the view's own `TimeStampRepository` join uses.
 
@@ -825,7 +831,7 @@ benign; it is not the reason nothing synced.
 ### What is engine-generic, and what to re-verify per CRM
 
 Generic, and safe to rely on for any destination module: the three view kinds and their `WHERE`
-shapes, a never-NULL `SFDCID`, the `SavedTimeStamp` cursor rules, the MAX rowversion across joined
+shapes, a never-NULL `SFDCID` wherever a view emits one, the `SavedTimeStamp` cursor rules, the MAX rowversion across joined
 tables, `TimeStamp_Prefix` discipline, mandatory `CRM_FieldList` rows, `''` in every nullable
 configuration column, and NULL `CRMName`/`APIAuthConfigID` meaning registered-CRM dispatch.
 
