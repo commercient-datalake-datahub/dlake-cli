@@ -1,5 +1,45 @@
 # dlake release notes
 
+## 0.5.44 (2026-09-25)
+
+- **New: `dlake registration pin --crm <name>`.** For CRMs whose connection ends in a PIN, the PIN
+  is e-mailed to your registration e-mail address; this command confirms it and connects the CRM,
+  after which step 4 is finalized with `dlake admin registration_crm_finalize`. The PIN is read
+  hidden from the terminal, or from stdin with `--pin-stdin`, and is never echoed. A plain
+  `--pin <value>` is refused, so the PIN does not end up in your shell history.
+- **`dlake registration oauth` tells you what comes next.** After the exchange it says whether
+  the CRM is connected (finalize next), needs a selection (`registration action`) or is waiting
+  for the e-mailed PIN (`registration pin`). For a CRM whose callback goes to the platform, the
+  command now waits for the code to arrive and completes the handshake itself, instead of leaving
+  the polling to you.
+- **Clearer sign-up refusals.** When `dlake register start` is refused, the reason now comes
+  with its code and a next step: an e-mail address that already has an account points you at
+  `dlake register login`, a company name that is taken asks for a different `--company`, and a
+  password the portal will not accept points you at `--generate-password`. `--json` output
+  carries the `code`. The `registration` commands print the refusal code too, with a next step
+  where there is one.
+- **`dlake register status` shows where the setup wizard stands:** the last completed step, the
+  step to work on next, the provisioning status and, while it waits for provisioning, the
+  submitted connector type. Against an older Registration API the output is as before.
+- **Product licence status.** `dlake registration products list` has a STATUS column showing
+  each product's licence status (`licensed`, `installed` or `removed`); removed products are
+  still listed, and a product type only your own database knows is marked "(not catalogued)".
+  A product registered for a different ERP than yours now comes with a warning, printed on
+  stderr by `products list` and `products add`. `--json` output is unchanged apart from the
+  new fields.
+- **New: `--field Name=Value`.** `registration oauth`, `registration action` and any
+  `dlake admin` tool with a single object argument (such as a wizard step's `--fields`) take a
+  repeated `--field`, each setting one value over the `--fields` JSON. `Name=@path` reads the
+  value from a file, the easy way to pass a Windows path or a password. A name given twice is
+  refused.
+- The `dlake register` help now says the starter key you receive when your Data Lake is seeded
+  lasts seven days.
+- Skill corrections: the CRMPro skill no longer says that importing a template fills in the
+  process's field list, and the integration-setup skill now ends with the sync-agent products
+  step that follows provisioning.
+- Upgrade: `npm install -g @commercient/dlake` (or `npm install -g datalake`), then run
+  `dlake skills install` to refresh the bundled agent skills.
+
 ## 0.5.43 (2026-09-22)
 
 - **New: `dlake backup`.** Restorable backups of your Data Lake's DLO schema: a native SQL
