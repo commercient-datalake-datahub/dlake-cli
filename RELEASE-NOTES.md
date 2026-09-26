@@ -1,5 +1,25 @@
 # dlake release notes
 
+## 0.5.46 (2026-09-26)
+
+- **`registration products add` shows the server's own message.** The confirmation now carries
+  what was registered, the next step (whether an agent install was requested) and any warning
+  that the product is an agent for a different ERP than the tenant's. The same message is
+  returned as `message` by the `registration_products_add`, `registration_products_remove` and
+  `registration_products_request_install` admin tools, beside the fields they already return.
+- **Install notes for the `datalake` package.** Its README now has the Windows PowerShell notes
+  (the execution-policy setting and quoting `@file` arguments), what to do if the binary is
+  missing, and the install line that allows the download step for both package names:
+  `npm install -g --allow-scripts=@commercient/dlake,datalake datalake`.
+- **Connector guidance for wizard step 5.** The CLI guide and the `dlake-integration-setup`
+  skill explain that the connector list is the same for every tenant on a white-label site, that
+  NetSuite, Acumatica and the other API ERPs are set up through the `API` connector, and that
+  QuickBooks Online and Sage One connectors are set up with Commercient support.
+- Upgrade: `npm install -g @commercient/dlake` (or `npm install -g datalake`). If your npm skips
+  install scripts, add `--allow-scripts=@commercient/dlake`, or
+  `--allow-scripts=@commercient/dlake,datalake` for the alias. Then run `dlake skills install` to
+  refresh the bundled agent skills.
+
 ## 0.5.45 (2026-09-25)
 
 - **`--help` works without a profile.** Every command prints its help without `--profile`,
