@@ -369,6 +369,15 @@ dlake admin registration_connector_submit \
     --connectorType SQL2008ABOVE --erpName SYSPRO7 --fields @fields.json
 ```
 
+**The connector list is per white-label site.** `registration_connector_catalog` returns the
+connectors configured for the site the tenant registered through, so every tenant on that site sees
+the same list; choose from what it returns rather than from a list kept elsewhere.
+
+- **API ERPs** — NetSuite, Acumatica and the other ERPs reached over their own API — are set up
+  through the connector named `API`, whose form adapts to the tenant's ERP.
+- **QuickBooks Online and Sage One** connectors authorize through an OAuth handshake that the CLI
+  does not carry yet. For those, contact Commercient support to complete the connector step.
+
 `--erpName` **overrides** the ERP recorded at registration. The response echoes the result, e.g.
 `{"erpName":"SYSPRO7","erpChanged":true}` — check it. From that point the provisioning branch, the
 sync-agent choice and the Connection Manager record all follow the declared ERP.
