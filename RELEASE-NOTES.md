@@ -1,5 +1,19 @@
 # dlake release notes
 
+## 0.5.47 (2026-09-29)
+
+- **Connect QuickBooks Online from the CLI.** `dlake registration oauth --erp QBOnline
+  --field environment=sandbox|production` connects QuickBooks Online end to end: it opens the
+  browser, waits for the authorization, and completes it.
+- **`--no-browser` for the QuickBooks Online connection.** It prints the authorization URL and a
+  ready-to-run command that completes the connection by hand.
+- **Connector submit names the OAuth verb.** A connector submit refused with `oauth_required`
+  now names the verb to use. Sage One connectors are still set up with Commercient support.
+- Upgrade: `npm install -g @commercient/dlake` (or `npm install -g datalake`). If your npm skips
+  install scripts, add `--allow-scripts=@commercient/dlake`, or
+  `--allow-scripts=@commercient/dlake,datalake` for the alias. Then run `dlake skills install` to
+  refresh the bundled agent skills.
+
 ## 0.5.46 (2026-09-26)
 
 - **`registration products add` shows the server's own message.** The confirmation now carries
