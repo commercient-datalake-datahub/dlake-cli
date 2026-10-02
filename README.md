@@ -346,9 +346,8 @@ array or object argument.
   <https://datalake-ms-dab.commercient.com/datalake/>.
 - **API usage guide** — endpoints, auth, scopes, rate limits: see the Data Lake
   \ Data Hub API guide served from your tenant's Help page.
-- **AI-agent skills** — twenty drop-in skills that teach a coding agent to drive
-  this CLI correctly: the right command ordering, the non-obvious gotchas, and
-  the HTTP contract for the Data API. [`skills/dlake`](skills/dlake/SKILL.md)
+- **AI-agent skills** — twenty skill summaries, one per Commercient integration:
+  what it does for the business and how to get its operating guide. [`skills/dlake`](skills/dlake/SKILL.md)
   covers building and operating a tenant;
   [`skills/dlake-integration-setup`](skills/dlake-integration-setup/SKILL.md)
   stands up a new integration; one skill each for the sync products —
@@ -373,14 +372,9 @@ array or object argument.
   on-premises agent that runs on the customer's own ERP server. Read one with
   `dlake skills show <name>` or install them all with `dlake skills install`,
   which refreshes any copies already on disk (add `--skip-existing` to keep local
-  edits); see [`skills/README.md`](skills/README.md). Each destination skill
-  carries **one child page per source ERP** under its own `erps/` folder —
-  [`skills/dlake-crmpro-hubspot/erps/`](skills/dlake-crmpro-hubspot) is an
-  example — describing what the shipped templates for that ERP × CRM pair set up.
-  The destination skill holds what is true of the CRM whatever the source, opens
-  with an ERP table naming its children, and says how to pick the row for a
-  tenant; the children install beside their parent and are read with
-  `dlake skills show <skill>/erps/<erp>`.
+  edits); see [`skills/README.md`](skills/README.md). Whitelisted customers fetch
+  the operational skills, with their per-ERP pages, from the admin plane with
+  `dlake admin get_skill <name>`.
 - **Permissions** — object writes and connection management need
   `data.ingest.manage`; reads accept any `data.ingest.*` tier; scoped API keys
   are enforced server-side (fail-closed) down to entity and field level.
