@@ -1,5 +1,20 @@
 # dlake release notes
 
+## 0.5.48 (2026-10-01)
+
+- **Agent skills: the public copies are now capability summaries.** The skills that
+  `dlake skills install` and `dlake skills show` provide (and the copies on GitHub and npm) say
+  what each integration does for the business and how to get its operating guide. Customers
+  fetch the operational skills from the admin plane with `dlake admin get_skill <name>` or
+  `list_skills`. Existing customers who need access: support@commercient.com. New customers:
+  sales@commercient.com.
+- **`dlake admin get_skill <name>`.** The skill name can be given straight after the tool name,
+  as well as with `--name`.
+- Upgrade: `npm install -g @commercient/dlake` (or `npm install -g datalake`). If your npm skips
+  install scripts, add `--allow-scripts=@commercient/dlake`, or
+  `--allow-scripts=@commercient/dlake,datalake` for the alias. Then run `dlake skills install` to
+  refresh the bundled agent skills.
+
 ## 0.5.47 (2026-09-29)
 
 - **Connect QuickBooks Online from the CLI.** `dlake registration oauth --erp QBOnline
