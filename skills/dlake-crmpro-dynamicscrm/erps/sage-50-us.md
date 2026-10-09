@@ -49,9 +49,9 @@ write and which groups they fall in.
   object), Sage 50 US customer (custom object), Sage 50 US invoice header (custom object), Sage 50
   US item (custom object), Sage 50 US sales order (custom object)
 - Object display names: Sync Product object, Get Accounts, Sage 50 US Sales Invoice Detail, Sage 50
-  US Sales Order Detail, Sage 50 US address, Sage 50 US customer, Sage 50 US invoiceheader, Sage 50
-  US item, Sage 50 US salesorder, Sync Customer
-- Template groups: Account, Product, CRM Order and Line, Invoice, Salesorder
+  US Sales Order Detail, Sage 50 US address, Sage 50 US customer, Sage 50 US invoice header, Sage 50
+  US item, Sage 50 US sales order, Sync Customer
+- Template groups: Account, Product, CRM Order and Line, Invoice, Sales order
 
 ## 2. Verifying
 
