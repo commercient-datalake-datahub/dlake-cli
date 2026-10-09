@@ -28,7 +28,7 @@ This page grows as the catalogue does.
 
 | Group | Business outcome | Objects | Source tables and views |
 |---|---|---|---|
-| **Shipto** | ERP Customer, shipping address data becomes Commercient Prophet 21 Ship To Address Managed Custom Object in Salesforce. New records are created and existing ones updated; none are deleted. | Commercient Prophet 21 Ship To Address Managed Custom Object | shipping addresses, customers |
+| **Ship to** | ERP Customer, shipping address data becomes Commercient Prophet 21 Ship To Address Managed Custom Object in Salesforce. New records are created and existing ones updated; none are deleted. | Commercient Prophet 21 Ship To Address Managed Custom Object | shipping addresses, customers |
 | **Inv Master** | The templates push Commercient Prophet 21 Inventory Master Managed Custom Object to Salesforce. New records are created and existing ones updated; none are deleted. | Commercient Prophet 21 Inventory Master Managed Custom Object | inventory items |
 | **Product** | ERP inventory master data becomes Product in Salesforce. New records are created and existing ones updated; none are deleted. | Product | inventory items |
 | **Warehouse** | ERP inventory location, inventory master, location data becomes Commercient Prophet 21 Warehouse Managed Custom Object in Salesforce. New records are created and existing ones updated; none are deleted. | Commercient Prophet 21 Warehouse Managed Custom Object | inventory locations, inventory items, locations |
@@ -53,7 +53,7 @@ the inserts never set is not listed.
 | Salesperson | Commercient Prophet 21 Salesperson Managed Custom Object | Commercient external key (Epicor package) | 2 |
 | Account | Account | Commercient AR customer code | 3 |
 | Customer | Commercient Prophet 21 Customer Managed Custom Object | Commercient external key (Epicor package) | 4 |
-| Shipto | Commercient Prophet 21 Ship To Address Managed Custom Object | Commercient external key (Epicor package) | 5 |
+| Ship to | Commercient Prophet 21 Ship To Address Managed Custom Object | Commercient external key (Epicor package) | 5 |
 | Order header | Commercient Prophet 21 Sales Order Header Managed Custom Object | Commercient external key (Epicor package) | 6 |
 | Order line number | Commercient Prophet 21 Sales Order Detail Managed Custom Object | Commercient external key (Epicor package) | 7 |
 | Invoice header | Commercient Prophet 21 Invoice Header Managed Custom Object | Commercient external key (Epicor package) | 8 |
@@ -127,7 +127,7 @@ sequence, which is the order the templates put them in:
 - 2 — Salesperson
 - 3 — Account
 - 4 — Customer
-- 5 — Shipto
+- 5 — Ship to
 - 6 — Order header
 - 7 — Order line number
 - 8 — Invoice header
@@ -217,7 +217,7 @@ Each template carries its intended mapping in field mapping.
 | Salesperson | Commercient Prophet 21 Salesperson Managed Custom Object | 13 | Company identifier, Customer salesperson identifier → Commercient external key (Epicor package), Company identifier, Customer salesperson identifier → Name, Commission percentage → Commercient commission percentage, Company identifier → Commercient company identifier (Prophet 21 package), Created by → Commercient created by |
 | Account | Account | 15 | Company identifier,Customer identifier → Commercient AR customer code, Customer name → Name, Central phone number → Phone, Central fax number → Fax, Mailing address line 1,Mailing address line 2,Mailing address line 3 → Billing street |
 | Customer | Commercient Prophet 21 Customer Managed Custom Object | 96 | Company identifier,Customer identifier → Commercient external key (Epicor package), Company identifier,Customer name → Name, Accept partial orders → Accept partial orders, Allow advance billing → Allow advance billing, Allowed account number → Allowed account number |
-| Shipto | Commercient Prophet 21 Ship To Address Managed Custom Object | 91 | Company identifier, Ship to identifier → Commercient external key (Epicor package), Customer name → Name, Acceptable wait time → Acceptable wait time, Accept partial orders → Accept partial orders, Alternate tax rate eligible → Alternate tax rate eligible |
+| Ship to | Commercient Prophet 21 Ship To Address Managed Custom Object | 91 | Company identifier, Ship to identifier → Commercient external key (Epicor package), Customer name → Name, Acceptable wait time → Acceptable wait time, Accept partial orders → Accept partial orders, Alternate tax rate eligible → Alternate tax rate eligible |
 | Order header | Commercient Prophet 21 Sales Order Header Managed Custom Object | 87 | Company identifier, Order number → Commercient external key (Epicor package), Company identifier, Order number → Name, Address identifier → Address identifier, Approved → Approved, Architect identifier → Architect identifier |
 | Order line number | Commercient Prophet 21 Sales Order Detail Managed Custom Object | 97 | Company number, Line number, Order number → Commercient external key (Epicor package), Company number, Line number, Order number → Name, Allocate usage to original item → Allocate usage to original item, Assembly → Assembly, Base unit price → Base unit price |
 | Invoice header | Commercient Prophet 21 Invoice Header Managed Custom Object | 96 | Company number,Invoice number → Commercient external key (Epicor package), Company number,Invoice number → Name, allowed → allowed, Amount paid → Amount paid, Approved → Approved |
@@ -263,7 +263,7 @@ write and which groups they fall in. They are not part of the shipped set descri
   Salesperson Managed Custom Object, Order product, User, Opportunity, Commercient Prophet 21
   Warehouse Managed Custom Object, Opportunity line item, Commercient Prophet 21 Address Managed
   Custom Object, 39 more and 19 custom objects
-- Object display names: Account, Customer Reverse Lookup Account, Shipto, Contacts, Customer,
+- Object display names: Account, Customer Reverse Lookup Account, Ship to, Contacts, Customer,
   invoice line, Invoice header, Product, Order header, Salesperson, Terms code, Inv Master, 125 more
   and 30 further templates
 - Template groups: Account, Product, Invoice, Sales order, Customer Multi Ship Addresses, CRM Order
