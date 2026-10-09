@@ -47,7 +47,8 @@ write and which groups they fall in.
 - Destination objects: account, Infor A+ customer (custom object), Infor A+ invoice detail (custom
   object), Infor A+ invoice header (custom object), Infor A+ item master (custom object), Infor A+
   sales order detail (custom object), Infor A+ sales order header (custom object), Infor A+
-  salesperson (custom object), Infor A+ ship to address (custom object), product, uom, uomschedule
+  salesperson (custom object), Infor A+ ship to address (custom object), product, uom, unit of
+  measure schedule
 - Object display names: CRM Account, CRM Product, CRM unit of measure, Infor A+ Customer, Infor A+
   Invoice Detail, Infor A+ Invoice Header, Infor A+ Item Master, Infor A+ Sales Order Detail, Infor
   A+ Sales Order Header, Infor A+ Salesperson, Infor A+ Shipping address and a further template
