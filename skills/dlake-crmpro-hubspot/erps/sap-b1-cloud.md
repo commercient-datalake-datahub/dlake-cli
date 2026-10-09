@@ -26,11 +26,11 @@ dlake-crmpro is the parent skill and the authority for everything general: the C
 configuration and field list, the sync history, how source data is selected, and what a run that
 finds nothing does. Read it first; this page does not repeat it. dlake-crmpro-hubspot is the
 destination skill this page is a child of, and the authority for the HubSpot conventions that hold
-across every ERP: read it first, then come back here for what this source's own templates set. The
-catalogue ships no Standard template for this pair. Its templates are community templates, authored
-in a tenant and imported the same way as any other, so what follows is what that set amounts to —
-how many templates, which operations they default to, which destination objects they write and which
-groups they fall in. This page grows as the catalogue does.
+across every ERP: read it first. The catalogue ships no Standard template for this pair. Its
+templates are community templates, authored in a tenant and imported the same way as any other, so
+what follows is what that set amounts to — how many templates, which operations they default to,
+which destination objects they write and which groups they fall in. This page grows as the catalogue
+does.
 
 ## 1. Community templates
 
