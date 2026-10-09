@@ -51,7 +51,7 @@ flags over that process's templates.
 | Create Quote | Salesforce Quote to Microsoft Dynamics NAV Sales Quote | Quote → Sales quote | 2 | create / update |
 | Create Sales order Return | Salesforce NAV order header to Microsoft Dynamics NAV Sales Return Order | Microsoft Dynamics NAV Order Header → Sales return order | 2 | create / update |
 | Create Customer comment | — | — | 1 | create |
-| Create Order comment | — | Ordercomment → Ordercomment | 1 | create |
+| Create Order comment | — | Order comment → Order comment | 1 | create |
 
 Across the 16 default templates: 9 carry insert, 7 carry update, 0 carry delete. A flag decides
 which operation the process is allowed to perform, not which one it performs on a given record. 2
