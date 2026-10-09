@@ -87,8 +87,8 @@ Query does not have one shape across the product (in the operational skill). For
 a FetchXML document. **No query text is reproduced here**; what follows is what those queries read
 and filter on.
 
-- **Objects read:** salesorder, salesorderdetail, account, contact, product.
-- **Child collections pulled in the same query:** salesorderdetail, account, contact. A header
+- **Objects read:** sales order, sales order detail, account, contact, product.
+- **Child collections pulled in the same query:** sales order detail, account, contact. A header
   retrieved without its lines is a query that does not name the child collection.
 - **FetchXML elements used:** fetch, entity, attribute, linked entity, filter, condition; condition
   operators: not null, null.
@@ -102,7 +102,7 @@ template resolved against the retrieved record’s document (in the operational 
 16 default templates, 16 carry a default inbound mapping; 1 of those do not parse as and are counted
 but not described. A parseable document carries about 16 members.
 
-- **Template path roots used:** salesorder, sales order line item, account, product. A path’s first
+- **Template path roots used:** sales order, sales order line item, account, product. A path’s first
   segment has to match the element the engine emits, and the document root itself is never part of
   the path.
 - **Line members present:** line item name, line quantity, line unit price, line amount, a
