@@ -86,9 +86,9 @@ template resolved against the retrieved record’s document (in the operational 
 8 default templates, 8 carry a default inbound mapping; 4 of those do not parse as and are counted
 but not described. A parseable document carries about 11 members.
 
-- **Template path roots used:** contacts, companies, deals, line item, arcustomercode. A path’s
-  first segment has to match the element the engine emits, and the document root itself is never
-  part of the path.
+- **Template path roots used:** contacts, companies, deals, line item, Commercient AR customer code.
+  A path’s first segment has to match the element the engine emits, and the document root itself is
+  never part of the path.
 - **Line members present:** a collection member, part reference, line description. 1 template name
   the collection through a collection member; the members beside it are resolved against that
   collection’s own root rather than through the header.
@@ -106,9 +106,9 @@ carry a parseable default outbound mapping, 3 carry none.
 | Part 3 | 0 templates (5 explicitly null) | a **new** record, matched on an external id field | — |
 | Part 4 | 0 templates (5 explicitly null) | a **different** record, addressed by an id field | — |
 
-- **CRM fields Part 1 writes to:** external key property, arcustomercode. These are the fields on
-  the flagged record that carry the source system’s key or outcome once the write has happened — the
-  names only; what lands in them is the response, per record.
+- **CRM fields Part 1 writes to:** external key property, Commercient AR customer code. These are
+  the fields on the flagged record that carry the source system’s key or outcome once the write has
+  happened — the names only; what lands in them is the response, per record.
 - **Response fields it reads them from:** Object identifier, returned line identifier, Client
   identifier. The map is written **source path first, CRM field second** (in the operational skill);
   the wrong way round resolves to the same silent empty string as a mistyped path.
