@@ -100,7 +100,7 @@ write and which groups they fall in. They are not part of the shipped set descri
 - Default operations: insert on 4, update on 4, delete on 4
 - Marked as circular sync: 0
 - Licence groups they span: 1
-- Destination objects: customers, products, updateprice
+- Destination objects: customers, products, Update Price
 - Object display names: Magento customer, Magento customer update, Magento product, Magento update
   price
 
