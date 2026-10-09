@@ -6,7 +6,7 @@ description: >-
   CRM: no Standard template ships for this pair, and the 11 community templates it does carry are
   stated as counts, destination objects and template groups only — a community template is authored
   in a tenant, so its names, notes, field mapping and SQL are not published. The destination objects
-  they write are invoice, invoicedetail, account, product. Use it when deciding whether a shipped
+  they write are invoice, invoice detail, account, product. Use it when deciding whether a shipped
   template set exists for a QuickBooks Online → Dynamics CRM before standing one up, and what the
   community set covers. It extends dlake-crmpro, which covers operating CRMPro generally, and
   dlake-crmpro-dynamicscrm, the destination skill this page is a child of, which carries the
@@ -43,8 +43,8 @@ write and which groups they fall in.
 - Default operations: insert on 11, update on 11, delete on 11
 - Marked as circular sync: 0
 - Licence groups they span: 2
-- Destination objects: invoice, invoicedetail, account, product and 5 custom objects
-- Object display names: Account, CRM Invoice, CRM Invoiceline, Invoice, Invoice Line, Product,
+- Destination objects: invoice, invoice detail, account, product and 5 custom objects
+- Object display names: Account, CRM Invoice, CRM Invoice line, Invoice, Invoice Line, Product,
   QuickBooks Online Customer, QuickBooks Online Invoice, QuickBooks Online invoice line, QuickBooks
   Online Payment, QuickBooks Online payment line
 - Template groups: Account
