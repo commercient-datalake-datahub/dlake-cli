@@ -45,7 +45,7 @@ write and which groups they fall in.
 - Licence groups they span: 1
 - Destination objects: deal, company, line item
 - Object display names: Get Deals, upload invoice document, upsert company, upsert deal file name,
-  upsert order deal, upsert orderdetail
+  upsert order deal, upsert order detail
 
 ## 2. Verifying
 
