@@ -6,11 +6,11 @@ description: >-
   Magento: no Standard template ships for this pair, and the 3 community templates it does carry are
   stated as counts, destination objects and template groups only — a community template is authored
   in a tenant, so its names, notes, field mapping and SQL are not published. The destination objects
-  they write are Account, Commercient AR Customer Managed Custom Object, Commercient Ship-To Address
-  Managed Custom Object. Use it when deciding whether a shipped template set exists for a Sage 100
-  US (Sage 100 US) → Magento before standing one up, and what the community set covers. It extends
-  dlake-crmpro, which covers operating CRMPro generally, and dlake-crmpro-magento, the destination
-  skill this page is a child of, which carries the Magento conventions that hold across every ERP.
+  they write are Account, Commercient AR Customer object, Commercient Ship-To Address object. Use it
+  when deciding whether a shipped template set exists for a Sage 100 US (Sage 100 US) → Magento
+  before standing one up, and what the community set covers. It extends dlake-crmpro, which covers
+  operating CRMPro generally, and dlake-crmpro-magento, the destination skill this page is a child
+  of, which carries the Magento conventions that hold across every ERP.
 ---
 # CRMPro → Magento — Sage 100 US (Sage 100 US): what the template catalogue carries
 
@@ -43,8 +43,7 @@ write and which groups they fall in.
 - Default operations: insert on 3, update on 3, delete on 3
 - Marked as circular sync: 0
 - Licence groups they span: 3
-- Destination objects: Account, Commercient AR Customer Managed Custom Object, Commercient Ship-To
-  Address Managed Custom Object
+- Destination objects: Account, Commercient AR Customer object, Commercient Ship-To Address object
 - Object display names: Account, Customer, Ship to address
 - Template groups: Account, Customer Multi Ship Addresses
 
