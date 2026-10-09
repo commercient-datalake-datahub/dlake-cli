@@ -50,7 +50,7 @@ write and which groups they fall in.
   Commercient SyteLine sales order object, Commercient SyteLine sales order line object, price
   level, sales order, User, uom, unit of measure schedule and 4 custom objects
 - Object display names: CRM sales order detail, Infor SyteLine version 9 Address, CRM Parent
-  Account, CRM Price level, CRM Product, CRM sales order, CRM Shipto Account, CRM System User, CRM
+  Account, CRM Price level, CRM Product, CRM sales order, CRM Ship to Account, CRM System User, CRM
   unit of measure, Infor SyteLine version 9 Address Inactive Delete, Infor SyteLine version 9
   Customer, Infor SyteLine version 9 Customer Inactive, 8 more and 7 further templates
 - Template groups: Account, CRM Order and Line
