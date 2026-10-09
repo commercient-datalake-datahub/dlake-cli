@@ -46,11 +46,11 @@ write and which groups they fall in.
 - Destination objects: account, Commercient IFS address object, Commercient IFS customer object,
   Commercient IFS invoice detail object, Commercient IFS invoice header object, Commercient IFS
   sales order detail object, Commercient IFS sales order header object, Commercient IFS salesperson
-  object, invoice, invoicedetail, pricelevel, product, salesorder, salesorderdetail, uom,
-  uomschedule and 3 custom objects
-- Object display names: CRM Account, CRM Child Account, CRM invoice, CRM invoicedetail, CRM Price
-  level, CRM Product, CRM salesorder, CRM salesorderdetail, CRM unit of measure, Customer to Account
-  Reverse Lookup, IFS Address, IFS Customer, 5 more and 4 further templates
+  object, invoice, invoice detail, price level, product, sales order, sales order detail, uom, unit
+  of measure schedule and 3 custom objects
+- Object display names: CRM Account, CRM Child Account, CRM invoice, CRM invoice detail, CRM Price
+  level, CRM Product, CRM sales order, CRM sales order detail, CRM unit of measure, Customer to
+  Account Reverse Lookup, IFS Address, IFS Customer, 5 more and 4 further templates
 - Template groups: CRM Order and Line, Account
 
 ## 2. Verifying
