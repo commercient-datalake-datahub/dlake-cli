@@ -68,8 +68,8 @@ an object naming the module to retrieve. **No query text is reproduced here**; w
 those queries read and filter on.
 
 - **Objects read:** deals, contacts.
-- **Members present in the query object:** selected fields (4), module name (4), Where (4). Where a
-  Where member is present it is empty. 4 carry a populated selected fields list.
+- **Members present in the query object:** selected fields (4), module name (4), filter (4). Where a
+  filter member is present it is empty. 4 carry a populated selected fields list.
 - **Where the filtering happens:** the query names a module rather than a condition, so the
   selection the operational skill describes is applied after retrieval, not by the query.
 
@@ -99,9 +99,9 @@ carry a parseable default outbound mapping, 2 carry none.
 | Part 3 | 0 templates (2 explicitly null) | a **new** record, matched on an external id field | — |
 | Part 4 | 0 templates (2 explicitly null) | a **different** record, addressed by an id field | — |
 
-- **CRM fields Part 1 writes to:** externalkey. These are the fields on the flagged record that
-  carry the source system’s key or outcome once the write has happened — the names only; what lands
-  in them is the response, per record.
+- **CRM fields Part 1 writes to:** external key property. These are the fields on the flagged record
+  that carry the source system’s key or outcome once the write has happened — the names only; what
+  lands in them is the response, per record.
 - **Response fields it reads them from:** record identifier, Contact. The map is written **source
   path first, CRM field second** (in the operational skill); the wrong way round resolves to the
   same silent empty string as a mistyped path.
