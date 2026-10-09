@@ -138,13 +138,13 @@ write and which groups they fall in. They are not part of the shipped set descri
 - Default operations: insert on 20, update on 20, delete on 20
 - Marked as circular sync: 0
 - Licence groups they span: 12
-- Destination objects: Account, Product, Commercient Infor Visual Quote Price object, Commercient
-  Contact Matching Managed Custom Object, Commercient Infor Visual Address Managed Custom Object,
-  Commercient Infor Visual Customer Order Line Managed Custom Object, Commercient Infor Visual
-  Customer Managed Custom Object, Commercient Infor Visual Customer Order Managed Custom Object,
-  Commercient Infor Visual Part Managed Custom Object, Commercient Infor Visual Part Warehouse
-  Managed Custom Object, Commercient Infor Visual Quote Managed Custom Object, Commercient Infor
-  Visual Quote Line Managed Custom Object, Commercient Infor Visual Receivable Managed Custom
+- Destination objects: Account, Product, Commercient Infor Visual Quote Price (Zoho package object),
+  Commercient Contact Matching Managed Custom Object, Commercient Infor Visual Address Managed
+  Custom Object, Commercient Infor Visual Customer Order Line Managed Custom Object, Commercient
+  Infor Visual Customer Managed Custom Object, Commercient Infor Visual Customer Order Managed
+  Custom Object, Commercient Infor Visual Part Managed Custom Object, Commercient Infor Visual Part
+  Warehouse Managed Custom Object, Commercient Infor Visual Quote Managed Custom Object, Commercient
+  Infor Visual Quote Line Managed Custom Object, Commercient Infor Visual Receivable Managed Custom
   Object, Commercient Infor Visual Receivable Line Managed Custom Object, Commercient Infor Visual
   Sales Rep Managed Custom Object, Commercient Infor Visual terms (related record), Contact and a
   custom object
