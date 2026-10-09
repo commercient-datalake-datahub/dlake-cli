@@ -45,7 +45,8 @@ write and which groups they fall in.
 - Marked as circular sync: 0
 - Licence groups they span: 3
 - Destination objects: account, Commercient SAP Business One address object, Commercient SAP
-  Business One customer object, Commercient salesperson object, contact, uom, uomschedule
+  Business One customer object, Commercient salesperson object, contact, uom, unit of measure
+  schedule
 - Object display names: CRM Account, CRM Contact, CRM unit of measure, SAP Business One Address, SAP
   Business One Customer, SAP Business One Salesperson and a further template
 - Template groups: Account
