@@ -49,8 +49,8 @@ write and which groups they fall in.
   item master object, Commercient Infor SXe purchase order object, Commercient Infor SXe purchase
   order line object, Commercient Infor SXe sales order header object, Commercient Infor SXe sales
   order line object, Commercient Infor SXe ship to address object, Commercient Infor SXe warehouse
-  line object, contact, invoice, invoicedetail, quotedetail, salesorder, salesorderdetail, User, 2
-  more and a custom object
+  line object, contact, invoice, invoice detail, quote detail, sales order, sales order detail,
+  User, 2 more and a custom object
 - Object display names: CRM Product, CRM Account, CRM Account AR customer code update, CRM Account
   Update, CRM Account Update No Batch, CRM Child Account, CRM Create Quote, CRM Existing Account,
   CRM Invoice, CRM Invoice Detail, CRM Parent Account, CRM Quote detail, 22 more and 8 further
