@@ -112,9 +112,8 @@ write and which groups they fall in. They are not part of the shipped set descri
 - Default operations: insert on 34, update on 34, delete on 34
 - Marked as circular sync: 0
 - Licence groups they span: 4
-- Destination objects: deal, company, line item, Commercient Account Matching Managed Custom Object,
-  Commercient Product Matching Managed Custom Object, product, products, Commercient Contact
-  Matching Managed Custom Object, contact
+- Destination objects: deal, company, line item, Commercient Account Matching object, Commercient
+  Product Matching object, product, products, Commercient Contact Matching object, contact
 - Object display names: upsert invoice, upsert invoice detail, create company, insert item, Sync
   account matching, Sync product matching, upsert order, upsert order detail, upsert product, create
   invoice, create invoice receipt, create order, 6 more and a further template
