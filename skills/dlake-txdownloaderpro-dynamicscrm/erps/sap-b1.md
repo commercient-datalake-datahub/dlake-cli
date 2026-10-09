@@ -46,7 +46,7 @@ flags over that process's templates.
 | Create / Update Customer | Update SAP Customer from Dynamics CRM Accounts | Account → Customer | 2 | create / update |
 | Create Contact | Update SAP contact From MS Dynamic Contact | Contact → Contact | 2 | create / update |
 | Create / Update Product | Create SAP Product from Salesforce Product | Product → Product | 1 | create |
-| Create / Update Work order | Dynamics Sales order to SAP Business One Work order | salesorder → Work Order | 1 | create |
+| Create / Update Work order | Dynamics Sales order to SAP Business One Work order | sales order → Work Order | 1 | create |
 
 Across the 6 default templates: 4 carry insert, 2 carry update, 0 carry delete. A flag decides which
 operation the process is allowed to perform, not which one it performs on a given record. 2
@@ -76,10 +76,11 @@ Query does not have one shape across the product (in the operational skill). For
 a FetchXML document, 1 carries a query statement in the CRM's own query language. **No query text is
 reproduced here**; what follows is what those queries read and filter on.
 
-- **Objects read:** account, Commercient salesperson object, Product, salesorder, salesorderdetail,
-  contact.
-- **Child collections pulled in the same query:** Commercient salesperson object, salesorderdetail,
-  account. A header retrieved without its lines is a query that does not name the child collection.
+- **Objects read:** account, Commercient salesperson object, Product, sales order, sales order
+  detail, contact.
+- **Child collections pulled in the same query:** Commercient salesperson object, sales order
+  detail, account. A header retrieved without its lines is a query that does not name the child
+  collection.
 - **Marker and key columns the queries name:** Commercient external key column. These are the
   columns a user’s flag lands in and the columns the run writes an outcome back to; which ones are
   in the filter is what decides whether a record is in scope at all.
@@ -97,7 +98,7 @@ template resolved against the retrieved record’s document (in the operational 
 6 default templates, 6 carry a default inbound mapping; 2 of those do not parse as and are counted
 but not described. A parseable document carries about 9 members.
 
-- **Template path roots used:** account, contact, salesorder, Product, sales order line item,
+- **Template path roots used:** account, contact, sales order, Product, sales order line item,
   Account. A path’s first segment has to match the element the engine emits, and the document root
   itself is never part of the path.
 - **Line members present:** line item code, line item quantity, line item price, a collection
