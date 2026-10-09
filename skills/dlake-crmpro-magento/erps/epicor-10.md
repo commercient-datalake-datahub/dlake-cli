@@ -81,8 +81,8 @@ write and which groups they fall in. They are not part of the shipped set descri
 - Default operations: insert on 19, update on 19, delete on 19
 - Marked as circular sync: 0
 - Licence groups they span: 2
-- Destination objects: customers, customerupdate, price view, product, updateprice, invoice, orders,
-  products, source item and 2 custom objects
+- Destination objects: customers, Customer Update, price view, product, Update Price, invoice,
+  orders, products, source item and 2 custom objects
 - Object display names: Magento customer, Magento customer update, Magento product, Magento update
   price, Magento Company, Magento get Product, Magento inventory Source-Item, Magento invoice,
   Magento order tracking, Magento update Inventory, Magento update Product and 3 further templates
