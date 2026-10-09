@@ -149,8 +149,8 @@ every shape above is empty.
 
 - **Template names the catalogue carries:** Create New Contact (3), Create New Customer (3), Create
   New Account (2), Create / Update Sales order (1), Create and Update Contact (1), Create and Update
-  Customer (1), Create and Update Sales Order (1), Create Contact (1), Create Salesorder (1), create
-  Update Customer (1).
+  Customer (1), Create and Update Sales Order (1), Create Contact (1), Create Sales order (1),
+  create Update Customer (1).
 
 Importing one of these writes the same TxDownloaderPro row that importing a default template writes
 (in the operational skill); what differs is where the template came from, not how it is stored. What
