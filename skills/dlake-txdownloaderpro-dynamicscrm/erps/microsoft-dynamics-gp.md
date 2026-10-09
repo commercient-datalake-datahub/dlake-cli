@@ -61,14 +61,14 @@ mappings and the operation flags are all stored on that row. In-flight state is 
 | outbound mapping | the template’s default outbound mapping — section 5 |
 | insert / update / delete | the template’s own flags — section 1 |
 
-1 of these template rows carry a licence group, so what a given tenant is offered in the picker is
+1 of these template rows carries a licence group, so what a given tenant is offered in the picker is
 narrower than what the catalogue holds.
 
 ## 3. What the query retrieves
 
 Query does not have one shape across the product (in the operational skill). For this pair, 1
-carries a Fetchdocument. **No query text is reproduced here**; what follows is what those queries
-read and filter on.
+carries a FetchXML document. **No query text is reproduced here**; what follows is what those
+queries read and filter on.
 
 - **Objects read:** account, contact.
 - **Child collections pulled in the same query:** contact. A header retrieved without its lines is a
@@ -87,7 +87,7 @@ members.
 
 - **Template path roots used:** account. A path’s first segment has to match the element the engine
   emits, and the document root itself is never part of the path.
-- **No Line. section.** These templates map a single record, with no repeating child collection.
+- **No line section.** These templates map a single record, with no repeating child collection.
 
 ## 5. Result structure — what goes back to the CRM
 
