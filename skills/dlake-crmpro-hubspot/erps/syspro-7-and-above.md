@@ -130,11 +130,10 @@ write and which groups they fall in. They are not part of the shipped set descri
 - Marked as circular sync: 0
 - Licence groups they span: 9
 - Destination objects: company, line item, deal, product, contact, invoice, ticket, Products,
-  Commercient Account Matching object (earlier package), Commercient AR Customer Managed Custom
-  Object (earlier package), Commercient Product Matching object (earlier package), Commercient
-  Products object, Commercient HubSpot new item object, Commercient HubSpot new quote line item
-  object, Commercient Syspro product details object, Company, line items, order, 3 more and 8 custom
-  objects
+  Commercient Account Matching object (earlier package), Commercient AR Customer object (earlier
+  package), Commercient Product Matching object (earlier package), Commercient Products object,
+  Commercient HubSpot new item object, Commercient HubSpot new quote line item object, Commercient
+  Syspro product details object, Company, line items, order, 3 more and 8 custom objects
 - Object display names: upsert customer, upsert invoice, upsert product, upsert invoice line, upsert
   contact, upsert sales order, create contact, create customer, create product, create sales order
   line, create invoice line, delete order, 51 more and 20 further templates
