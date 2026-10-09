@@ -83,7 +83,7 @@ Inbound mapping is a flat object: each member names a field on the source side a
 template resolved against the retrieved record’s document (in the operational skill). Of this pair’s
 1 default template, 0 carry a default inbound mapping and 1 carries none.
 
-- **No Line. section.** These templates map a single record, with no repeating child collection.
+- **No line section.** These templates map a single record, with no repeating child collection.
 
 ## 5. Result structure — what goes back to the CRM
 
