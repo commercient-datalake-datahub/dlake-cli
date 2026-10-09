@@ -6,7 +6,7 @@ description: >-
   Standard template ships for this pair, and the 25 community templates it does carry are stated as
   counts, destination objects and template groups only — a community template is authored in a
   tenant, so its names, notes, field mapping and SQL are not published. The destination objects they
-  write are pricelevel, account, Commercient Macola ES address object, Commercient Macola ES AR
+  write are price level, account, Commercient Macola ES address object, Commercient Macola ES AR
   invoice detail object, Commercient Macola ES AR invoice header object and more. Use it when
   deciding whether a shipped template set exists for a Macola ES → Dynamics CRM before standing one
   up, and what the community set covers. It extends dlake-crmpro, which covers operating CRMPro
@@ -44,17 +44,17 @@ write and which groups they fall in.
 - Default operations: insert on 25, update on 25, delete on 25
 - Marked as circular sync: 0
 - Licence groups they span: 4
-- Destination objects: pricelevel, account, Commercient Macola ES address object, Commercient Macola
-  ES AR invoice detail object, Commercient Macola ES AR invoice header object, Commercient Macola ES
-  AR order detail object, Commercient Macola ES AR order header object, Commercient Macola ES AR
-  terms object, Commercient Macola ES customer object, Commercient Macola ES inventory object,
+- Destination objects: price level, account, Commercient Macola ES address object, Commercient
+  Macola ES AR invoice detail object, Commercient Macola ES AR invoice header object, Commercient
+  Macola ES AR order detail object, Commercient Macola ES AR order header object, Commercient Macola
+  ES AR terms object, Commercient Macola ES customer object, Commercient Macola ES inventory object,
   Commercient Macola ES invoice detail object, Commercient Macola ES invoice detail comments object,
   Commercient Macola ES invoice header object, Commercient Macola ES invoice header comments object,
   Commercient Macola ES item master object, Commercient Macola ES order detail object, Commercient
   Macola ES order detail comments object, Commercient Macola ES order header object, Commercient
   Macola ES order header comments object, Commercient Macola ES salesperson object and 4 more
 - Object display names: CRM Price list, CRM Unit of measure schedule, CRM Account, CRM Contact, CRM
-  Product, Macola ES Address, Macola ES AR Invoicedetail, Macola ES AR Invoiceheader, Macola ES AR
+  Product, Macola ES Address, Macola ES AR invoice detail, Macola ES AR invoice header, Macola ES AR
   Order Detail, Macola ES AR Order Header, Macola ES AR terms, Macola ES Customer and 11 more
 - Template groups: CRM Order and Line, Account
 
