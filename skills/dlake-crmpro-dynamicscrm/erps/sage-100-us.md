@@ -50,7 +50,7 @@ write and which groups they fall in.
   Commercient Ship-To Address Managed Custom Object, Commercient Sage 100 AR customer object
 - Object display names: Sync customer matching, accounts, Sales order, Sales order History Line,
   Ship to address, Sync AR customer
-- Template groups: Account, Salesorder, Customer Multi Ship Addresses
+- Template groups: Account, Sales order, Customer Multi Ship Addresses
 
 ## 2. Verifying
 
