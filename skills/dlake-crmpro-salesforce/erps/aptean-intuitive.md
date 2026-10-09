@@ -137,10 +137,10 @@ write and which groups they fall in. They are not part of the shipped set descri
   Invoice Line Managed Custom Object, Commercient Sales Order Managed Custom Object, Commercient
   Sales Order Line Managed Custom Object, Commercient Item Managed Custom Object, Price book entry,
   Aptean Intuitive AR detail (custom object), Aptean Intuitive invoice line lot detail (custom
-  object), Commercient Account Matching object, Commercient Bill To Address Managed Custom Object,
-  Commercient Payment Terms Managed Custom Object, Commercient Project Group Managed Custom Object,
-  Commercient Shipment Managed Custom Object, Commercient Sold To Address Managed Custom Object,
-  contact, 2 more and 2 custom objects
+  object), Commercient Account Matching Managed Custom Object, Commercient Bill To Address Managed
+  Custom Object, Commercient Payment Terms Managed Custom Object, Commercient Project Group Managed
+  Custom Object, Commercient Shipment Managed Custom Object, Commercient Sold To Address Managed
+  Custom Object, contact, 2 more and 2 custom objects
 - Object display names: Account, Aptean Intuitive Customer, Aptean Intuitive Customer to account
   lookup, Aptean Intuitive Invoice, Aptean Intuitive invoice line, Aptean Intuitive Sales order,
   Aptean Intuitive Sales order line, Aptean Intuitive Shipping address, Aptean Intuitive Item,
