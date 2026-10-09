@@ -153,12 +153,11 @@ write and which groups they fall in. They are not part of the shipped set descri
 - Marked as circular sync: 0
 - Licence groups they span: 10
 - Destination objects: deal, line item, company, contact, products, Commercient Sage 100 AR customer
-  object, order, Commercient Account Matching Managed Custom Object, product, Account, Commercient
-  Sage 100 AR customer contact object, Commercient Contact Matching Managed Custom Object,
-  Commercient Shipping Address Matching object, invoice, Commercient Sage 100 shipping address
-  object, Commercient AR Customer Managed Custom Object, Commercient AR Customer Contact object,
-  Commercient AR Products object, Commercient Contact Match object, Commercient Data Matching
-  object, 7 more and 13 custom objects
+  object, order, Commercient Account Matching object, product, Account, Commercient Sage 100 AR
+  customer contact object, Commercient Contact Matching object, Commercient Shipping Address
+  Matching object, invoice, Commercient Sage 100 shipping address object, Commercient AR Customer
+  object, Commercient AR Customer Contact object, Commercient AR Products object, Commercient
+  Contact Match object, Commercient Data Matching object, 7 more and 13 custom objects
 - Object display names: upsert customer, upsert item, upsert invoice, upsert order, create customer,
   create invoice detail, upsert contact, upsert order detail, create order detail, create contact,
   upsert invoice detail, create invoice, 75 more and 25 further templates
