@@ -42,7 +42,7 @@ page grows as the catalogue does.
 | **Microsoft Dynamics AX Sales Order Detail** | The templates push Commercient Dynamics AX Sales Order Detail object to Zoho CRM. | Commercient Dynamics AX Sales Order Detail object | sales order lines |
 | **Microsoft Dynamics AX Invoice Header** | The templates push Commercient Dynamics AX Invoice Header object to Zoho CRM. | Commercient Dynamics AX Invoice Header object | customer invoice headers |
 | **Microsoft Dynamics AX Invoice Detail** | The templates push Commercient Dynamics AX Invoice Detail object to Zoho CRM. | Commercient Dynamics AX Invoice Detail object | customer invoice lines |
-| **Dynamics AX Cust Pur History** | The templates push Dynamics AX Customer Purchase History (custom object) to Zoho CRM. | Dynamics AX Customer Purchase History (custom object) | customer purchase history (custom table), customers |
+| **Dynamics AX Customer Purchase History** | The templates push Dynamics AX Customer Purchase History (custom object) to Zoho CRM. | Dynamics AX Customer Purchase History (custom object) | customer purchase history (custom table), customers |
 | **Product Price books** | The templates push Zoho product price book relation to Zoho CRM. | Zoho product price book relation | items, ordered status (custom table), price and discount agreements |
 | **Dynamics AX Dispatch Shipping** | The templates push Dynamics AX Outbound Shipping (custom object) to Zoho CRM. | Dynamics AX Outbound Shipping (custom object) | packing slip lines, associated shipping guide lines (custom table), shipping guides (custom table), sales orders, postal addresses, states |
 | **Dynamics AX Contact person** | The templates push Commercient Dynamics AX Salesperson object to Zoho CRM. | Commercient Dynamics AX Salesperson object | contact persons, customers, address book parties, party locations, postal addresses, countries and regions |
@@ -68,7 +68,7 @@ the inserts never set is not listed.
 | Microsoft Dynamics AX Sales Order Detail | Commercient Dynamics AX Sales Order Detail object | Commercient external key column | 10 |
 | Microsoft Dynamics AX Invoice Header | Commercient Dynamics AX Invoice Header object | Commercient external key column | 11 |
 | Microsoft Dynamics AX Invoice Detail | Commercient Dynamics AX Invoice Detail object | Commercient external key column | 12 |
-| Dynamics AX Cust Pur History | Dynamics AX Customer Purchase History (custom object) | Commercient external key column | 13 |
+| Dynamics AX Customer Purchase History | Dynamics AX Customer Purchase History (custom object) | Commercient external key column | 13 |
 | Product Price books | Zoho product price book relation | Commercient external key column | 17 |
 | Dynamics AX Dispatch Shipping | Dynamics AX Outbound Shipping (custom object) | Commercient external key column | 18 |
 | Dynamics AX Contact person | Commercient Dynamics AX Salesperson object | Commercient external key column | 19 |
@@ -120,7 +120,7 @@ which is the order the templates put them in:
 - 10 — Microsoft Dynamics AX Sales Order Detail
 - 11 — Microsoft Dynamics AX Invoice Header
 - 12 — Microsoft Dynamics AX Invoice Detail
-- 13 — Dynamics AX Cust Pur History
+- 13 — Dynamics AX Customer Purchase History
 - 17 — Product Price books
 - 18 — Dynamics AX Dispatch Shipping
 - 19 — Dynamics AX Contact person
@@ -196,7 +196,7 @@ Each template carries its intended mapping in field mapping.
 | Microsoft Dynamics AX Sales Order Detail | Commercient Dynamics AX Sales Order Detail object | 94 | Company data area,Inventory transaction identifier,Partition → Commercient external key (custom field), Company data area,Inventory transaction identifier,Partition → Name, Activity number → Activity number (Zoho field), Name → Name 1, Address reference record → Address reference record (Zoho field) |
 | Microsoft Dynamics AX Invoice Header | Commercient Dynamics AX Invoice Header object | 81 | Company data area → account (related record), Invoice account → customer (related record), Invoice identifier,Invoice date → Commercient external key (custom field), Invoice identifier,Invoice date → Name, Back order → Back order (Zoho field) |
 | Microsoft Dynamics AX Invoice Detail | Commercient Dynamics AX Invoice Detail object | 79 | Invoice identifier, Invoice date, ERP line number → Commercient external key (custom field), Invoice identifier, Invoice date, ERP line number → Name, Asset book → Asset book (Zoho field), Name → Name 1, Fixed asset → Fixed asset (Zoho field) |
-| Dynamics AX Cust Pur History | Dynamics AX Customer Purchase History (custom object) | 30 | Average purchase → Average purchase (Zoho field), Customer account reference → Customer account reference, Invoicing, month 1 → Invoicing, month 1, Invoicing, month 2 → Invoicing, month 2, Invoicing, month 3 → Invoicing, month 3 |
+| Dynamics AX Customer Purchase History | Dynamics AX Customer Purchase History (custom object) | 30 | Average purchase → Average purchase (Zoho field), Customer account reference → Customer account reference, Invoicing, month 1 → Invoicing, month 1, Invoicing, month 2 → Invoicing, month 2, Invoicing, month 3 → Invoicing, month 3 |
 | Product Price books | Zoho product price book relation | 6 | the linked Salesforce record, the linked Salesforce record → Commercient external key column, the linked Salesforce record → Product lookup (Zoho field), the linked Salesforce record → Price book lookup (Zoho field), Item identifier → Item (Zoho field), Amount → List price |
 | Dynamics AX Dispatch Shipping | Dynamics AX Outbound Shipping (custom object) | 15 | the linked Salesforce record → Client, the linked Salesforce record → Dynamics AX customer (related record), Record identifier → Commercient external key column, Base sales order number → Name, Base sales order number → Sales order reference (Zoho field) |
 | Dynamics AX Contact person | Commercient Dynamics AX Salesperson object | 9 | Contact person identifier, Company data area, Partition → Commercient external key (custom field), Created by → Created by, Name → Last name, Name → First name, Created date and time → Created date and time (Zoho field) |
