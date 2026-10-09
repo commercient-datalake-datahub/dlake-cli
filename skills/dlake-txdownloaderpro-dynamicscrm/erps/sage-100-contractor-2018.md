@@ -73,8 +73,8 @@ Query does not have one shape across the product (in the operational skill). For
 a FetchXML document. **No query text is reproduced here**; what follows is what those queries read
 and filter on.
 
-- **Objects read:** account, contact, opportunity, opportunitydetail.
-- **Child collections pulled in the same query:** contact, opportunitydetail, account. A header
+- **Objects read:** account, contact, opportunity, opportunity detail.
+- **Child collections pulled in the same query:** contact, opportunity detail, account. A header
   retrieved without its lines is a query that does not name the child collection.
 - **FetchXML elements used:** fetch, entity, attribute, linked entity, filter, condition,
   opportunity; condition operators: null, not null, equals.
