@@ -42,7 +42,7 @@ page grows as the catalogue does.
 | **Infor Visual Receivable Line** | The templates push Commercient Infor Visual receivable line object to Zoho CRM. | Commercient Infor Visual receivable line object | receivable lines |
 | **Infor Visual Quote** | The templates push Commercient Infor Visual quote object to Zoho CRM. | Commercient Infor Visual quote object | quotes |
 | **Infor Visual Quote Line** | The templates push Commercient Infor Visual quote line object to Zoho CRM. | Commercient Infor Visual quote line object | quote lines |
-| **Infor Visual Quote Price** | The templates push Commercient Infor Visual Quote Price object to Zoho CRM. | Commercient Infor Visual Quote Price object | quote prices |
+| **Infor Visual Quote Price** | The templates push Commercient Infor Visual Quote Price (Zoho package object) to Zoho CRM. | Commercient Infor Visual Quote Price (Zoho package object) | quote prices |
 | **Contact** | The templates push Contacts to Zoho CRM. | Contacts | customer contacts |
 | **Account Notes** | The templates push Infor Visual notes (custom object) to Zoho CRM. | Infor Visual notes (custom object) | notations |
 | **Order Notes** | The templates push Infor Visual notes (custom object) to Zoho CRM. | Infor Visual notes (custom object) | notations |
@@ -72,7 +72,7 @@ the inserts never set is not listed.
 | Infor Visual Receivable Line | Commercient Infor Visual receivable line object | Commercient external key column | 12 |
 | Infor Visual Quote | Commercient Infor Visual quote object | Commercient external key column | 13 |
 | Infor Visual Quote Line | Commercient Infor Visual quote line object | Commercient external key column | 14 |
-| Infor Visual Quote Price | Commercient Infor Visual Quote Price object | Commercient external key column | 15 |
+| Infor Visual Quote Price | Commercient Infor Visual Quote Price (Zoho package object) | Commercient external key column | 15 |
 | Contact | Contacts | Commercient external key column | 16 |
 | Account Notes | Infor Visual notes (custom object) | Commercient external key column | 17 |
 | Order Notes | Infor Visual notes (custom object) | Commercient external key column | 18 |
@@ -219,7 +219,7 @@ Each template carries its intended mapping in field mapping.
 | Infor Visual Receivable Line | Commercient Infor Visual receivable line object | 31 | Invoice identifier, Line number → Commercient external key (custom field), Invoice identifier, Line number → Name, the linked Salesforce record → Receivable, the linked Salesforce record → Order line number, Amount → Amount |
 | Infor Visual Quote | Commercient Infor Visual quote object | 66 | record identifier → Commercient external key (custom field), record identifier → Name, returned customer identifier → Account, returned customer identifier → Customer, Address line 1 → Address line 1 |
 | Infor Visual Quote Line | Commercient Infor Visual quote line object | 46 | Quote identifier, Line number → Commercient external key (custom field), Quote identifier, Line number → Name, Quote identifier → Quote, Part identifier → Part, Part identifier → Product |
-| Infor Visual Quote Price | Commercient Infor Visual Quote Price object | 30 | Quote identifier, Quote line number, Quantity → Commercient external key (custom field), Quote identifier, Quote line number, Quantity → Name, the linked Salesforce record → Quote, Burden general selling and administrative → Burden general selling and administrative, Burden markup → Burden markup |
+| Infor Visual Quote Price | Commercient Infor Visual Quote Price (Zoho package object) | 30 | Quote identifier, Quote line number, Quantity → Commercient external key (custom field), Quote identifier, Quote line number, Quantity → Name, the linked Salesforce record → Quote, Burden general selling and administrative → Burden general selling and administrative, Burden markup → Burden markup |
 | Contact | Contacts | 9 | returned customer identifier, Contact number → Commercient external key column, the linked Salesforce record → Account name, Contact last name → Last name, Contact first name → First name, Contact email → Email |
 | Account Notes | Infor Visual notes (custom object) | 5 | Row identifier → Name, Note → Notes, the linked Salesforce record → Account, → Row timestamp, Row identifier → Commercient external key column |
 | Order Notes | Infor Visual notes (custom object) | 5 | Row identifier → Name, Note → Notes, the linked Salesforce record → Order, → Row timestamp, Row identifier → Commercient external key column |
@@ -243,10 +243,10 @@ write and which groups they fall in. They are not part of the shipped set descri
 - Destination objects: Infor Visual notes (custom object), Accounts, Commercient Infor Visual
   address object, Commercient Infor Visual customer object, Commercient Infor Visual order object,
   Commercient Infor Visual order line object, Commercient Infor Visual part object, Commercient
-  Infor Visual quote line object, Commercient Infor Visual Quote Price object, Commercient Infor
-  Visual quote object, Commercient Infor Visual receivable object, Commercient Infor Visual
-  salesperson object, Commercient Infor Visual terms object, Contacts, Invoices, Products, Quotes,
-  Sales orders, users and a custom object
+  Infor Visual quote line object, Commercient Infor Visual Quote Price (Zoho package object),
+  Commercient Infor Visual quote object, Commercient Infor Visual receivable object, Commercient
+  Infor Visual salesperson object, Commercient Infor Visual terms object, Contacts, Invoices,
+  Products, Quotes, Sales orders, users and a custom object
 - Object display names: Account, Account Notes, Contact, Customer Reverse Lookup Account, Infor
   Visual Customer, Infor Visual Customer Address, Infor Visual Order, Infor Visual Order Line, Infor
   Visual Part, Infor Visual Quote, Infor Visual Quote Line, Infor Visual Quote Price and 11 more
