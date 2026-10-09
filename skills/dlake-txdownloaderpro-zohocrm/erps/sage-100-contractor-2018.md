@@ -106,9 +106,9 @@ carry a parseable default outbound mapping, 5 carry none.
 | Part 3 | 0 templates (5 explicitly null) | a **new** record, matched on an external id field | — |
 | Part 4 | 0 templates (5 explicitly null) | a **different** record, addressed by an id field | — |
 
-- **CRM fields Part 1 writes to:** Commercient external key column, arcustomercode. These are the
-  fields on the flagged record that carry the source system’s key or outcome once the write has
-  happened — the names only; what lands in them is the response, per record.
+- **CRM fields Part 1 writes to:** Commercient external key column, Commercient AR customer code.
+  These are the fields on the flagged record that carry the source system’s key or outcome once the
+  write has happened — the names only; what lands in them is the response, per record.
 - **Response fields it reads them from:** Client identifier, returned line identifier, Object
   identifier. The map is written **source path first, CRM field second** (in the operational skill);
   the wrong way round resolves to the same silent empty string as a mistyped path.
