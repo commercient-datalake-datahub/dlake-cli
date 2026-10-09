@@ -44,7 +44,7 @@ write and which groups they fall in.
 - Licence groups they span: 3
 - Destination objects: company, contact, deal, line item, Matching (custom object)
 - Object display names: upsert company, Sync Matching, upsert contact, upsert order, upsert order
-  detail, upsert shipto company
+  detail, upsert ship to company
 - Template groups: Account, CRM Opportunity and Line
 
 ## 2. Verifying
