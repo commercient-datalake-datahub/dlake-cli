@@ -91,7 +91,7 @@ template resolved against the retrieved record’s document (in the operational 
 members.
 
 - **Template path roots used:** Order, Account, Quote, Opportunity, order products, quote items,
-  opportunity items, salesorder. A path’s first segment has to match the element the engine emits,
+  opportunity items, sales order. A path’s first segment has to match the element the engine emits,
   and the document root itself is never part of the path.
 - **Line members present:** line quantity, line unit price, line description, line discount type, a
   collection member, line product identifier, line price book line, line discount value, line
