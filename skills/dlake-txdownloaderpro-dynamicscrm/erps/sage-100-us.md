@@ -79,10 +79,10 @@ Query does not have one shape across the product (in the operational skill). For
 a FetchXML document, 2 carry a query statement in the CRM's own query language. **No query text is
 reproduced here**; what follows is what those queries read and filter on.
 
-- **Objects read:** contact, account, opportunity, opportunitydetail, quote, quotedetail, order,
-  orderdetail, product.
-- **Child collections pulled in the same query:** account, contact, opportunitydetail, quotedetail,
-  orderdetail. A header retrieved without its lines is a query that does not name the child
+- **Objects read:** contact, account, opportunity, opportunity detail, quote, quote detail, order,
+  order detail, product.
+- **Child collections pulled in the same query:** account, contact, opportunity detail, quote
+  detail, order detail. A header retrieved without its lines is a query that does not name the child
   collection.
 - **Marker and key columns the queries name:** Commercient AR customer code. These are the columns a
   user’s flag lands in and the columns the run writes an outcome back to; which ones are in the
@@ -101,9 +101,9 @@ template resolved against the retrieved record’s document (in the operational 
 15 default templates, 15 carry a default inbound mapping. A parseable document carries about 16
 members.
 
-- **Template path roots used:** account, quote, opportunity, order, invoice, orderdetail,
-  quotedetail, opportunitydetail, contact, invoicedetail, product. A path’s first segment has to
-  match the element the engine emits, and the document root itself is never part of the path.
+- **Template path roots used:** account, quote, opportunity, order, invoice, order detail, quote
+  detail, opportunity detail, contact, invoice detail, product. A path’s first segment has to match
+  the element the engine emits, and the document root itself is never part of the path.
 - **Line members present:** a collection member, line item code, line unit price, line discount,
   line quantity shipped, line discount percent, line comment, line item description, line number,
   line quantity ordered, line quote quantity, line opportunity quantity, line quantity ordered. 7
