@@ -142,8 +142,8 @@ write and which groups they fall in. They are not part of the shipped set descri
   Epicor 10 customer object, Commercient Account Matching object, Commercient Contact Matching
   object and 5 custom objects
 - Object display names: upsert contact, upsert customer, create contact, create customer, create
-  item, upsert invoice, upsert invoice detail, upsert item, upsert order, upsert quote, upsert
-  shipto company, create company, 25 more and 7 further templates
+  item, upsert invoice, upsert invoice detail, upsert item, upsert order, upsert quote, upsert ship
+  to company, create company, 25 more and 7 further templates
 - Template groups: Account, CRM Order and Line, CRM Opportunity and Line
 
 ## 7. Verifying
