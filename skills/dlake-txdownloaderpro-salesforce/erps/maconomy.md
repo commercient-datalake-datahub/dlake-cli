@@ -85,7 +85,7 @@ members.
 
 - **Template path roots used:** Account, Opportunity. A path’s first segment has to match the
   element the engine emits, and the document root itself is never part of the path.
-- **No Line. section.** These templates map a single record, with no repeating child collection.
+- **No line section.** These templates map a single record, with no repeating child collection.
 
 ## 5. Result structure — what goes back to the CRM
 
@@ -103,7 +103,7 @@ carry a parseable default outbound mapping, 2 carry none.
 - **CRM fields Part 1 writes to:** Commercient AR customer code, External key (custom field). These
   are the fields on the flagged record that carry the source system’s key or outcome once the write
   has happened — the names only; what lands in them is the response, per record.
-- **Response fields it reads them from:** customernumber, jobnumber. The map is written **source
+- **Response fields it reads them from:** customer number, job number. The map is written **source
   path first, CRM field second** (in the operational skill); the wrong way round resolves to the
   same silent empty string as a mistyped path.
 
