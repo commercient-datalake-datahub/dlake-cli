@@ -140,10 +140,10 @@ write and which groups they fall in. They are not part of the shipped set descri
 - Marked as circular sync: 0
 - Licence groups they span: 9
 - Destination objects: deal, line item, company, contact, products, product, Commercient Account
-  Matching Managed Custom Object, Commercient Contact Matching object, order, Commercient Product
-  Matching Managed Custom Object, companies, contacts, deals, invoice, Commercient QuickBooks
-  customer object, Commercient QuickBooks invoice object, Commercient QuickBooks sales order object,
-  Commercient Accounts object, Commercient Contact Data 1 object, 29 more and 19 custom objects
+  Matching object, Commercient Contact Matching object, order, Commercient Product Matching object,
+  companies, contacts, deals, invoice, Commercient QuickBooks customer object, Commercient
+  QuickBooks invoice object, Commercient QuickBooks sales order object, Commercient Accounts object,
+  Commercient Contact Data 1 object, 29 more and 19 custom objects
 - Object display names: upsert customer, create invoice detail, upsert item, create contact, create
   customer, upsert invoice, create item, upsert contact, create invoice, upsert invoice detail,
   upsert estimate, upsert order, 156 more and 37 further templates
