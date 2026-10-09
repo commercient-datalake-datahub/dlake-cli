@@ -138,7 +138,7 @@ versions they belong to.
 | Contact role (custom object) → — | 2 |
 | Contact → — | 2 |
 | Customer → — | 2 |
-| Commercient Varship Managed Custom Object → — | 1 |
+| Commercient Ship To Address Managed Custom Object → — | 1 |
 | Sales Order → — | 1 |
 
 None of these rows carries a destination object name in the catalogue, so the destination side of
