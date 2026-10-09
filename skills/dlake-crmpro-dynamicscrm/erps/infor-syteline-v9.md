@@ -7,7 +7,7 @@ description: >-
   carry are stated as counts, destination objects and template groups only — a community template is
   authored in a tenant, so its names, notes, field mapping and SQL are not published. The
   destination objects they write are account, Commercient SyteLine address object, Commercient
-  SyteLine customer object, product, salesorderdetail and more. Use it when deciding whether a
+  SyteLine customer object, product, sales order detail and more. Use it when deciding whether a
   shipped template set exists for an Infor SyteLine version 9 → Dynamics CRM before standing one up,
   and what the community set covers. It extends dlake-crmpro, which covers operating CRMPro
   generally, and dlake-crmpro-dynamicscrm, the destination skill this page is a child of, which
@@ -45,14 +45,14 @@ write and which groups they fall in.
 - Marked as circular sync: 0
 - Licence groups they span: 3
 - Destination objects: account, Commercient SyteLine address object, Commercient SyteLine customer
-  object, product, salesorderdetail, Commercient SyteLine inventory object, Commercient SyteLine
+  object, product, sales order detail, Commercient SyteLine inventory object, Commercient SyteLine
   invoice object, Commercient SyteLine invoice line item object, Commercient SyteLine item object,
-  Commercient SyteLine sales order object, Commercient SyteLine sales order line object, pricelevel,
-  salesorder, User, uom, uomschedule and 4 custom objects
-- Object display names: CRM salesorderdetail, Infor SyteLine version 9 Address, CRM Parent Account,
-  CRM Price level, CRM Product, CRM salesorder, CRM Shipto Account, CRM System User, CRM unit of
-  measure, Infor SyteLine version 9 Address Inactive Delete, Infor SyteLine version 9 Customer,
-  Infor SyteLine version 9 Customer Inactive, 8 more and 7 further templates
+  Commercient SyteLine sales order object, Commercient SyteLine sales order line object, price
+  level, sales order, User, uom, unit of measure schedule and 4 custom objects
+- Object display names: CRM sales order detail, Infor SyteLine version 9 Address, CRM Parent
+  Account, CRM Price level, CRM Product, CRM sales order, CRM Shipto Account, CRM System User, CRM
+  unit of measure, Infor SyteLine version 9 Address Inactive Delete, Infor SyteLine version 9
+  Customer, Infor SyteLine version 9 Customer Inactive, 8 more and 7 further templates
 - Template groups: Account, CRM Order and Line
 
 ## 2. Verifying
