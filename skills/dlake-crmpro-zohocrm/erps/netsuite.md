@@ -205,8 +205,8 @@ write and which groups they fall in. They are not part of the shipped set descri
   NetSuite Sales Order object, Commercient NetSuite Sales Order Line object, Commercient NetSuite
   Terms object, NetSuite Inventory Location (custom object), users, Commercient NetSuite Item
   Warehouse object, NetSuite Tax Group (custom object), NetSuite Tax Type (custom object), Zoho
-  price books, Commercient Account Matching Managed Custom Object, Commercient Contact Matching
-  object, 1 more and 2 custom objects
+  price books, Commercient Account Matching object, Commercient Contact Matching object, 1 more and
+  2 custom objects
 - Object display names: Account, Contact, Netsuite Customer, Netsuite Customer address, Netsuite
   Salesperson, Netsuite Invoice, Netsuite invoice line, Netsuite Item, Netsuite Sales order,
   Netsuite Sales order line, Netsuite Term, Product, 15 more and 2 further templates
