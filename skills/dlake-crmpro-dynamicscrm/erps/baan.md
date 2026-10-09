@@ -47,7 +47,8 @@ write and which groups they fall in.
 - Destination objects: account, Commercient Baan customer object, Commercient Baan inventory object,
   Commercient Baan invoice object, Commercient Baan item object, Commercient Baan sales order
   object, Commercient Baan sales order detail object, Commercient Baan salesperson object,
-  Commercient Baan ship to address object, product, territory, uom, uomschedule and a custom object
+  Commercient Baan ship to address object, product, territory, uom, unit of measure schedule and a
+  custom object
 - Object display names: Baan Customer, Baan Inventory, Baan Invoice, Baan Item, Baan Sales Person,
   Baan Sales order, Baan Sales order detail, Baan Ship to Address, CRM Parent Account, CRM Payment
   Terms Code, CRM Product, CRM Territory and 2 more
