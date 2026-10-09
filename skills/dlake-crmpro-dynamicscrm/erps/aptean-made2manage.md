@@ -6,11 +6,11 @@ description: >-
   CRM: no Standard template ships for this pair, and the 33 community templates it does carry are
   stated as counts, destination objects and template groups only — a community template is authored
   in a tenant, so its names, notes, field mapping and SQL are not published. The destination objects
-  they write are account, product, salesorder, salesorderdetail, uom and more. Use it when deciding
-  whether a shipped template set exists for an Aptean Made2Manage → Dynamics CRM before standing one
-  up, and what the community set covers. It extends dlake-crmpro, which covers operating CRMPro
-  generally, and dlake-crmpro-dynamicscrm, the destination skill this page is a child of, which
-  carries the Dynamics CRM conventions that hold across every ERP.
+  they write are account, product, sales order, sales order detail, uom and more. Use it when
+  deciding whether a shipped template set exists for an Aptean Made2Manage → Dynamics CRM before
+  standing one up, and what the community set covers. It extends dlake-crmpro, which covers
+  operating CRMPro generally, and dlake-crmpro-dynamicscrm, the destination skill this page is a
+  child of, which carries the Dynamics CRM conventions that hold across every ERP.
 ---
 # CRMPro → Dynamics CRM — Aptean Made2Manage: what the template catalogue carries
 
@@ -43,11 +43,12 @@ write and which groups they fall in.
 - Default operations: insert on 33, update on 33, delete on 33
 - Marked as circular sync: 0
 - Licence groups they span: 4
-- Destination objects: account, product, salesorder, salesorderdetail, uom, uomschedule, Commercient
-  Account Matching object, contact, invoice, invoicedetail, pricelevel and 10 custom objects
-- Object display names: CRM Account, Accounts, CRM Contact, CRM invoice, CRM invoicedetail, CRM
-  Price level, CRM Product, CRM salesorder, CRM Sales order, CRM salesorderdetail, CRM Sales order
-  detail, CRM unit of measure, 4 more and 11 further templates
+- Destination objects: account, product, sales order, sales order detail, uom, unit of measure
+  schedule, Commercient Account Matching object, contact, invoice, invoice detail, price level and
+  10 custom objects
+- Object display names: CRM Account, Accounts, CRM Contact, CRM invoice, CRM invoice detail, CRM
+  Price level, CRM Product, CRM sales order, CRM sales order detail, CRM unit of measure, 4 more and
+  11 further templates
 - Template groups: Account, CRM Order and Line
 
 ## 2. Verifying
