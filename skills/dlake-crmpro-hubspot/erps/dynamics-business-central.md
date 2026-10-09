@@ -102,7 +102,7 @@ write and which groups they fall in. They are not part of the shipped set descri
   object), Commercient Dynamics Business Central customer object, Data Matching (custom object),
   HubSpot customer (custom object), HubSpot new contact (custom object), HubSpot new item (custom
   object) and 5 custom objects
-- Object display names: upsert company, upsert contact, upsert product, upsert shipto, upsert
+- Object display names: upsert company, upsert contact, upsert product, upsert ship to, upsert
   invoice deal, create company, create contact, create product, delete order deal, get company, get
   products, insert company notes US, 29 more and 11 further templates
 - Template groups: Account, Product, CRM Opportunity and Line
