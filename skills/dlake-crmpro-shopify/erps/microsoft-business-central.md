@@ -28,7 +28,7 @@ page grows as the catalogue does.
 
 | Group | Business outcome | Objects | Source tables and views |
 |---|---|---|---|
-| **createcustomer** | The templates push Customer to Shopify. Records are created once; they are not updated and none are deleted. | Customer | customers |
+| **Create Customer** | The templates push Customer to Shopify. Records are created once; they are not updated and none are deleted. | Customer | customers |
 | **Customer Address** | The templates push Customer address to Shopify. Records are created once; they are not updated and none are deleted. | Customer address | customers |
 
 ## 2. The process rows the templates create
@@ -38,8 +38,8 @@ the inserts never set is not listed.
 
 | Display name | Destination object | Run sequence |
 |---|---|---|
-| createcustomer | Customer | 1 |
-| createcustomeraddress | Customer address | 2 |
+| Create Customer | Customer | 1 |
+| Create Customer Address | Customer address | 2 |
 
 Every one of these inserts the active setting as 0, so an imported process is inactive until an
 operator activates it.
@@ -60,8 +60,8 @@ filter is the authority.
 The templates set run sequence to 1, 2. A run processes active rows in ascending run sequence, which
 is the order the templates put them in:
 
-- 1 — createcustomer
-- 2 — createcustomeraddress
+- 1 — Create Customer
+- 2 — Create Customer Address
 
 These views read another process's sync output, which is what makes the order a dependency order:
 the row appears in the view only once the process that writes that sync output has run, so a parent
