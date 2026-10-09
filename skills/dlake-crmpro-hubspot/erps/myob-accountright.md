@@ -130,7 +130,7 @@ write and which groups they fall in. They are not part of the shipped set descri
 - Marked as circular sync: 0
 - Licence groups they span: 3
 - Destination objects: line item, company, deal, contact, invoice, products, Commercient Contact
-  Matching Managed Custom Object, discount
+  Matching object, discount
 - Object display names: upsert contact, create customer, create invoice detail, upsert customer,
   upsert invoice, upsert item, create invoice, create item, create order, create order detail,
   create service invoice, Sync contact matching, 7 more and a further template
