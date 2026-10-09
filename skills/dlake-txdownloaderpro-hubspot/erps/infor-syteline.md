@@ -123,9 +123,9 @@ system’s response after the write (in the operational skill). Of this pair’s
 | Part 3 | 0 templates (15 explicitly null) | a **new** record, matched on an external id field | — |
 | Part 4 | 0 templates (15 explicitly null) | a **different** record, addressed by an id field | — |
 
-- **CRM fields Part 1 writes to:** external key property, arcustomercode. These are the fields on
-  the flagged record that carry the source system’s key or outcome once the write has happened — the
-  names only; what lands in them is the response, per record.
+- **CRM fields Part 1 writes to:** external key property, Commercient AR customer code. These are
+  the fields on the flagged record that carry the source system’s key or outcome once the write has
+  happened — the names only; what lands in them is the response, per record.
 - **Response fields it reads them from:** Customer order number, Contact identifier, Customer
   number, Contact code, Customer identifier (customer record), Estimate unique identifier, Prospect
   unique identifier, Sales order, Customer sequence number, Opportunity identifier, Item. The map is
