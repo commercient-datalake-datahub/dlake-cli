@@ -46,7 +46,7 @@ flags over that process's templates.
 | Create or Update Customer | Update Account from Salesforce to Acumatica Cloud | Account → Customer | 2 | create / update |
 | Create New Contact | Salesforce Contact to Acumatica Contact | Contact → Contact | 1 | create |
 | Create New Opportunity | Salesforce Opportunity to Acumatica Opportunity | Opportunity → Opportunity | 1 | create |
-| Create New Sales order | Create Salesorder for Salesforce to Acumatica | Sales order → Sales order | 1 | create |
+| Create New Sales order | Create Sales order for Salesforce to Acumatica | Sales order → Sales order | 1 | create |
 
 Across the 5 default templates: 4 carry insert, 1 carries update, 0 carry delete. A flag decides
 which operation the process is allowed to perform, not which one it performs on a given record.
@@ -147,8 +147,8 @@ None of these rows carries a destination object name in the catalogue, so the de
 every shape above is empty.
 
 - **Template names the catalogue carries:** Create New Customer (4), Create New Contact (2), Create
-  Customer (1), Create New Account (1), Create Sales Order (1), Create Salesorder (1), Update
-  Customer (1), Update Customers (1), Update Sales Orders (1), Update Sales order (1).
+  Customer (1), Create New Account (1), Create Sales Order (1), Update Customer (1), Update
+  Customers (1), Update Sales Orders (1), Update Sales order (1).
 
 Importing one of these writes the same TxDownloaderPro row that importing a default template writes
 (in the operational skill); what differs is where the template came from, not how it is stored. What
