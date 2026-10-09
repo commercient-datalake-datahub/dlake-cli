@@ -2,13 +2,13 @@
 name: dlake-crmpro-salesforce/erps/infor-m3-qm
 kind: erp-summary
 description: >-
-  Use it when standing up or reading an Infor M3 → Salesforce template set, when deciding which
+  Use it when standing up or reading an Infor M3 QM → Salesforce template set, when deciding which
   templates to import and activate, or when a run completes without pushing records and the answer
   is in the view or the configuration row. It extends dlake-crmpro, which covers operating CRMPro
   generally, and dlake-crmpro-salesforce, the destination skill this page is a child of, which
   carries the Salesforce conventions that hold across every ERP.
 ---
-# CRMPro → Salesforce — Infor M3: what the shipped templates set up
+# CRMPro → Salesforce — Infor M3 QM: what the shipped templates set up
 
 This is a capability summary, not an operating guide. To receive the operational skill you must be a
 registered, whitelisted Commercient customer. Whitelisted customers fetch it with
@@ -42,15 +42,15 @@ the inserts never set is not listed.
 | Display name | Destination object | Matching key | Run sequence |
 |---|---|---|---|
 | Get Salesforce Users | User | Commercient salesperson code | 0 |
-| Infor M3 Salesperson | Commercient Salesperson Managed Custom Object | Commercient external key (Infor package) | 1 |
+| Infor M3 QM Salesperson | Commercient Salesperson Managed Custom Object | Commercient external key (Infor package) | 1 |
 | Account | Account | Commercient AR customer code | 2 |
-| Infor M3 Customer | Commercient Customer Managed Custom Object | Commercient external key (Infor package) | 3 |
-| Infor M3 Customer to account lookup | Account | Commercient AR customer code | 4 |
-| Infor M3 Ship to | Commercient Shipping Address Managed Custom Object | Commercient external key (Infor package) | 5 |
-| Infor M3 Sales order header | Commercient Sales Order Header Managed Custom Object | Commercient external key (Infor package) | 6 |
-| Infor M3 Sales order line | Commercient Sales Order Line Managed Custom Object | Commercient external key (Infor package) | 7 |
-| Infor M3 Invoice header | Commercient Invoice Header Managed Custom Object | Commercient external key (Infor package) | 8 |
-| Infor M3 invoice line | Commercient Invoice Line Managed Custom Object | Commercient external key (Infor package) | 9 |
+| Infor M3 QM Customer | Commercient Customer Managed Custom Object | Commercient external key (Infor package) | 3 |
+| Infor M3 QM Customer to account lookup | Account | Commercient AR customer code | 4 |
+| Infor M3 QM Ship to | Commercient Shipping Address Managed Custom Object | Commercient external key (Infor package) | 5 |
+| Infor M3 QM Sales order header | Commercient Sales Order Header Managed Custom Object | Commercient external key (Infor package) | 6 |
+| Infor M3 QM Sales order line | Commercient Sales Order Line Managed Custom Object | Commercient external key (Infor package) | 7 |
+| Infor M3 QM Invoice header | Commercient Invoice Header Managed Custom Object | Commercient external key (Infor package) | 8 |
+| Infor M3 QM invoice line | Commercient Invoice Line Managed Custom Object | Commercient external key (Infor package) | 9 |
 | Contact | Contact | External key (custom field) | 10 |
 
 Every one of these inserts the active setting as 0, so an imported process is inactive until an
@@ -81,15 +81,15 @@ The templates set run sequence from 0 to 10. A run processes active rows in asce
 which is the order the templates put them in:
 
 - 0 — Get Salesforce Users
-- 1 — Infor M3 Salesperson
+- 1 — Infor M3 QM Salesperson
 - 2 — Account
-- 3 — Infor M3 Customer
-- 4 — Infor M3 Customer to account lookup
-- 5 — Infor M3 Ship to
-- 6 — Infor M3 Sales order header
-- 7 — Infor M3 Sales order line
-- 8 — Infor M3 Invoice header
-- 9 — Infor M3 invoice line
+- 3 — Infor M3 QM Customer
+- 4 — Infor M3 QM Customer to account lookup
+- 5 — Infor M3 QM Ship to
+- 6 — Infor M3 QM Sales order header
+- 7 — Infor M3 QM Sales order line
+- 8 — Infor M3 QM Invoice header
+- 9 — Infor M3 QM invoice line
 - 10 — Contact
 
 These views read another process's sync output, which is what makes the order a dependency order:
@@ -113,15 +113,15 @@ Each template carries its intended mapping in field mapping.
 
 | Template | Object | Mapped fields | First ERP → Salesforce pairs |
 |---|---|---|---|
-| Infor M3 Salesperson | Commercient Salesperson Managed Custom Object | 17 | Sales rep identifier → Commercient sales rep identifier, address → Commercient address, phone → Commercient phone, Territory → Commercient territory, → |
+| Infor M3 QM Salesperson | Commercient Salesperson Managed Custom Object | 17 | Sales rep identifier → Commercient sales rep identifier, address → Commercient address, phone → Commercient phone, Territory → Commercient territory, → |
 | Account | Account | 10 | Commercient AR customer code column → Commercient AR customer code, Phone → Phone, Billing street → Billing street, Billing city → Billing city, Billing state → Billing state |
-| Infor M3 Customer | Commercient Customer Managed Custom Object | 41 | Account → Account, Customer identifier → Commercient customer identifier, phone → Commercient phone, Bill to → Commercient bill to, Ship via → Commercient ship via |
-| Infor M3 Customer to account lookup | Account | 2 | Commercient AR customer code column → Commercient AR customer code, Commercient Infor M3 customer (related record) → Commercient Infor M3 customer (related record) |
-| Infor M3 Ship to | Commercient Shipping Address Managed Custom Object | 46 | Account → Account, Customer record link → Commercient Customer Managed Custom Object, date → Commercient date, type → Commercient type, via → Commercient via |
-| Infor M3 Sales order header | Commercient Sales Order Header Managed Custom Object | 71 | Account → Account, Customer record link → Commercient Customer Managed Custom Object, date → Commercient date, Sold to → Commercient sold to, Booking date → Commercient booking date |
-| Infor M3 Sales order line | Commercient Sales Order Line Managed Custom Object | 41 | Sales order record link → Commercient Sales Order Header Managed Custom Object, Parent key → Commercient parent key, Sales order identifier → Commercient sales order identifier, Item value → Commercient item value, → |
-| Infor M3 Invoice header | Commercient Invoice Header Managed Custom Object | 47 | Account → Account, Customer record link → Commercient Customer Managed Custom Object, Customer (source column) → Commercient customer, po → Commercient PO, Source document → Source document |
-| Infor M3 invoice line | Commercient Invoice Line Managed Custom Object | 18 | Invoice record link → Commercient Invoice Header Managed Custom Object, Parent key → Commercient parent key, AR record identifier → Commercient AR record identifier, Item value → Commercient item value, → |
+| Infor M3 QM Customer | Commercient Customer Managed Custom Object | 41 | Account → Account, Customer identifier → Commercient customer identifier, phone → Commercient phone, Bill to → Commercient bill to, Ship via → Commercient ship via |
+| Infor M3 QM Customer to account lookup | Account | 2 | Commercient AR customer code column → Commercient AR customer code, Commercient Infor M3 customer (related record) → Commercient Infor M3 customer (related record) |
+| Infor M3 QM Ship to | Commercient Shipping Address Managed Custom Object | 46 | Account → Account, Customer record link → Commercient Customer Managed Custom Object, date → Commercient date, type → Commercient type, via → Commercient via |
+| Infor M3 QM Sales order header | Commercient Sales Order Header Managed Custom Object | 71 | Account → Account, Customer record link → Commercient Customer Managed Custom Object, date → Commercient date, Sold to → Commercient sold to, Booking date → Commercient booking date |
+| Infor M3 QM Sales order line | Commercient Sales Order Line Managed Custom Object | 41 | Sales order record link → Commercient Sales Order Header Managed Custom Object, Parent key → Commercient parent key, Sales order identifier → Commercient sales order identifier, Item value → Commercient item value, → |
+| Infor M3 QM Invoice header | Commercient Invoice Header Managed Custom Object | 47 | Account → Account, Customer record link → Commercient Customer Managed Custom Object, Customer (source column) → Commercient customer, po → Commercient PO, Source document → Source document |
+| Infor M3 QM invoice line | Commercient Invoice Line Managed Custom Object | 18 | Invoice record link → Commercient Invoice Header Managed Custom Object, Parent key → Commercient parent key, AR record identifier → Commercient AR record identifier, Item value → Commercient item value, → |
 | Contact | Contact | 10 | account lookup → account lookup, Given name → Given name, Family name → Family name, Title → Title, Fax → Fax |
 
 ## 6. Community templates
@@ -141,9 +141,9 @@ write and which groups they fall in. They are not part of the shipped set descri
   Salesperson Managed Custom Object, Commercient Shipping Address Managed Custom Object, Commercient
   Sales Order Header Managed Custom Object, Commercient Sales Order Line Managed Custom Object,
   Contact, User
-- Object display names: Account, Contact, Get Salesforce Users, Infor M3 Customer, Infor M3 Customer
-  to account lookup, Infor M3 Invoice header, Infor M3 invoice line, Infor M3 Sales order header,
-  Infor M3 Sales order line, Infor M3 Salesperson, Infor M3 Ship to
+- Object display names: Account, Contact, Get Salesforce Users, Infor M3 QM Customer, Infor M3 QM
+  Customer to account lookup, Infor M3 QM Invoice header, Infor M3 QM invoice line, Infor M3 QM
+  Sales order header, Infor M3 QM Sales order line, Infor M3 QM Salesperson, Infor M3 QM Ship to
 - Template groups: Account, Invoice, Sales order, Customer Multi Ship Addresses
 
 ## 7. Verifying
@@ -155,12 +155,12 @@ The detail of this section is part of the operational skill. Whitelisted custome
 
 dlake-crmpro is the general operating surface — the CRMPro tools, the setup and transaction tables,
 field mapping, and the source view contract that applies to every destination. This page adds what
-the shipped Infor M3 → Salesforce templates set up. dlake-crmpro-salesforce is the destination skill
-this page sits under: its own text is the authority for the Salesforce conventions that hold across
-every ERP, and its ERP table lists this page alongside every sibling ERP page for this destination.
-For the extract leg that fills the source data, see dlake-normalsync; for the on-premises agent that
-runs it, dlake-syncagent; for the writeback leg, dlake-txdownloaderpro; for standing an integration
-up, dlake-integration-setup.
+the shipped Infor M3 QM → Salesforce templates set up. dlake-crmpro-salesforce is the destination
+skill this page sits under: its own text is the authority for the Salesforce conventions that hold
+across every ERP, and its ERP table lists this page alongside every sibling ERP page for this
+destination. For the extract leg that fills the source data, see dlake-normalsync; for the
+on-premises agent that runs it, dlake-syncagent; for the writeback leg, dlake-txdownloaderpro; for
+standing an integration up, dlake-integration-setup.
 
 ## How to get started
 
