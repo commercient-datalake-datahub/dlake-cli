@@ -6,8 +6,8 @@ description: >-
   template ships for this pair, and the 2 community templates it does carry are stated as counts,
   destination objects and template groups only — a community template is authored in a tenant, so
   its names, notes, field mapping and SQL are not published. The destination objects they write are
-  customerkeyupdate, customerupdate. Use it when deciding whether a shipped template set exists for
-  a Sage 300 → Magento before standing one up, and what the community set covers. It extends
+  Customer Key Update, Customer Update. Use it when deciding whether a shipped template set exists
+  for a Sage 300 → Magento before standing one up, and what the community set covers. It extends
   dlake-crmpro, which covers operating CRMPro generally, and dlake-crmpro-magento, the destination
   skill this page is a child of, which carries the Magento conventions that hold across every ERP.
 ---
@@ -42,7 +42,7 @@ write and which groups they fall in.
 - Default operations: insert on 2, update on 2, delete on 2
 - Marked as circular sync: 0
 - Licence groups they span: 1
-- Destination objects: customerkeyupdate, customerupdate
+- Destination objects: Customer Key Update, Customer Update
 - Object display names: Magento customer key update, Magento customer update key
 
 ## 2. Verifying
