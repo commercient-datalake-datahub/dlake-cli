@@ -6,7 +6,7 @@ description: >-
   Standard template ships for this pair, and the 10 community templates it does carry are stated as
   counts, destination objects and template groups only — a community template is authored in a
   tenant, so its names, notes, field mapping and SQL are not published. The destination objects they
-  write are line item, lineitem, company, deal, invoice and more. Use it when deciding whether a
+  write are line item, line item, company, deal, invoice and more. Use it when deciding whether a
   shipped template set exists for an Infor XA → HubSpot before standing one up, and what the
   community set covers. It extends dlake-crmpro, which covers operating CRMPro generally, and
   dlake-crmpro-hubspot, the destination skill this page is a child of, which carries the HubSpot
@@ -43,8 +43,8 @@ write and which groups they fall in.
 - Default operations: insert on 10, update on 10, delete on 10
 - Marked as circular sync: 0
 - Licence groups they span: 2
-- Destination objects: line item, lineitem, company, deal, invoice, Matching (custom object), order,
-  product
+- Destination objects: line item, line item, company, deal, invoice, Matching (custom object),
+  order, product
 - Object display names: upsert order line item, Sync Matching, upsert customer, upsert deal, upsert
   invoice, upsert invoice line item, upsert line item, upsert order, upsert product
 - Template groups: CRM Order and Line
