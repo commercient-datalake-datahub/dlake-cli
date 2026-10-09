@@ -44,7 +44,7 @@ flags over that process's templates.
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
 | Create new Contact | HubSpot Contact to Sage 50 UK Contact | Contact → Contact | 1 | create |
-| Update Contact | Hubspot Contact to Sage 50 UK Update Contact | contacts → Contact | 1 | update |
+| Update Contact | HubSpot Contact to Sage 50 UK Update Contact | contacts → Contact | 1 | update |
 
 Across the 2 default templates: 1 carries insert, 1 carries update, 0 carry delete. A flag decides
 which operation the process is allowed to perform, not which one it performs on a given record.
