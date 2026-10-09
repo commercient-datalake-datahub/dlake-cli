@@ -47,7 +47,7 @@ write and which groups they fall in.
   custom object
 - Object display names: delete deal line, delete inactive contacts, Get Ownership, Sync Matching,
   upsert company, upsert customer accounting data, upsert inactive customer, upsert order, upsert
-  orderdetail, upsert Product and 6 further templates
+  order detail, upsert Product and 6 further templates
 - Template groups: Account
 
 ## 2. Verifying
