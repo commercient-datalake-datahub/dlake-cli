@@ -6,12 +6,12 @@ description: >-
   HubSpot: no Standard template ships for this pair, and the 25 community templates it does carry
   are stated as counts, destination objects and template groups only — a community template is
   authored in a tenant, so its names, notes, field mapping and SQL are not published. The
-  destination objects they write are line item, deal, company, Commercient Match Managed Custom
-  Object, Commercient Ship-To Matching Managed Custom Object and more. Use it when deciding whether
-  a shipped template set exists for a SAP Business One Cloud → HubSpot before standing one up, and
-  what the community set covers. It extends dlake-crmpro, which covers operating CRMPro generally,
-  and dlake-crmpro-hubspot, the destination skill this page is a child of, which carries the HubSpot
-  conventions that hold across every ERP.
+  destination objects they write are line item, deal, company, Commercient Match object, Commercient
+  Ship-To Matching object and more. Use it when deciding whether a shipped template set exists for a
+  SAP Business One Cloud → HubSpot before standing one up, and what the community set covers. It
+  extends dlake-crmpro, which covers operating CRMPro generally, and dlake-crmpro-hubspot, the
+  destination skill this page is a child of, which carries the HubSpot conventions that hold across
+  every ERP.
 ---
 # CRMPro → HubSpot — SAP Business One Cloud: what the template catalogue carries
 
@@ -44,9 +44,8 @@ write and which groups they fall in.
 - Default operations: insert on 25, update on 25, delete on 25
 - Marked as circular sync: 0
 - Licence groups they span: 4
-- Destination objects: line item, deal, company, Commercient Match Managed Custom Object,
-  Commercient Ship-To Matching Managed Custom Object, Companies, contact, order, products and a
-  custom object
+- Destination objects: line item, deal, company, Commercient Match object, Commercient Ship-To
+  Matching object, Companies, contact, order, products and a custom object
 - Object display names: upsert order, upsert quote, insert customer, Sync HubSpot delete company,
   Sync match, Sync shipping address matching, upsert contact, upsert credit note, upsert credit note
   detail, upsert customer, upsert customer child, upsert customer key, 9 more and 2 further
