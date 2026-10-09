@@ -44,7 +44,7 @@ flags over that process's templates.
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
 | Create New Sales Order | Salesforce Opportunity to Sage 100 Sales Order | Opportunity, Order, Quote → Order, Sales order | 6 | create / update |
-| (unnamed) | Salesforce Opportunity To Update Sage 100 AR Invoice | Opportunity, Opportunity, Quote → AR invoice, Invoice, Salesorder | 6 | create / update |
+| (unnamed) | Salesforce Opportunity To Update Sage 100 AR Invoice | Opportunity, Opportunity, Quote → AR invoice, Invoice, Sales order | 6 | create / update |
 | Create New Sales Invoice | Salesforce Work order To Sage 100 Invoice | Work order, Opportunity, Order → Invoice | 3 | create |
 | Delete Sales Invoice | Salesforce Order to Sage 100 Invoice - Delete Invoice | Order, Quote, Opportunity → Invoice | 3 | delete |
 | Delete Sales Order | Salesforce Order to Sage 100 Sales Order - Delete Sales Order | Order, Quote, Opportunity → Sales Order | 3 | delete |
