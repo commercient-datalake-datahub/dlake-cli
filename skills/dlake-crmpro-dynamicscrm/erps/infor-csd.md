@@ -6,7 +6,7 @@ description: >-
   Standard template ships for this pair, and the 14 community templates it does carry are stated as
   counts, destination objects and template groups only — a community template is authored in a
   tenant, so its names, notes, field mapping and SQL are not published. The destination objects they
-  write are account, quote, invoice, invoicedetail, quotedetail and more. Use it when deciding
+  write are account, quote, invoice, invoice detail, quote detail and more. Use it when deciding
   whether a shipped template set exists for an Infor CSD → Dynamics CRM before standing one up, and
   what the community set covers. It extends dlake-crmpro, which covers operating CRMPro generally,
   and dlake-crmpro-dynamicscrm, the destination skill this page is a child of, which carries the
@@ -43,8 +43,8 @@ write and which groups they fall in.
 - Default operations: insert on 14, update on 14, delete on 14
 - Marked as circular sync: 0
 - Licence groups they span: 4
-- Destination objects: account, quote, invoice, invoicedetail, quotedetail, salesorder,
-  salesorderdetail
+- Destination objects: account, quote, invoice, invoice detail, quote detail, sales order, sales
+  order detail
 - Object display names: CRM Account, CRM Account Update Batch, CRM Account Update No Batch, CRM
   Create Quote, CRM Invoice, CRM Invoice Detail, CRM Quote detail, CRM Sales Order, CRM Sales Order
   Detail, CRM Ship to Account, CRM Ship to Account Update, CRM Update Quote, 1 more and a further
