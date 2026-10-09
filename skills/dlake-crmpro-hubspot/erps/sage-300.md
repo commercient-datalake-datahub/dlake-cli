@@ -126,8 +126,8 @@ write and which groups they fall in. They are not part of the shipped set descri
 - Marked as circular sync: 0
 - Licence groups they span: 7
 - Destination objects: line item, deal, company, contact, products, Commercient Account Matching
-  Managed Custom Object, Commercient Contact Matching Managed Custom Object, Commercient HubSpot New
-  Item object, invoice, order and 5 custom objects
+  object, Commercient Contact Matching object, Commercient HubSpot New Item object, invoice, order
+  and 5 custom objects
 - Object display names: upsert contact, upsert customer, upsert order detail, create order detail,
   upsert invoice, upsert invoice detail, upsert order, create invoice detail, create order, upsert
   item, create contact, create customer, 20 more and 6 further templates
