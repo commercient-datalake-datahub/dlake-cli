@@ -6,8 +6,8 @@ description: >-
   Dynamics CRM: no Standard template ships for this pair, and the 18 community templates it does
   carry are stated as counts, destination objects and template groups only — a community template is
   authored in a tenant, so its names, notes, field mapping and SQL are not published. The
-  destination objects they write are account, invoice, invoicedetail, pricelevel, product and more.
-  Use it when deciding whether a shipped template set exists for a Sage 100 US (Sage 100 US) →
+  destination objects they write are account, invoice, invoice detail, price level, product and
+  more. Use it when deciding whether a shipped template set exists for a Sage 100 US (Sage 100 US) →
   Dynamics CRM before standing one up, and what the community set covers. It extends dlake-crmpro,
   which covers operating CRMPro generally, and dlake-crmpro-dynamicscrm, the destination skill this
   page is a child of, which carries the Dynamics CRM conventions that hold across every ERP.
@@ -43,13 +43,13 @@ write and which groups they fall in.
 - Default operations: insert on 18, update on 18, delete on 18
 - Marked as circular sync: 0
 - Licence groups they span: 3
-- Destination objects: account, invoice, invoicedetail, pricelevel, product, Sage customer records
+- Destination objects: account, invoice, invoice detail, price level, product, Sage customer records
   (custom object), Sage invoice line items (custom object), Sage invoices (custom object), Sage open
   sales orders (custom object), Sage open sales order line items (custom object), Sage salesperson
-  (custom object), Sage ship to address (custom object), salesorder, salesorderdetail, uom,
-  uomschedule and a custom object
-- Object display names: account, CRM invoice, CRM invoicedetail, CRM Price level, CRM Product, CRM
-  salesorder, CRM salesorderdetail, CRM unit of measure, Sage Customer Records, Sage Invoice Line
+  (custom object), Sage ship to address (custom object), sales order, sales order detail, uom, unit
+  of measure schedule and a custom object
+- Object display names: account, CRM invoice, CRM invoice detail, CRM Price level, CRM Product, CRM
+  sales order, CRM sales order detail, CRM unit of measure, Sage Customer Records, Sage Invoice Line
   Items, Sage Invoices, Sage Open Sales Orders, 3 more and 2 further templates
 - Template groups: CRM Order and Line, Account
 
