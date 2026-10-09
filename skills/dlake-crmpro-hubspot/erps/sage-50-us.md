@@ -141,8 +141,8 @@ write and which groups they fall in. They are not part of the shipped set descri
 - Licence groups they span: 6
 - Destination objects: deal, line item, company, product, Deal, contact, notes, Commercient Sage 50
   US contact matching object, Commercient Account Matching 2 object, Commercient Product Matching
-  Managed Custom Object, Commercient HubSpot new contact object, Commercient HubSpot new customer
-  object, Customer, line item and 3 custom objects
+  object, Commercient HubSpot new contact object, Commercient HubSpot new customer object, Customer,
+  line item and 3 custom objects
 - Object display names: create invoice, create company, create invoice detail, create product,
   create deal, create order, create quote, get all companies, update deal, update deal quote, upsert
   company, upsert contact, 47 more and 6 further templates
