@@ -87,12 +87,12 @@ Query does not have one shape across the product (in the operational skill). For
 a FetchXML document. **No query text is reproduced here**; what follows is what those queries read
 and filter on.
 
-- **Objects read:** contact, account, salesorder, salesorderdetail, quote, quotedetail, User,
-  Commercient SyteLine address object, customeraddress, Price list item, product, opportunity,
+- **Objects read:** contact, account, sales order, sales order detail, quote, quote detail, User,
+  Commercient SyteLine address object, customer address, Price list item, product, opportunity,
   Opportunity product.
-- **Child collections pulled in the same query:** account, salesorderdetail, quotedetail, contact,
-  User, Commercient SyteLine address object, salesorder, product, Opportunity product. A header
-  retrieved without its lines is a query that does not name the child collection.
+- **Child collections pulled in the same query:** account, sales order detail, quote detail,
+  contact, User, Commercient SyteLine address object, sales order, product, Opportunity product. A
+  header retrieved without its lines is a query that does not name the child collection.
 - **FetchXML elements used:** fetch, entity, attribute, linked entity, filter, condition, order;
   condition operators: not null, null, equals.
 - **Where the filtering happens:** in the query, on the CRM side, before anything reaches the source
@@ -105,10 +105,10 @@ template resolved against the retrieved record’s document (in the operational 
 27 default templates, 27 carry a default inbound mapping. A parseable document carries about 17
 members.
 
-- **Template path roots used:** quote, salesorder, salesorderdetail, account, contact,
-  customeraddress, Price list item, opportunity, quotedetail, Opportunity product, product. A path’s
-  first segment has to match the element the engine emits, and the document root itself is never
-  part of the path.
+- **Template path roots used:** quote, sales order, sales order detail, account, contact, customer
+  address, Price list item, opportunity, quote detail, Opportunity product, product. A path’s first
+  segment has to match the element the engine emits, and the document root itself is never part of
+  the path.
 - **Line members present:** a collection member, line item number, line unit of measure, line
   description, line due date, line converted price, line converted quantity ordered, line item
   description, line customer order number, line currency code, line item cost unit of measure, line
