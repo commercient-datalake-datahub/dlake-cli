@@ -77,11 +77,11 @@ Query does not have one shape across the product (in the operational skill). For
 a FetchXML document. **No query text is reproduced here**; what follows is what those queries read
 and filter on.
 
-- **Objects read:** contact, account, Opportunity, Opportunitydetail, quote, quotedetail, order,
-  orderdetail.
-- **Child collections pulled in the same query:** account, contact, Opportunitydetail, quotedetail,
-  orderdetail, opportunitydetail. A header retrieved without its lines is a query that does not name
-  the child collection.
+- **Objects read:** contact, account, Opportunity, opportunity detail, quote, quote detail, order,
+  order detail.
+- **Child collections pulled in the same query:** account, contact, opportunity detail, quote
+  detail, order detail, opportunity detail. A header retrieved without its lines is a query that
+  does not name the child collection.
 - **FetchXML elements used:** fetch, entity, attribute, linked entity, filter, condition, order,
   opportunity, quote; condition operators: not null, null, equals.
 - **Where the filtering happens:** in the query, on the CRM side, before anything reaches the source
@@ -94,8 +94,8 @@ template resolved against the retrieved record’s document (in the operational 
 13 default templates, 13 carry a default inbound mapping. A parseable document carries about 14
 members.
 
-- **Template path roots used:** account, opportunity, quote, order, contact, opportunitydetail,
-  quotedetail, orderdetail. A path’s first segment has to match the element the engine emits, and
+- **Template path roots used:** account, opportunity, quote, order, contact, opportunity detail,
+  quote detail, order detail. A path’s first segment has to match the element the engine emits, and
   the document root itself is never part of the path.
 - **Line members present:** line item number, line description, line base price, line account
   identifier, a collection member, line quantity ordered, line opportunity quantity, line quote
