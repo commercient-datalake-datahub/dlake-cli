@@ -43,10 +43,10 @@ flags over that process's templates.
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
-| Create or Update Contact version 2019 | Hubspot Contacts to Sage 100 Contractor Client contact | contacts → Client contact, Job contact | 4 | create / update |
-| Create or Update Customer version 2019 | Hubspot companies To Sage 100 Contractor Customer | companies → Customer | 2 | create / update |
-| Create New Employee version 2019 | Hubspot Contacts to Sage 100 Contractor Employee | contacts → Employee | 1 | create |
-| Create New Purchase order version 2019 | Hubspot Deals to Sage 100 Contractor Purchase order | deals → Purchase order | 1 | create |
+| Create or Update Contact version 2019 | HubSpot Contacts to Sage 100 Contractor Client contact | contacts → Client contact, Job contact | 4 | create / update |
+| Create or Update Customer version 2019 | HubSpot companies To Sage 100 Contractor Customer | companies → Customer | 2 | create / update |
+| Create New Employee version 2019 | HubSpot Contacts to Sage 100 Contractor Employee | contacts → Employee | 1 | create |
+| Create New Purchase order version 2019 | HubSpot Deals to Sage 100 Contractor Purchase order | deals → Purchase order | 1 | create |
 
 Across the 8 default templates: 5 carry insert, 3 carry update, 0 carry delete. A flag decides which
 operation the process is allowed to perform, not which one it performs on a given record.
