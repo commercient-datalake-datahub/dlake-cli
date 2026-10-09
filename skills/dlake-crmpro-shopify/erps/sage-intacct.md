@@ -28,7 +28,7 @@ page grows as the catalogue does.
 
 | Group | Business outcome | Objects | Source tables and views |
 |---|---|---|---|
-| **updatequantity** | The templates push Product quantity to Shopify. New records are created and existing ones updated; none are deleted. | Product quantity | items, Shopify product variants (mirrored), Shopify inventory levels (mirrored) |
+| **Update Quantity** | The templates push Product quantity to Shopify. New records are created and existing ones updated; none are deleted. | Product quantity | items, Shopify product variants (mirrored), Shopify inventory levels (mirrored) |
 
 ## 2. The process rows the templates create
 
@@ -37,7 +37,7 @@ the inserts never set is not listed.
 
 | Display name | Destination object | Run sequence |
 |---|---|---|
-| updatequantity | Product quantity | 1 |
+| Update Quantity | Product quantity | 1 |
 
 Every one of these inserts the active setting as 1, so an imported process starts active — check the
 view before importing it.
