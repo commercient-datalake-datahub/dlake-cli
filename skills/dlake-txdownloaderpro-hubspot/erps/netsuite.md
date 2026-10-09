@@ -43,13 +43,13 @@ flags over that process's templates.
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
-| Create New Contact | Hubspot Contacts to NetSuite Contacts | contacts → Contact | 2 | create / update |
-| Create New Customer | Hubspot companies To Netsuite Customer | companies → Customer | 2 | create / update |
-| Create New Estimate | Hubspot Deals to NetSuite Estimate | deals → Estimate | 2 | create / update |
-| Create New Invoice | Hubspot Deals to NetSuite Invoice | deals → Invoice | 2 | create / update |
-| Create New Opportunity | Hubspot Deals to NetSuite Opportunity | deals → Opportunity | 2 | create / update |
-| Create New Return authorization | Hubspot Deals to NetSuite Return Authorization | deals → Return authorization | 2 | create / update |
-| Create New Sales order | Hubspot Deals to NetSuite Sales order | deals → Sales order | 2 | create / update |
+| Create New Contact | HubSpot Contacts to NetSuite Contacts | contacts → Contact | 2 | create / update |
+| Create New Customer | HubSpot companies To Netsuite Customer | companies → Customer | 2 | create / update |
+| Create New Estimate | HubSpot Deals to NetSuite Estimate | deals → Estimate | 2 | create / update |
+| Create New Invoice | HubSpot Deals to NetSuite Invoice | deals → Invoice | 2 | create / update |
+| Create New Opportunity | HubSpot Deals to NetSuite Opportunity | deals → Opportunity | 2 | create / update |
+| Create New Return authorization | HubSpot Deals to NetSuite Return Authorization | deals → Return authorization | 2 | create / update |
+| Create New Sales order | HubSpot Deals to NetSuite Sales order | deals → Sales order | 2 | create / update |
 
 Across the 14 default templates: 7 carry insert, 7 carry update, 0 carry delete. A flag decides
 which operation the process is allowed to perform, not which one it performs on a given record.
