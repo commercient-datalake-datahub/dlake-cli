@@ -40,10 +40,10 @@ the inserts never set is not listed.
 
 | Display name | Destination object | Run sequence |
 |---|---|---|
-| createcustomer | Customer | 1 |
-| createproduct | Product object | 1 |
-| updatequantity | Product quantity | 1 |
-| updateprice | Product price | 1 |
+| Create Customer | Customer | 1 |
+| Create Product | Product object | 1 |
+| Update Quantity | Product quantity | 1 |
+| Update Price | Product price | 1 |
 | Customer address | Customer address | 2 |
 
 Every one of these inserts the active setting as 0, so an imported process is inactive until an
@@ -68,7 +68,7 @@ filter is the authority.
 The templates set run sequence to 1, 2. A run processes active rows in ascending run sequence, which
 is the order the templates put them in:
 
-- 1 — createcustomer, createproduct, updatequantity, updateprice
+- 1 — Create Customer, Create Product, Update Quantity, Update Price
 - 2 — Customer address
 
 Several of these rows share a run sequence value: each template group carries its own numbering, so
@@ -87,10 +87,10 @@ Each template carries its intended mapping in field mapping.
 
 | Template | Object | Mapped fields | First ERP → Shopify pairs |
 |---|---|---|---|
-| createcustomer | Customer | 8 | record key → record key, description → description, ERP code → ERP code, Given name → Given name, Middle name → Middle name |
-| createproduct | Product object | 7 | Title → Title, Product body text → Product body text, record key → record key, →, Stock keeping unit → Stock keeping unit |
-| updatequantity | Product quantity | 6 | record key → record key, Id → Id, Inventory quantity → Inventory quantity, inventory item identifier → inventory item identifier, Previous quantity → Previous quantity |
-| updateprice | Product price | 3 | record key → record key, product variant identifier → product variant identifier, Price → Price |
+| Create Customer | Customer | 8 | record key → record key, description → description, ERP code → ERP code, Given name → Given name, Middle name → Middle name |
+| Create Product | Product object | 7 | Title → Title, Product body text → Product body text, record key → record key, →, Stock keeping unit → Stock keeping unit |
+| Update Quantity | Product quantity | 6 | record key → record key, Id → Id, Inventory quantity → Inventory quantity, inventory item identifier → inventory item identifier, Previous quantity → Previous quantity |
+| Update Price | Product price | 3 | record key → record key, product variant identifier → product variant identifier, Price → Price |
 | Customer address | Customer address | 16 | record key → record key, description → description, ERP code → ERP code, Address 1 → Address 1, Address 2 → Address 2 |
 
 ## 6. Verifying
