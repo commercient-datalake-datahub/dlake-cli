@@ -42,8 +42,8 @@ flags over that process's templates.
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
 | Create New Invoice | — | Sales order → Invoice | 1 | create |
-| Create New Sales Credit | Dynamics Sales order to Sage Live Sales Credit | salesorder → Sales Credit | 1 | create |
-| Create New Sales Order | Dynamics Sales order to Sage Live Sales Order | salesorder → Sales Order | 1 | create |
+| Create New Sales Credit | Dynamics Sales order to Sage Live Sales Credit | sales order → Sales Credit | 1 | create |
+| Create New Sales Order | Dynamics Sales order to Sage Live Sales Order | sales order → Sales Order | 1 | create |
 | Create or Update Customer | Dynamic CRM Account to Sage Customer | Account → — | 1 | create |
 
 Across the 4 default templates: 4 carry insert, 0 carry update, 0 carry delete. A flag decides which
@@ -71,8 +71,8 @@ Query does not have one shape across the product (in the operational skill). For
 a FetchXML document. **No query text is reproduced here**; what follows is what those queries read
 and filter on.
 
-- **Objects read:** salesorder, salesorderdetail, account.
-- **Child collections pulled in the same query:** salesorderdetail, account. A header retrieved
+- **Objects read:** sales order, sales order detail, account.
+- **Child collections pulled in the same query:** sales order detail, account. A header retrieved
   without its lines is a query that does not name the child collection.
 - **FetchXML elements used:** fetch, entity, attribute, order, linked entity, filter, condition;
   condition operators: not null, equals, null.
@@ -86,7 +86,7 @@ template resolved against the retrieved record’s document (in the operational 
 4 default templates, 4 carry a default inbound mapping. A parseable document carries about 21
 members.
 
-- **Template path roots used:** salesorder, account, sales order line item. A path’s first segment
+- **Template path roots used:** sales order, account, sales order line item. A path’s first segment
   has to match the element the engine emits, and the document root itself is never part of the path.
 - **Line members present:** line quantity, line unit price, line description, line discount type, a
   collection member, line product, line product identifier, line price book line, line discount
