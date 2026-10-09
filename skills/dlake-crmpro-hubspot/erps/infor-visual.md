@@ -125,7 +125,7 @@ write and which groups they fall in. They are not part of the shipped set descri
 - Marked as circular sync: 0
 - Licence groups they span: 6
 - Destination objects: deal, line item, company, contact, product, Commercient Account Matching
-  Managed Custom Object, currency, deals and 13 custom objects
+  object, currency, deals and 13 custom objects
 - Object display names: upsert product, upsert company, create order, create order detail, upsert
   order detail, upsert visual order, create company, create contact, create quote detail, upload
   deal document, upsert quote, create product, 12 more and 6 further templates
