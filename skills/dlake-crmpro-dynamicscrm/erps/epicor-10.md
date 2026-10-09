@@ -28,11 +28,11 @@ This page grows as the catalogue does.
 
 | Group | Business outcome | Objects | Source tables and views |
 |---|---|---|---|
-| **salesorder** | The templates push salesorder to Dynamics CRM. | salesorder | sales order lines, price list part prices, e, sales order headers |
-| **salesorderdetail** | The templates push salesorderdetail to Dynamics CRM. | salesorderdetail | sales order lines, customers |
+| **sales order** | The templates push sales order to Dynamics CRM. | sales order | sales order lines, price list part prices, e, sales order headers |
+| **sales order detail** | The templates push sales order detail to Dynamics CRM. | sales order detail | sales order lines, customers |
 | **invoice** | The templates push invoice to Dynamics CRM. | invoice | invoice lines, price list part prices, e, invoice headers |
-| **invoicedetail** | The templates push invoicedetail to Dynamics CRM. | invoicedetail | invoice lines, customers |
-| **quotedetail** | The templates push quotedetail to Dynamics CRM. | quotedetail | quote lines, customers |
+| **invoice detail** | The templates push invoice detail to Dynamics CRM. | invoice detail | invoice lines, customers |
+| **quote detail** | The templates push quote detail to Dynamics CRM. | quote detail | quote lines, customers |
 | **Epicor 10 Sales order** | The templates push Commercient Epicor 10 sales order object to Dynamics CRM. | Commercient Epicor 10 sales order object | sales order lines, price list part prices, e, sales order headers |
 | **Epicor 10 Sales order Detail** | The templates push Commercient Epicor 10 sales order detail object to Dynamics CRM. | Commercient Epicor 10 sales order detail object | sales order lines, customers |
 | **Epicor 10 Invoice** | The templates push Commercient Epicor 10 invoice object to Dynamics CRM. | Commercient Epicor 10 invoice object | invoice lines, price list part prices, e, invoice headers |
@@ -46,12 +46,12 @@ the inserts never set is not listed.
 
 | Display name | Destination object | Matching key | Run sequence |
 |---|---|---|---|
-| salesorder | salesorder | Commercient external key | 20 |
-| salesorderdetail | salesorderdetail | Commercient external key | 21 |
+| sales order | sales order | Commercient external key | 20 |
+| sales order detail | sales order detail | Commercient external key | 21 |
 | invoice | invoice | Commercient external key | 22 |
-| invoicedetail | invoicedetail | Commercient external key | 23 |
+| invoice detail | invoice detail | Commercient external key | 23 |
 | quote | quote | Commercient external key | 24 |
-| quotedetail | quotedetail | Commercient external key | 25 |
+| quote detail | quote detail | Commercient external key | 25 |
 | Epicor 10 Sales order | Commercient Epicor 10 sales order object | Commercient external key | 26 |
 | Epicor 10 Sales order Detail | Commercient Epicor 10 sales order detail object | Commercient external key | 27 |
 | Epicor 10 Invoice | Commercient Epicor 10 invoice object | Commercient external key | 28 |
@@ -84,12 +84,12 @@ filter is the authority.
 The templates set run sequence from 20 to 29. A run processes active rows in ascending run sequence,
 which is the order the templates put them in:
 
-- 20 — salesorder
-- 21 — salesorderdetail
+- 20 — sales order
+- 21 — sales order detail
 - 22 — invoice
-- 23 — invoicedetail
+- 23 — invoice detail
 - 24 — quote
-- 25 — quotedetail
+- 25 — quote detail
 - 26 — Epicor 10 Sales order
 - 27 — Epicor 10 Sales order Detail
 - 28 — Epicor 10 Invoice
@@ -146,12 +146,12 @@ Each template carries its intended mapping in field mapping.
 
 | Template | Object | Mapped fields | First ERP → Dynamics CRM pairs |
 |---|---|---|---|
-| salesorder | salesorder | 22 | Company, Order number → Commercient external key, Company, Order number → Name, Epicor bill to address line 1 → Bill to street 1, Epicor bill to address line 2 → Bill to street 2, Epicor bill to address line 3 → Bill to street 3 |
-| salesorderdetail | salesorderdetail | 14 | Company, Order line number, Order number → Commercient external key, Address 1 → Ship to street 1, Address 2 → Ship to street 2, Address 3 → Ship to street 3, City → Ship to city |
+| sales order | sales order | 22 | Company, Order number → Commercient external key, Company, Order number → Name, Epicor bill to address line 1 → Bill to street 1, Epicor bill to address line 2 → Bill to street 2, Epicor bill to address line 3 → Bill to street 3 |
+| sales order detail | sales order detail | 14 | Company, Order line number, Order number → Commercient external key, Address 1 → Ship to street 1, Address 2 → Ship to street 2, Address 3 → Ship to street 3, City → Ship to city |
 | invoice | invoice | 22 | Epicor bill to address line 1 → Bill to street 1, Epicor bill to address line 2 → Bill to street 2, Epicor bill to address line 3 → Bill to street 3, Epicor bill to city → Bill to city, Epicor bill to state → Bill to state or province |
-| invoicedetail | invoicedetail | 14 | Company,invoice line,Invoice number → Commercient external key, Address 1 → Ship to street 1, Address 2 → Ship to street 2, Address 3 → Ship to street 3, City → Ship to city |
+| invoice detail | invoice detail | 14 | Company,invoice line,Invoice number → Commercient external key, Address 1 → Ship to street 1, Address 2 → Ship to street 2, Address 3 → Ship to street 3, City → Ship to city |
 | quote | quote | 22 | Company, Quote number → Commercient external key, Company, Quote number → Name, Epicor bill to address line 1 → Bill to street 1, Epicor bill to address line 2 → Bill to street 2, Epicor bill to address line 3 → Bill to street 3 |
-| quotedetail | quotedetail | 14 | Company, Quote number, Quote line number → Commercient external key, Address 1 → Ship to street 1, Address 2 → Ship to street 2, Address 3 → Ship to street 3, City → Ship to city |
+| quote detail | quote detail | 14 | Company, Quote number, Quote line number → Commercient external key, Address 1 → Ship to street 1, Address 2 → Ship to street 2, Address 3 → Ship to street 3, City → Ship to city |
 | Epicor 10 Sales order | Commercient Epicor 10 sales order object | 3 | Company, Order number → external key property, Company, Order number → Name, the linked Salesforce record → price list lookup |
 | Epicor 10 Sales order Detail | Commercient Epicor 10 sales order detail object | 5 | Company, Order line number, Order number → Commercient external key, Company, Order line number, Order number → name, the linked Salesforce record → Commercient Epicor 10 sales order lookup, the linked Salesforce record → product lookup, the linked Salesforce record → unit of measure lookup |
 | Epicor 10 Invoice | Commercient Epicor 10 invoice object | 3 | Company,Invoice number → Commercient external key, Company,Invoice number → Name, the linked Salesforce record → price list lookup |
@@ -174,8 +174,8 @@ write and which groups they fall in. They are not part of the shipped set descri
   object), Epicor 10 item warehouse (custom object), Epicor 10 quote detail (custom object), Epicor
   10 quote header (custom object), Epicor 10 sales order detail (custom object), Epicor 10 sales
   order header (custom object), Epicor 10 salesperson (custom object), Epicor 10 ship to address
-  (custom object), invoice, invoicedetail, product, quote, quotedetail, salesorder, salesorderdetail
-  and 2 more
+  (custom object), invoice, invoice detail, product, quote, quote detail, sales order, sales order
+  detail and 2 more
 - Object display names: CRM Account, CRM Contact, CRM Product, CRM unit of measure, Epicor 10
   Customer, Epicor 10 Invoice detail, Epicor 10 Invoice header, Epicor 10 Item master, Epicor 10
   Item warehouse, Epicor 10 Quote detail, Epicor 10 Quote header, Epicor 10 Sales order detail, 9
