@@ -43,7 +43,7 @@ flags over that process's templates.
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
-| Create Sales order | Salesforce Opportunity To MYOB AccountRight Sales order | Quote, Order → Salesorder | 3 | create |
+| Create Sales order | Salesforce Opportunity To MYOB AccountRight Sales order | Quote, Order → Sales order | 3 | create |
 | Create Contact | Salesforce Contact To MYOB AccountRight Contact | Contact → Contact | 1 | create |
 | Create Customer | Salesfoce Account TO MYOB AccountRight Customer | Accounts → Customer | 1 | create |
 | Create Customer Location or Address | Salesforce Account to MYOB AccountRight Customer Location | Account → Location | 1 | create |
