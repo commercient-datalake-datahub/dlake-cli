@@ -58,7 +58,7 @@ flags over that process's templates.
 | Create New Purchase Entry | Salesforce Order to Sage 50 US Purchase Entry | Order → Purchase Order Entry | 1 | create |
 | Create New Purchase order | Salesforce Order to Sage 50 US Purchase Order | Order → Purchase Order | 1 | create |
 | Create New Quote | Salesforce Quote to Sage 50 US Quote | Quote → Quote | 1 | create |
-| Create or Update Ship To Customer Address | — | Commercient Sage 50 US Address object → Shipping address | 1 | create / update |
+| Create or Update Ship To Customer Address | — | Commercient Sage 50 US Address Managed Custom Object → Shipping address | 1 | create / update |
 | Delete Customer | Salesforce Customer to Sage 50 US Account - Delete Customer | — | 1 | delete |
 | Delete Product | Salesforce Product to Sage 50 US item - Delete Item | Product → Item | 1 | delete |
 | Delete Purchase order | Salesforce Order to Sage 50 US Purchase Order - Delete Purchase Order | Order → Purchase Order | 1 | delete |
@@ -104,11 +104,11 @@ follows is what those queries read and filter on.
   items. A header retrieved without its lines is a query that does not name the child collection.
 - **Marker and key columns the queries name:** Commercient AR customer code, External key (custom
   field), Commercient account (related record), Commercient address line 1, Commercient address line
-  2, Commercient city, Commercient country, Commercient external key, Commercient Customer object,
-  Commercient name, Commercient state, Commercient address type number, Commercient tax code,
-  Commercient zip code, Commercient Sage 50 US Address Managed Custom Object, Commercient message.
-  These are the columns a user’s flag lands in and the columns the run writes an outcome back to;
-  which ones are in the filter is what decides whether a record is in scope at all.
+  2, Commercient city, Commercient country, Commercient external key, Commercient customer (related
+  record), Commercient name, Commercient state, Commercient address type number, Commercient tax
+  code, Commercient zip code, Commercient Sage 50 US Address Managed Custom Object, Commercient
+  message. These are the columns a user’s flag lands in and the columns the run writes an outcome
+  back to; which ones are in the filter is what decides whether a record is in scope at all.
 - **Operators present:** `=`, a test for an empty value, `!=`, and, a null test, `>`. The
   operational skill is the authority on the vocabulary; the point here is only which of it these
   templates use.
