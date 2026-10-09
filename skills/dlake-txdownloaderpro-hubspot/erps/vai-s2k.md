@@ -41,8 +41,8 @@ flags over that process's templates.
 
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
-| (unnamed) | Hubspot companies To VAI S2K Customer | companies, Account → Customer | 2 | create / update |
-| (unnamed) | Hubspot Contacts to VAI S2K Contacts | contacts → Contact | 2 | create / update |
+| (unnamed) | HubSpot companies To VAI S2K Customer | companies, Account → Customer | 2 | create / update |
+| (unnamed) | HubSpot Contacts to VAI S2K Contacts | contacts → Contact | 2 | create / update |
 | (unnamed) | HubSpot Deals to VAI S2K Sales Order | deals → Sales order | 2 | create / update |
 | (unnamed) | HubSpot Companies to VAI S2K Ship To Master | companies → Ship To Master | 1 | create |
 
