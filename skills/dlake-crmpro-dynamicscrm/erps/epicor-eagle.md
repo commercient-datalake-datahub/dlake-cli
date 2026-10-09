@@ -47,10 +47,11 @@ write and which groups they fall in.
 - Destination objects: account, Commercient AR customer object, Commercient AR salesperson object,
   Commercient AR terms code object, Commercient invoice header object, Commercient invoice line
   object, Commercient sales order header object, Commercient sales order line object, invoice,
-  invoicedetail, Class (custom object), Department (custom object), Job (custom object), pricelevel,
-  product, salesorder, salesorderdetail, uom, uomschedule and 2 custom objects
+  invoice detail, Class (custom object), Department (custom object), Job (custom object), price
+  level, product, sales order, sales order detail, uom, unit of measure schedule and 2 custom
+  objects
 - Object display names: CRM Account, CRM Class, CRM Department, CRM Inventory, CRM invoice, CRM
-  invoicedetail, CRM Price Book, CRM Product, CRM salesorder, CRM salesorderdetail, CRM unit of
+  invoice detail, CRM Price Book, CRM Product, CRM sales order, CRM sales order detail, CRM unit of
   measure, CRM Unit of measure schedule and 9 more
 - Template groups: CRM Order and Line, Account
 
