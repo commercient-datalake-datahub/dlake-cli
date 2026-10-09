@@ -44,7 +44,7 @@ flags over that process's templates.
 | Process | What it delivers | Source → destination | Templates | Operations |
 |---|---|---|---|---|
 | Create New Contact | Salesforce Contact to JobBOSS Customer Contact | Contact → Customer contact | 2 | create / update |
-| — | Salesforce Opportunity to JobBOSS Quote | Opportunity → Quote | 2 | create / update |
+| (unnamed) | Salesforce Opportunity to JobBOSS Quote | Opportunity → Quote | 2 | create / update |
 
 Across the 5 default templates: 3 carry insert, 2 carry update, 0 carry delete. A flag decides which
 operation the process is allowed to perform, not which one it performs on a given record. 1
@@ -64,7 +64,6 @@ mappings and the operation flags are all stored on that row. In-flight state is 
 | inbound mapping | the template’s default inbound mapping — section 4 |
 | outbound mapping | the template’s default outbound mapping — section 5 |
 | insert / update / delete | the template’s own flags — section 1 |
-| — | the process version, not the template |
 
 ## 3. What the query retrieves
 
@@ -145,12 +144,12 @@ every shape above is empty.
 
 Importing one of these writes the same TxDownloaderPro row that importing a default template writes
 (in the operational skill); what differs is where the template came from, not how it is stored. What
-any one of them contains is read from the imported row itself, with the tools below.
+any one of them contains is read from the imported row itself.
 
 ## 7. Verifying
 
-Read the imported row before a run, not after. The operational skill is the authority on these tools
-and on the state they report.
+Read the imported row before a run, not after. The operational skill is the authority on the
+TxDownloaderPro tools and on the state they report.
 
 The two failures this pair’s templates actually produce: a run that retrieves nothing, which is the
 query’s own condition and not the mapping; and a record that arrives with fields empty, which is a
