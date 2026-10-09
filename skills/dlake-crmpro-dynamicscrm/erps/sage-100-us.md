@@ -7,12 +7,11 @@ description: >-
   as counts, destination objects and template groups only — a community template is authored in a
   tenant, so its names, notes, field mapping and SQL are not published. The destination objects they
   write are Commercient Customer Matching object, accounts, Commercient Sales Order History Line
-  Managed Custom Object, Commercient Sales Order Header Managed Custom Object, Commercient Ship-To
-  Address Managed Custom Object and more. Use it when deciding whether a shipped template set exists
-  for a Sage 100 (US) → Dynamics CRM before standing one up, and what the community set covers. It
-  extends dlake-crmpro, which covers operating CRMPro generally, and dlake-crmpro-dynamicscrm, the
-  destination skill this page is a child of, which carries the Dynamics CRM conventions that hold
-  across every ERP.
+  object, Commercient Sales Order Header object, Commercient Ship-To Address object and more. Use it
+  when deciding whether a shipped template set exists for a Sage 100 (US) → Dynamics CRM before
+  standing one up, and what the community set covers. It extends dlake-crmpro, which covers
+  operating CRMPro generally, and dlake-crmpro-dynamicscrm, the destination skill this page is a
+  child of, which carries the Dynamics CRM conventions that hold across every ERP.
 ---
 # CRMPro → Dynamics CRM — Sage 100 (US): what the template catalogue carries
 
@@ -46,8 +45,8 @@ write and which groups they fall in.
 - Marked as circular sync: 0
 - Licence groups they span: 5
 - Destination objects: Commercient Customer Matching object, accounts, Commercient Sales Order
-  History Line Managed Custom Object, Commercient Sales Order Header Managed Custom Object,
-  Commercient Ship-To Address Managed Custom Object, Commercient Sage 100 AR customer object
+  History Line object, Commercient Sales Order Header object, Commercient Ship-To Address object,
+  Commercient Sage 100 AR customer object
 - Object display names: Sync customer matching, accounts, Sales order, Sales order History Line,
   Ship to address, Sync AR customer
 - Template groups: Account, Sales order, Customer Multi Ship Addresses
