@@ -74,11 +74,11 @@ Query does not have one shape across the product (in the operational skill). For
 a FetchXML document, 2 carry a query statement in the CRM's own query language. **No query text is
 reproduced here**; what follows is what those queries read and filter on.
 
-- **Objects read:** account, contact, quote, quotedetail, salesorder, salesorderdetail, order,
-  orderdetail, opportunity, opportunitydetail.
-- **Child collections pulled in the same query:** contact, account, quotedetail, salesorderdetail,
-  orderdetail, opportunitydetail. A header retrieved without its lines is a query that does not name
-  the child collection.
+- **Objects read:** account, contact, quote, quote detail, sales order, sales order detail, order,
+  order detail, opportunity, opportunity detail.
+- **Child collections pulled in the same query:** contact, account, quote detail, sales order
+  detail, order detail, opportunity detail. A header retrieved without its lines is a query that
+  does not name the child collection.
 - **FetchXML elements used:** fetch, entity, attribute, linked entity, filter, condition, order;
   condition operators: null, not null, equals.
 - **Where the filtering happens:** in the query, on the CRM side, before anything reaches the source
@@ -91,10 +91,10 @@ template resolved against the retrieved record’s document (in the operational 
 13 default templates, 13 carry a default inbound mapping. A parseable document carries about 15
 members.
 
-- **Template path roots used:** opportunity, quote, order, account, opportunitydetail, quotedetail,
-  orderdetail, salesorderdetail, invoicedetail, salesorder, invoice, Opportunity. A path’s first
-  segment has to match the element the engine emits, and the document root itself is never part of
-  the path.
+- **Template path roots used:** opportunity, quote, order, account, opportunity detail, quote
+  detail, order detail, sales order detail, invoice detail, sales order, invoice, Opportunity. A
+  path’s first segment has to match the element the engine emits, and the document root itself is
+  never part of the path.
 - **Line members present:** line quantity, line unit price, line tax type, line item identifier
   field, a collection member, line general ledger account, line sales order description, line
   description, line amount, line stocking quantity. 10 templates name the collection through a
