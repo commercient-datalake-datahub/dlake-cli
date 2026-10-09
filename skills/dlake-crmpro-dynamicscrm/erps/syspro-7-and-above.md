@@ -6,11 +6,11 @@ description: >-
   CRM: no Standard template ships for this pair, and the 24 community templates it does carry are
   stated as counts, destination objects and template groups only — a community template is authored
   in a tenant, so its names, notes, field mapping and SQL are not published. The destination objects
-  they write are account, invoice, invoicedetail, pricelevel, product and more. Use it when deciding
-  whether a shipped template set exists for a SYSPRO 7 and above → Dynamics CRM before standing one
-  up, and what the community set covers. It extends dlake-crmpro, which covers operating CRMPro
-  generally, and dlake-crmpro-dynamicscrm, the destination skill this page is a child of, which
-  carries the Dynamics CRM conventions that hold across every ERP.
+  they write are account, invoice, invoice detail, price level, product and more. Use it when
+  deciding whether a shipped template set exists for a SYSPRO 7 and above → Dynamics CRM before
+  standing one up, and what the community set covers. It extends dlake-crmpro, which covers
+  operating CRMPro generally, and dlake-crmpro-dynamicscrm, the destination skill this page is a
+  child of, which carries the Dynamics CRM conventions that hold across every ERP.
 ---
 # CRMPro → Dynamics CRM — SYSPRO 7 and above: what the template catalogue carries
 
@@ -43,12 +43,12 @@ write and which groups they fall in.
 - Default operations: insert on 24, update on 24, delete on 24
 - Marked as circular sync: 0
 - Licence groups they span: 3
-- Destination objects: account, invoice, invoicedetail, pricelevel, product, salesorder,
-  salesorderdetail, Syspro 7 AR invoice (custom object), Syspro 7 AR invoice payment (custom
-  object), Syspro 7 customer (custom object), uom, uomschedule and 12 custom objects
-- Object display names: CRM Account, CRM invoice, CRM invoicedetail, CRM Price level, CRM Product,
-  CRM salesorder, CRM salesorderdetail, CRM unit of measure, Syspro 7 AR Branch, Syspro 7 AR Terms,
-  Syspro 7 Area, Syspro 7 Customer, 7 more and 5 further templates
+- Destination objects: account, invoice, invoice detail, price level, product, sales order, sales
+  order detail, Syspro 7 AR invoice (custom object), Syspro 7 AR invoice payment (custom object),
+  Syspro 7 customer (custom object), uom, unit of measure schedule and 12 custom objects
+- Object display names: CRM Account, CRM invoice, CRM invoice detail, CRM Price level, CRM Product,
+  CRM sales order, CRM sales order detail, CRM unit of measure, Syspro 7 AR Branch, Syspro 7 AR
+  Terms, Syspro 7 Area, Syspro 7 Customer, 7 more and 5 further templates
 - Template groups: CRM Order and Line, Account
 
 ## 2. Verifying
