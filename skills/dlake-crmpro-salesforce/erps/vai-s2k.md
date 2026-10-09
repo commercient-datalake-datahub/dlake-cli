@@ -28,10 +28,10 @@ This page grows as the catalogue does.
 
 | Group | Business outcome | Objects | Source tables and views |
 |---|---|---|---|
-| **Vcmenot Sync** | ERP Vcmenot data becomes Vcmenot (custom object) in Salesforce. New records are created and existing ones updated; none are deleted. | Vcmenot (custom object) | Vcmenot records |
-| **Vcnenot Sync** | ERP Vcnenot data becomes Vcnenot (custom object) in Salesforce. New records are created and existing ones updated; none are deleted. | Vcnenot (custom object) | Vcnenot records |
+| **Customer memo notes Sync** | ERP Customer memo notes data becomes Customer memo notes (custom object) in Salesforce. New records are created and existing ones updated; none are deleted. | Customer memo notes (custom object) | customer memo note records |
+| **Customer other notes Sync** | ERP Customer other notes data becomes Customer other notes (custom object) in Salesforce. New records are created and existing ones updated; none are deleted. | Customer other notes (custom object) | customer other note records |
 | **Account** | In addition to creating the Account record from your ERP customer records, Commercient syncs over the entire Accounting AR Customer record into a Commercient AR Customer object which is a Managed Custom Object (MCO). A lookup field is provided to lookup to the default AR Customer record MCO from the Account record. New records are created and existing ones updated; none are deleted. | Account, Contact, Commercient AR Customer Managed Custom Object | customers, customer shipping addresses, prospects |
-| **Customer Multi Ship Addresses** | If you are using multiple ship to addresses for a given AR Customer in your ERP system then you will be able to see all the addresses inside the CRM Account screen in a Commercient Multi Ship To Address MCO related list. New records are created and existing ones updated; none are deleted. | Commercient Varship Managed Custom Object | customer shipping addresses |
+| **Customer Multi Ship Addresses** | If you are using multiple ship to addresses for a given AR Customer in your ERP system then you will be able to see all the addresses inside the CRM Account screen in a Commercient Multi Ship To Address MCO related list. New records are created and existing ones updated; none are deleted. | Commercient Ship To Address Managed Custom Object | customer shipping addresses |
 | **Product** | ERP Item master table, Warehouse table, Item warehouse table data becomes Item (custom object), Warehouse (custom object), Item Warehouse (custom object) in Salesforce. New records are created and existing ones updated; none are deleted. | Item (custom object), Warehouse (custom object), Item Warehouse (custom object), Product | items, warehouse locations, item warehouse records |
 | **Sales order** | Commercient will sync the Sales Orders from the ERP Sales Order Entry module to the Commercient Sales Order Header (MCO) objects in CRM. In the CRM, customer service and sales people can visualize the status of the order such as on hold, backorder, forward order, scheduled for delivery, whether it has shipped, and completion status. New records are created and existing ones updated; none are deleted. | Commercient Sales Order Header Managed Custom Object, Commercient Sales Order Detail Managed Custom Object | sales order headers, sales order lines |
 
@@ -46,7 +46,7 @@ the inserts never set is not listed.
 | Contact | Contact | External key (custom field) | 2 |
 | Customer | Commercient AR Customer Managed Custom Object | Commercient external key | 3 |
 | Account To Customer Reverse Lookup | Account | Commercient AR customer code | 4 |
-| Shipping address | Commercient Varship Managed Custom Object | Commercient external key | 5 |
+| Shipping address | Commercient Ship To Address Managed Custom Object | Commercient external key | 5 |
 | Sales order header | Commercient Sales Order Header Managed Custom Object | Commercient external key | 6 |
 | Sales order detail | Commercient Sales Order Detail Managed Custom Object | Commercient external key | 7 |
 | Product | Product | Commercient external key (earlier package) | 8 |
@@ -54,8 +54,8 @@ the inserts never set is not listed.
 | Product To Item Reverse Lookup | Product | Commercient external key (earlier package) | 10 |
 | Warehouse | Warehouse (custom object) | External key (custom field) | 11 |
 | Item Warehouse | Item Warehouse (custom object) | External key (custom field) | 12 |
-| Vcmenot Sync | Vcmenot (custom object) | External key (custom field) | 15 |
-| Vcnenot Sync | Vcnenot (custom object) | External key (custom field) | 16 |
+| Customer memo notes Sync | Customer memo notes (custom object) | External key (custom field) | 15 |
+| Customer other notes Sync | Customer other notes (custom object) | External key (custom field) | 16 |
 | Prospect Account | Account | Commercient AR customer code | 17 |
 | Prospect Contact | Contact | External key (custom field) | 18 |
 
@@ -82,8 +82,8 @@ filter is the authority.
 | product item master lookup feed | insert + update | items |
 | warehouse feed | insert + update | warehouse locations |
 | item warehouse feed | insert + update | item warehouse records |
-| Vcmenot feed | insert + update | Vcmenot records |
-| Vcnenot feed | insert + update | Vcnenot records |
+| customer memo notes feed | insert + update | customer memo note records |
+| customer other notes feed | insert + update | customer other note records |
 | prospect account feed | insert + update | prospects |
 | prospect contact feed | insert + update | prospects |
 
@@ -104,8 +104,8 @@ which is the order the templates put them in:
 - 10 — Product To Item Reverse Lookup
 - 11 — Warehouse
 - 12 — Item Warehouse
-- 15 — Vcmenot Sync
-- 16 — Vcnenot Sync
+- 15 — Customer memo notes Sync
+- 16 — Customer other notes Sync
 - 17 — Prospect Account
 - 18 — Prospect Contact
 
@@ -113,8 +113,10 @@ These views read another process's sync output, which is what makes the order a 
 the row appears in the view only once the process that writes that sync output has run, so a parent
 flows on one run and its children on the next.
 
-- Vcmenot feed reads account sync output (generic name), customer sync output (generic name)
-- Vcnenot feed reads account sync output (generic name), customer sync output (generic name)
+- customer memo notes feed reads account sync output (generic name), customer sync output (generic
+  name)
+- customer other notes feed reads account sync output (generic name), customer sync output (generic
+  name)
 - customer account lookup feed reads customer sync output (generic name)
 - contact feed reads account sync output (generic name)
 - prospect contact feed reads prospect account sync output (generic name)
@@ -138,7 +140,7 @@ Each template carries its intended mapping in field mapping.
 | Account | Account | 14 | Company number,Customer number → Commercient AR customer code, Customer master name → Name, Customer phone → Phone, Customer type → Type, Customer address line 1,Customer address line 2,Customer address line 3 → Billing street |
 | Customer | Commercient AR Customer Managed Custom Object | 10 | Company number, Customer number → Commercient external key, Customer master name → Name, Customer address line 1, Customer address line 2, Customer address line 3 → Billing street, Customer city → Billing city, Customer state → Billing state |
 | Account To Customer Reverse Lookup | Account | 2 | Company number, Customer number → Commercient AR customer code, the linked Salesforce record → Commercient customer master (related record) |
-| Shipping address | Commercient Varship Managed Custom Object | 90 | Shipping address company number, Shipping address customer number, Shipping address code → Commercient external key, Shipping address company number, Shipping address customer number → Commercient account (related record), Shipping address company number, Shipping address customer number → Commercient customer master (related record), Shipping address name → Name, Shipping address delete code → Commercient shipping address delete code |
+| Shipping address | Commercient Ship To Address Managed Custom Object | 90 | Shipping address company number, Shipping address customer number, Shipping address code → Commercient external key, Shipping address company number, Shipping address customer number → Commercient account (related record), Shipping address company number, Shipping address customer number → Commercient customer master (related record), Shipping address name → Name, Shipping address delete code → Commercient shipping address delete code |
 | Sales order header | Commercient Sales Order Header Managed Custom Object | 99 | Order header company number, Order header order number, Back order code → Commercient external key, Order header company number, Order header customer number → Commercient account (related record), Order header company number, Order header customer number → Commercient customer master (related record), Order header company number, Order header order number, Back order code → Name, Order delete code → Commercient order delete code |
 | Sales order detail | Commercient Sales Order Detail Managed Custom Object | 97 | Order line company number, Order line order number, Order line back order code, Order line number → external key column, Order line company number, Order line order number, Order line back order code, Order line number → Name, Order line delete code → Order line delete code, Order line company number → Order line company number, Order line order number → Order line order number |
 | Product | Product | 5 | Item company number, Inventory item → Commercient external key (earlier package), Inventory item → Product code, Item description 1, Item description 2, Item description line 3 → Description, Item description 1, Item description 2, Item description line 3, Inventory item → Name |
@@ -146,8 +148,8 @@ Each template carries its intended mapping in field mapping.
 | Product To Item Reverse Lookup | Product | 2 | Item company number, Inventory item → Commercient external key (earlier package), the linked Salesforce record → Item master (custom field) |
 | Warehouse | Warehouse (custom object) | 99 | Warehouse company number, Warehouse location code → External key (custom field), Warehouse company number, Warehouse location code, Warehouse name → Name, Warehouse delete code → Warehouse delete code, Warehouse company number → Warehouse company number, Warehouse location code → Warehouse location code |
 | Item Warehouse | Item Warehouse (custom object) | 101 | Item warehouse delete code, Item warehouse company number, Item warehouse location code, Item warehouse item number → External key (custom field), Item warehouse company number, Item warehouse item number → Product (custom field), Item warehouse company number, Item warehouse item number → Item master (custom field), Item warehouse company number, Item warehouse location code → Warehouse (custom field), Item warehouse delete code, Item warehouse company number, Item warehouse location code, Item warehouse item number → Name |
-| Vcmenot Sync | Vcmenot (custom object) | 27 | Note company number, Note customer number, Note date, Note time, Note text line 1, Note text line 2, Note text line 3 → External key (custom field), Note company number, Note customer number → Account, Note company number, Note customer number → Customer master (custom field), Note company number, Note customer number, Note date, Note time → Name, Note delete code → Note delete code |
-| Vcnenot Sync | Vcnenot (custom object) | 27 | Note company number, Note customer number, Note date, Note time, Note text line 1 → External key (custom field), Note company number, Note customer number → Account, Note company number, Note customer number → Customer master (custom field), Note company number, Note customer number, Note date, Note time → Name, Note delete code → Note delete code |
+| Customer memo notes Sync | Customer memo notes (custom object) | 27 | Note company number, Note customer number, Note date, Note time, Note text line 1, Note text line 2, Note text line 3 → External key (custom field), Note company number, Note customer number → Account, Note company number, Note customer number → Customer master (custom field), Note company number, Note customer number, Note date, Note time → Name, Note delete code → Note delete code |
+| Customer other notes Sync | Customer other notes (custom object) | 27 | Note company number, Note customer number, Note date, Note time, Note text line 1 → External key (custom field), Note company number, Note customer number → Account, Note company number, Note customer number → Customer master (custom field), Note company number, Note customer number, Note date, Note time → Name, Note delete code → Note delete code |
 | Prospect Account | Account | 14 | Prospect company number, Prospect number → Commercient AR customer code, Prospect name → Name, Prospect phone → Phone, Type → Type, Prospect address line 1, Prospect address line 2, Prospect address line 3 → Billing street |
 
 ## 6. Community templates
@@ -163,7 +165,7 @@ write and which groups they fall in. They are not part of the shipped set descri
 - Marked as circular sync: 7
 - Licence groups they span: 14
 - Destination objects: Account, Contact, Order, Price book entry, Product, Order product,
-  Commercient Varship Managed Custom Object, Commercient AR Customer Managed Custom Object,
+  Commercient Ship To Address Managed Custom Object, Commercient AR Customer Managed Custom Object,
   Commercient Sales Order Detail Managed Custom Object, Commercient Sales Order Header Managed
   Custom Object, Quote, Quote line item, Commercient Division Managed Custom Object, Commercient
   Division Class Managed Custom Object, Commercient Sales Order History Detail Managed Custom
