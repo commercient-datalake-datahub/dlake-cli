@@ -37,8 +37,8 @@ vector features require SQL Server 2022+ / 2025.)
 - **Bring data in** — through **Commercient SYNC**, Commercient Data Lake / Data
   Hub can **read and write to and from more than 150 systems** (ERPs, CRMs,
   e-commerce, and more — see [www.commercient.com](https://www.commercient.com)).
-  Built-in connectors cover HubSpot, Stripe, Salesforce, ServiceTitan, SQL
-  Server, and any ODBC source (via a small on-prem push agent), with incremental
+  Built-in connectors cover HubSpot, Stripe, Salesforce, ServiceTitan,
+  Pipedrive, SQL Server, and any ODBC source (via a small on-prem push agent), with incremental
   sync, change tracking, scheduling, integrity verification, and conflict
   handling for bi-directional flows. File ingest (CSV / Parquet / XML) creates
   and evolves tables automatically.
