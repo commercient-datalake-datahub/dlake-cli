@@ -1,5 +1,21 @@
 # dlake release notes
 
+## 0.5.49 (2026-10-14)
+
+- **Restore a deleted document.** Deleting a document is reversible: `dlake docs rm <id>` hides it
+  from lists and search, and `dlake docs restore <id>` brings it back. Deleting a document that is
+  already deleted is harmless and says so.
+- **Change a document's details.** `dlake docs update <id>` changes the title, description,
+  category, tags and the other details without uploading the file again.
+- **See deleted documents.** `dlake docs list --include-deleted` and
+  `dlake docs get <id> --include-deleted` show deleted documents too.
+- **Uploading a file you deleted earlier restores it.** The upload says so, and it lists any
+  details you passed that were not applied, with the `dlake docs update` command to apply them.
+- Upgrade: `npm install -g @commercient/dlake` (or `npm install -g datalake`). If your npm skips
+  install scripts, add `--allow-scripts=@commercient/dlake`, or
+  `--allow-scripts=@commercient/dlake,datalake` for the alias. Then run `dlake skills install` to
+  refresh the bundled agent skills.
+
 ## 0.5.48 (2026-10-01)
 
 - **Agent skills: the public copies are now capability summaries.** The skills that
