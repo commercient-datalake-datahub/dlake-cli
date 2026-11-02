@@ -1,5 +1,20 @@
 # dlake release notes
 
+## 0.5.50 (2026-11-02)
+
+- **Larger uploads through `dlake s3 put`.** Files up to 25 MB now upload through the Data Lake
+  instead of straight to the bucket (up from 8 MB). Larger files still go straight to the bucket.
+- **Create help desk logins.** `dlake helpdesk create --email <address> --first-name <name>
+  --last-name <name>` creates a help desk login for the person you name, with a generated password
+  saved to a file only you can read (or `--password-stdin` to set your own).
+- **Enter secrets without typing them on the command line.** `dlake admin <tool> --prompt-secret
+  <argument>` asks for a secret value without showing it, or reads it from piped input, so it
+  never appears in your shell history.
+- Upgrade: `npm install -g @commercient/dlake` (or `npm install -g datalake`). If your npm skips
+  install scripts, add `--allow-scripts=@commercient/dlake`, or
+  `--allow-scripts=@commercient/dlake,datalake` for the alias. Then run `dlake skills install` to
+  refresh the bundled agent skills.
+
 ## 0.5.49 (2026-10-14)
 
 - **Restore a deleted document.** Deleting a document is reversible: `dlake docs rm <id>` hides it
